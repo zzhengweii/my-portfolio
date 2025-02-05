@@ -1,0 +1,63 @@
+/* Full Page Loading Screen */
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom, #37415c, #242e49, #181a2f);
+  background-attachment: fixed;
+  z-index: 1000; /* Ensure it stays on top */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Loading Animation Container */
+.la-ball-clip-rotate-multiple {
+  position: relative;
+  width: 12vw; /* Dynamic width based on viewport width */
+  height: 12vw; /* Dynamic height based on viewport width */
+  display: block;
+  font-size: 0;
+  color: #fff;
+}
+
+.la-ball-clip-rotate-multiple > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: transparent;
+  border-style: solid;
+  border-radius: 100%;
+  animation: ball-clip-rotate-multiple-rotate 1s ease-in-out infinite;
+}
+
+.la-ball-clip-rotate-multiple > div:first-child {
+  width: 100%; /* Full size of the parent container */
+  height: 100%; /* Full size of the parent container */
+  border-right-color: transparent;
+  border-left-color: transparent;
+}
+
+.la-ball-clip-rotate-multiple > div:last-child {
+  width: 50%; /* Smaller inner circle */
+  height: 50%; /* Smaller inner circle */
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  animation-duration: 0.5s;
+  animation-direction: reverse;
+}
+
+/* Animation */
+@keyframes ball-clip-rotate-multiple-rotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

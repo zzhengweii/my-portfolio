@@ -1,0 +1,107 @@
+@import "../styles/fonts.css";
+
+/* Navbar container */
+.navbar {
+  background-color: transparent;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  z-index: 1000; /* Ensures navbar stays above other elements */
+}
+
+/* Navigation list (desktop) */
+.navbar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Navigation links */
+.navbar-link {
+  color: #fff;
+  font-family: NATS-Regular;
+  font-size: 25px;
+  text-decoration: none;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+  display: inline-block; /* Ensures hover effect works */
+}
+
+.navbar-link:hover {
+  color: #ffcc80; /* High contrast hover color */
+  border-bottom: 2px solid #ffcc80;
+}
+
+.menu-button {
+  display: none;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .navbar-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.907);
+    display: flex;
+    justify-content: center;
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s; /* Adjusted transition */
+  }
+
+  /* Show menu when open */
+  .navbar-list.open {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease-out; /* Smooth fade-out */
+  }
+
+  .navbar-link {
+    color: #242e49;
+    font-size: 24px;
+    display: block;
+    padding: 10px 0;
+  }
+
+  .navbar-link:hover {
+    color: #edb27a;
+    border-bottom: 2px solid #edb27a;
+  }
+
+  /* Hamburger menu button */
+  .menu-button {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    z-index: 1100; /* Ensures button stays on top */
+  }
+
+  .menu-button svg {
+    width: 40px;
+    height: 40px;
+    fill: #f7f7f7;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Rotate menu icon when menu is open */
+  .menu-button.open svg {
+    transform: rotate(90deg);
+    fill: #242e49;
+  }
+}

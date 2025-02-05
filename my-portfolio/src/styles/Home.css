@@ -1,0 +1,111 @@
+@import "../styles/fonts.css";
+
+.welcome {
+  font-family: Playfair-Regular;
+  font-size: 200px; /* Default size */
+  color: white;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid;
+  margin-inline: auto;
+  animation: typing-large 3s steps(7) forwards, blink 1s step-end infinite;
+}
+
+/* Large screens (default width) */
+@keyframes typing-large {
+  from {
+    width: 0;
+  }
+  to {
+    width: 52%;
+  }
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 1440px) {
+  .welcome {
+    font-size: 150px;
+    animation: typing-medium 3s steps(7) forwards, blink 1s step-end infinite;
+  }
+
+  @keyframes typing-large {
+    from {
+      width: 0;
+    }
+    to {
+      width: 71%;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .welcome {
+    font-size: 150px;
+    animation: typing-medium 3s steps(7) forwards, blink 1s step-end infinite;
+  }
+
+  @keyframes typing-medium {
+    from {
+      width: 0;
+    }
+    to {
+      width: 74%;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .welcome {
+    font-size: 120px;
+    animation: typing-tablet 3s steps(7) forwards, blink 1s step-end infinite;
+  }
+
+  @keyframes typing-tablet {
+    from {
+      width: 0;
+    }
+    to {
+      width: 74%;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome {
+    font-size: 80px;
+    animation: typing-small 3s steps(7) forwards, blink 1s step-end infinite;
+  }
+
+  @keyframes typing-small {
+    from {
+      width: 0;
+    }
+    to {
+      width: 53%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome {
+    font-size: 50px;
+    animation: typing-mobile 3s steps(7) forwards, blink 1s step-end infinite;
+  }
+
+  @keyframes typing-mobile {
+    from {
+      width: 0;
+    }
+    to {
+      width: 53%;
+    }
+  }
+}
+
+/* Cursor Blinking Effect */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
