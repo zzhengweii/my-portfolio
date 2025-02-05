@@ -3,6 +3,7 @@
 /* Navbar container */
 .navbar {
   background-color: transparent;
+  position: sticky;
   color: #fff;
   padding: 1rem;
   text-align: center;

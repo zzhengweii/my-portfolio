@@ -1,7 +1,13 @@
+::-webkit-scrollbar {
+  display: none;
+}
 .website {
   background-image: linear-gradient(to bottom, #37415c, #242e49, #181a2f);
   background-attachment: fixed;
+  width: 100%;
   height: 100vh;
+  overflow-y: auto; /* Enables vertical scrolling */
+  scroll-behavior: smooth; /* Smooth scrolling effect */
   margin: 0;
 }
 
@@ -12,9 +18,7 @@
 }
 
 #home {
-  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10em;
 }

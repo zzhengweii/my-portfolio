@@ -26,15 +26,17 @@ function App() {
           <Loading /> {/* Your loading spinner */}
         </div>
       ) : (
-        <div className="hello">
+        <div>
           <Navbar />
+
           <div id="home">
             <Home />
           </div>
-          {/* <div id="about">
+          <div id="about">
             <About />
           </div>
-          <div id="experience">
+
+          {/* <div id="experience">
             <Experience />
           </div>
           <div id="projects">
