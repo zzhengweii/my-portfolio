@@ -12,7 +12,7 @@ const Experience = () => {
   const experiences = [
     {
       title: "Software Engineer/ Data Analyst Intern",
-      company: "EAIM",
+      company: "East Asia Institute of Management",
       year: "Dec 2024 - Jan 2025",
       description:
         "Designed dashboards and visualisations, analysed datasets for insights, and enhanced BI solutions for scalability and performance",
