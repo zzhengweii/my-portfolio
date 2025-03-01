@@ -154,6 +154,12 @@ h1 {
   min-width: 1.5em;
 }
 
+@media (max-width: 1200px) and (min-width: 769px) {
+  .tech-container {
+    justify-content: flex-start;
+  }
+}
+
 @media (max-width: 1200px) {
   .about-container {
     grid-template-columns: 1fr;
@@ -181,7 +187,6 @@ h1 {
 
   .tech-container {
     font-size: 120px;
-    justify-content: flex-start;
   }
 }
 

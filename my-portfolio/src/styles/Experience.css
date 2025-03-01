@@ -123,21 +123,21 @@ h1 {
   font-weight: bold;
   font-family: Raleway-SemiBold;
   color: #e7cfac;
-  margin: 15px 0;
+  margin: 5px 0;
 }
 
 .experience-item .year {
   font-size: 1.5em;
   color: #d9b28d;
   font-family: RobotoMono-Regular;
-  margin: 15px 0;
+  margin: 10px 0;
 }
 
 .experience-item .des {
   font-size: 1.4em;
   color: rgb(255, 255, 255);
   font-family: Inter;
-  margin: 15px 0;
+  margin: 5px 0;
 }
 
 .experience-item .skills {
@@ -253,15 +253,17 @@ h1 {
 
     .experience-item .company-name {
       font-size: 25px;
-      margin: 20px 0;
+      margin: 5px 0;
     }
 
     .experience-item .year {
+      font-size: 24px;
       margin: 10px 0;
     }
 
     .experience-item .des {
-      font-size: 18px;
+      font-size: 22px;
+      margin: 5px 0;
     }
     .experience-item .skill-icon {
       width: 50px;
@@ -299,7 +301,7 @@ h1 {
 
     .experience-item .job {
       font-size: 21px;
-      margin: 10px 0;
+      margin: 5px 0;
     }
 
     .experience-item .company-name {
@@ -309,12 +311,12 @@ h1 {
 
     .experience-item .year {
       font-size: 1em;
-      margin: 10px 0;
+      margin: 7px 0;
     }
 
     .experience-item .des {
       font-size: 18px;
-      margin: 10px 0;
+      margin: 5pxx 0;
     }
 
     .experience-item .skills {

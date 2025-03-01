@@ -22,7 +22,7 @@ const Experience = () => {
     {
       title: "Retail Associate",
       company: "Crocs",
-      year: "Jan 2021 - Nov 2022",
+      year: "Mar 2023 - Jun 2023",
       description:
         "Provided product knowledge, guided customers through new launches, and achieved 50% higher sales in-store",
       companyLogo: crocs,
