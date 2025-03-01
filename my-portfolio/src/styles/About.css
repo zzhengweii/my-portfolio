@@ -1,6 +1,283 @@
 @import "../styles/fonts.css";
 
-div {
-  height: 100vh;
+/* Overall container */
+.about-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr 1fr 0.5fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "About About About "
+    "Hello Hello Image "
+    "Hello Hello Image "
+    "Languages Languages Tech ";
+  padding: 0 2em;
+}
+
+/* About title */
+h1 {
+  width: 100%;
+  height: 50px; /* Fixed height */
+  display: flex;
+  align-items: flex-start;
   color: white;
+  font-family: Inter-Bold;
+  grid-area: About;
+}
+
+/* Sub-container for text and image */
+.about-content {
+  grid-area: Hello;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Text container */
+.about-text {
+  display: flex;
+  flex-direction: column;
+  padding-right: 2em;
+}
+
+.helloTittle {
+  font-family: Playfair-Regular;
+  color: white;
+  font-size: 160px;
+  align-self: flex-start;
+  margin-top: -100px;
+}
+
+.about-text p {
+  color: white;
+  font-family: RobotoMono-Regular;
+  font-size: 40px;
+}
+
+.description {
+  color: white;
+  font-family: RobotoMono-Regular;
+  line-height: 3;
+  font-size: 22px;
+  text-align: justify;
+}
+
+.about-image {
+  grid-area: Image;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: -30px;
+  margin-bottom: 60px;
+}
+
+/* Image container */
+.about-image img {
+  width: 400px; /* Adjust size */
+  height: auto;
+  border-radius: 50% 20% / 10% 40%;
+}
+
+/* Tech section */
+.tech-container {
+  grid-area: Tech;
+  font-family: Playfair-Regular;
+  color: white;
+  font-size: 160px;
+  height: 200px; /* Fixed height */
+  display: flex;
+  justify-content: center;
+}
+
+/* Tech categories */
+.tech-category {
+  display: flex;
+  flex-direction: column;
+  grid-area: Languages;
+  gap: 3em;
+}
+
+.headings-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.headings {
+  font-family: RobotoMono-Bold;
+  color: white;
+  font-size: 22px;
+  margin-right: 5px;
+}
+
+.item1 {
+  font-family: RobotoMono-Regular;
+  background-color: #e7cfac;
+  border-radius: 20px;
+  width: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 19px;
+  padding: 0 8px;
+  margin: 0 3px;
+  min-width: 1.5em;
+}
+
+.item2 {
+  font-family: RobotoMono-Regular;
+  background-color: #d9b28d;
+  border-radius: 20px;
+  width: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 19px;
+  padding: 0 8px;
+  margin: 0 3px;
+  min-width: 1.5em;
+}
+
+.item3 {
+  font-family: RobotoMono-Regular;
+  background-color: #edb27a;
+  border-radius: 20px;
+  width: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 19px;
+  padding: 0 8px;
+  margin: 0 3px;
+  min-width: 1.5em;
+}
+
+@media (max-width: 1200px) {
+  .about-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+      "About"
+      "Image"
+      "Hello"
+      "Tech"
+      "Languages";
+    padding: 0 10px;
+  }
+
+  .helloTittle {
+    font-size: 120px;
+  }
+
+  .about-text p {
+    font-size: 30px;
+  }
+
+  .description {
+    font-size: 18px;
+  }
+
+  .tech-container {
+    font-size: 120px;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-container {
+    padding: 0 1em;
+  }
+
+  .helloTittle {
+    font-size: 80px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .about-text p {
+    font-size: 22px;
+    display: block;
+    margin: 10px auto;
+  }
+
+  .description {
+    font-size: 17px;
+    padding: 0 4.5em;
+  }
+
+  .tech-container {
+    font-size: 80px;
+    max-height: 1.5em;
+    display: flex;
+    justify-items: center;
+  }
+
+  .about-image img {
+    width: 300px;
+  }
+  .headings {
+    font-size: 18px;
+  }
+
+  .item1,
+  .item2,
+  .item3 {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-container {
+    padding: 0 0.5em;
+  }
+
+  .helloTittle {
+    font-size: 50px;
+    text-align: center;
+  }
+
+  .about-text p {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .description {
+    font-size: 16px;
+    padding: 0 2em;
+  }
+
+  .tech-container {
+    font-size: 50px;
+    text-align: center;
+  }
+
+  .about-image {
+    display: flex;
+    justify-content: center;
+    margin: 1em 0;
+  }
+
+  .about-image img {
+    width: 180px;
+  }
+
+  .headings-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .headings {
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .item1,
+  .item2,
+  .item3 {
+    font-size: 14px;
+    margin: 5px;
+  }
 }

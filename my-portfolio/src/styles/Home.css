@@ -10,7 +10,7 @@
   margin-inline: auto;
   height: 195px;
   display: flex;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
   align-items: center;
   animation: typing-large 3s steps(7) forwards, blink 1s step-end infinite;
 }
@@ -97,6 +97,7 @@
   .welcome {
     font-size: 80px;
     height: 110px;
+    margin-bottom: 3em;
     animation: typing-small 3s steps(8) forwards, blink 1s step-end infinite;
   }
 
@@ -114,6 +115,7 @@
   .welcome {
     font-size: 50px;
     height: 80px;
+    margin-bottom: 5em;
     animation: typing-mobile 3s steps(7) forwards, blink 1s step-end infinite;
   }
 
