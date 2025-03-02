@@ -194,7 +194,8 @@
   }
 
   .project-thumbnail {
-    height: 200px;
+    height: auto;
+    width: 100%;
   }
 
   .project-title {
@@ -215,6 +216,9 @@
 }
 
 @media (max-width: 480px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
   .projects-heading {
     font-size: 1.5em;
   }
@@ -225,6 +229,7 @@
 
   .project-thumbnail {
     height: 150px;
+    margin-top: 10px;
   }
 
   .project-title {

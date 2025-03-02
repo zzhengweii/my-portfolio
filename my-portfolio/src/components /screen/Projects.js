@@ -76,8 +76,8 @@ const Projects = () => {
           {projects.map((project, index) => {
             const fadeInDirection =
               index % 2 === 0
-                ? { x: -100, opacity: 0 } // Left for even indexes
-                : { x: 100, opacity: 0 }; // Right for odd indexes
+                ? { x: -100, opacity: 0, rotateZ: -10 } // Left for even indexes
+                : { x: 100, opacity: 0, rotateZ: 10 }; // Right for odd indexes
 
             return (
               <motion.div
@@ -85,7 +85,7 @@ const Projects = () => {
                 className="project-card"
                 style={{ perspective: "1000px" }}
                 initial={fadeInDirection}
-                whileInView={{ x: 0, opacity: 1 }}
+                whileInView={{ x: 0, opacity: 1, rotateZ: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 whileHover={{
