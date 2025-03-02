@@ -1,0 +1,71 @@
+.footer {
+  margin-top: auto;
+  width: 100%;
+  max-width: 85rem;
+  padding: 1em 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-family: Inter-Bold;
+  font-size: 0.875rem;
+}
+
+.footer-icons {
+  margin: 1em 0 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  text-align: center;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background-color: rgba(132, 162, 198, 0.43);
+}
+
+.icon:hover {
+  transform: scale(1.1);
+  background-color: #f5f5f5;
+  box-shadow: 0 0 22px rgb(208, 220, 253);
+}
+
+.github-icon {
+  color: black;
+}
+
+.linkedin-icon {
+  color: #0277b5;
+}
+
+.mail-icon {
+  color: #d44738;
+}
+
+.footer-text {
+  color: white;
+  font-family: RaleWay-SemiBold;
+  font-size: 1em;
+  word-spacing: 0.2em;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 1em 0.5rem;
+  }
+
+  .footer-icons {
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 1em 0.25rem;
+  }
+}

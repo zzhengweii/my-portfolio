@@ -5,7 +5,7 @@ import Loading from "./components/screen/Loading";
 import About from "./components/screen/About";
 import Experience from "./components/screen/Experience";
 import Projects from "./components/screen/Projects";
-import Contact from "./components/screen/Contact";
+import Footer from "./components/screen/Footer";
 import "./App.css";
 
 function App() {
@@ -42,9 +42,10 @@ function App() {
           <div id="projects">
             <Projects />
           </div>
-          {/* <div id="contact">
-            <Contact />
-          </div> */}
+          <div id="contact">
+            {" "}
+            <Footer />
+          </div>
         </div>
       )}
     </div>
