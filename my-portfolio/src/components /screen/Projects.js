@@ -57,6 +57,8 @@ const projects = [
       "Designed and implemented a full-stack dashboard to help the marketing and sales teams track key performance indicators (KPIs). The dashboard streamlined operations by providing instant access to actionable insights",
     thumbnail: housing,
     stack: "SQL, Tableau",
+    slides:
+      "https://nusu-my.sharepoint.com/:p:/r/personal/e1122416_u_nus_edu/Documents/Team_36_AS2.pptx?d=wf621cd8cb98942b29588bcef1807caf5&csf=1&web=1&e=R6j1nX",
   },
 ];
 
@@ -218,6 +220,40 @@ const Projects = () => {
                           ></rect>
                           <line x1="3" y1="9" x2="21" y2="9"></line>
                           <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                      </a>
+                    )}
+                    {project.slides && (
+                      <a
+                        href={project.slides}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="project-link"
+                      >
+                        Slides
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="link-icon"
+                        >
+                          <rect
+                            x="3"
+                            y="4"
+                            width="18"
+                            height="16"
+                            rx="2"
+                            ry="2"
+                          ></rect>
+                          <path d="M3 10h18"></path>
+                          <path d="M10 3v1"></path>
+                          <path d="M14 3v1"></path>
                         </svg>
                       </a>
                     )}
