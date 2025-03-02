@@ -36,8 +36,7 @@ To run the project locally, follow these steps:
      npm run dev
      ```
 ## Deployment 🚀
-This portfolio is deployed on Vercel, and any changes pushed to the main branch will automatically trigger a deployment. You can view the live site at:
-[here🌟!](https://owzhengwei.vercel.app/)
+This portfolio is deployed on Vercel, and any changes pushed to the main branch will automatically trigger a deployment. You can view the live site [here](https://owzhengwei.vercel.app/)🌟!
 
 ## License 📜
 This project is open-source and available under the MIT License.
