@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import EAIM from "../../assets/images/EAIM.png";
-import reactLogo from "../../assets/images/React.png";
-import sqlLogo from "../../assets/images/SQL.png";
-import nodeLogo from "../../assets/images/NodeJS.png";
-import excelLogo from "../../assets/images/excel.png";
-import crocs from "../../assets/images/crocs.png";
-import army from "../../assets/images/army.png";
+import reactLogo from "../../assets/icons/React.png";
+import sqlLogo from "../../assets/icons/SQL.png";
+import nodeLogo from "../../assets/icons/NodeJS.png";
+import excelLogo from "../../assets/icons/excel.png";
+import EAIM from "../../assets/logos/EAIM.png";
+import crocs from "../../assets/logos/crocs.png";
+import army from "../../assets/logos/army.png";
 import "../../styles/Experience.css";
 
 const Experience = () => {
