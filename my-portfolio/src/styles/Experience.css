@@ -1,12 +1,12 @@
 .experience-container {
   position: relative;
   width: 100%;
-  padding: 2em 0;
+  padding: 2em 2em;
   color: #f5f5f5;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 2em;
+  margin-top: 5em;
 }
 
 h1 {
@@ -154,10 +154,35 @@ h1 {
   transition: transform 0.3s ease;
 }
 
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(235, 235, 235, 0.8);
+  color: #181a2f;
+  padding: 6px 5px;
+  border-radius: 5px;
+  font-family: RobotoMono-Regular;
+  font-size: 1em;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  text-align: center;
+}
+
+.tooltip-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
 @media (max-width: 1024px) {
-  .experience-container {
-    padding: 0 10px;
-  }
   .timeline {
     width: 90%;
   }
@@ -229,112 +254,116 @@ h1 {
   .experience-item .skill-icon:hover {
     transform: scale(1.15);
   }
+}
 
-  @media (max-width: 768px) {
-    .experience-container {
-      padding: 0 10px;
-    }
-    .timeline::before {
-      left: 10px;
-    }
-
-    .experience-item {
-      width: 90%;
-      left: 0;
-      transform: translateX(0);
-    }
-
-    .experience-item.left,
-    .experience-item.right {
-      margin-left: 2em;
-      left: 0;
-      text-align: left;
-    }
-
-    .experience-item .company-name {
-      font-size: 25px;
-      margin: 5px 0;
-    }
-
-    .experience-item .year {
-      font-size: 24px;
-      margin: 10px 0;
-    }
-
-    .experience-item .des {
-      font-size: 22px;
-      margin: 5px 0;
-    }
-    .experience-item .skill-icon {
-      width: 50px;
-      height: 50px;
-    }
+@media (max-width: 768px) {
+  .experience-container {
+    padding: 0 10px;
+  }
+  .timeline::before {
+    left: 10px;
   }
 
-  @media (max-width: 480px) {
-    h1 {
-      font-size: 2em;
-    }
+  .experience-item {
+    width: 90%;
+    left: 0;
+    transform: translateX(0);
+  }
 
-    .experience-item {
-      width: 80%;
-      left: 0;
-      transform: translateX(0);
-      padding: 1em;
-      margin: 20px 0;
-    }
+  .experience-item.left,
+  .experience-item.right {
+    margin-left: 2em;
+    left: 0;
+    text-align: left;
+  }
 
-    .experience-item.left,
-    .experience-item.right {
-      left: 0;
-      text-align: left;
-    }
+  .experience-item .company-name {
+    font-size: 25px;
+    margin: 5px 0;
+  }
 
-    .experience-item .header {
-      gap: 1em;
-    }
+  .experience-item .year {
+    font-size: 24px;
+    margin: 10px 0;
+  }
 
-    .experience-item .company-logo {
-      width: 50px;
-      height: 50px;
-    }
+  .experience-item .des {
+    font-size: 22px;
+    margin: 5px 0;
+  }
+  .experience-item .skill-icon {
+    width: 50px;
+    height: 50px;
+  }
+}
 
-    .experience-item .job {
-      font-size: 21px;
-      margin: 5px 0;
-    }
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5em;
+  }
 
-    .experience-item .company-name {
-      font-size: 1.2em;
-      margin: 5px 0;
-    }
+  .experience-item {
+    width: 80%;
+    left: 0;
+    transform: translateX(0);
+    padding: 1em;
+    margin: 20px 0;
+  }
 
-    .experience-item .year {
-      font-size: 1em;
-      margin: 7px 0;
-    }
+  .experience-item.left,
+  .experience-item.right {
+    left: 0;
+    text-align: left;
+  }
 
-    .experience-item .des {
-      font-size: 18px;
-      margin: 5pxx 0;
-    }
+  .experience-item .header {
+    gap: 1em;
+  }
 
-    .experience-item .skills {
-      gap: 0.3em;
-    }
+  .experience-item .company-logo {
+    width: 50px;
+    height: 50px;
+  }
 
-    .experience-item .skill-icon {
-      width: 50px;
-      height: 50px;
-    }
+  .experience-item .job {
+    font-size: 18px;
+    margin: 5px 0;
+  }
 
-    .experience-item:hover {
-      transform: translateY(-5px) scale(1.03);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    }
+  .experience-item .company-name {
+    font-size: 1.1em;
+    margin: 5px 0;
+  }
 
-    .experience-item .skill-icon:hover {
-      transform: scale(1.1);
-    }
+  .experience-item .year {
+    font-size: 1em;
+    margin: 7px 0;
+  }
+
+  .experience-item .des {
+    font-size: 0.9em;
+    margin: 5px 0;
+  }
+
+  .experience-item .skills {
+    gap: 0.3em;
+  }
+
+  .experience-item .skill-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .experience-item:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .experience-item .skill-icon:hover {
+    transform: scale(1.1);
+  }
+
+  .tooltip {
+    font-size: 0.8em;
   }
 }

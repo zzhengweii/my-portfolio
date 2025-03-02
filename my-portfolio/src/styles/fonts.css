@@ -11,6 +11,11 @@
 }
 
 @font-face {
+  font-family: "Inter-SemiBold";
+  src: url("../assets/fonts/Inter/Inter_28pt-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
   font-family: "Inter";
   src: url("../assets/fonts/Inter/Inter_28pt-Regular.ttf") format("truetype");
 }

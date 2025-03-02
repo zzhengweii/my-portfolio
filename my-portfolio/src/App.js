@@ -39,12 +39,12 @@ function App() {
           <div id="experience">
             <Experience />
           </div>
-          {/* <div id="projects">
+          <div id="projects">
             <Projects />
           </div>
-          <div id="contact">
+          {/* <div id="contact">
             <Contact />
-          </div>  */}
+          </div> */}
         </div>
       )}
     </div>

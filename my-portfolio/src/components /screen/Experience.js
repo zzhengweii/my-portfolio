@@ -92,12 +92,20 @@ const Experience = () => {
                   <p className="des">{exp.description}</p>
                   <div className="skills">
                     {exp.skillsImages.map((img, i) => (
-                      <img
-                        key={i}
-                        src={img}
-                        alt="Skill"
-                        className="skill-icon"
-                      />
+                      <div key={i} className="tooltip-container">
+                        <img src={img} alt="Skill" className="skill-icon" />
+                        <span className="tooltip">
+                          {img.includes("React")
+                            ? "REACT"
+                            : img.includes("SQL")
+                            ? "SQL"
+                            : img.includes("Node")
+                            ? "NODE.JS"
+                            : img.includes("excel")
+                            ? "EXCEL"
+                            : "Skill"}
+                        </span>
+                      </div>
                     ))}
                   </div>
                 </div>

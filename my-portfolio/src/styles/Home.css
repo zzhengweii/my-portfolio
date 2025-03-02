@@ -111,7 +111,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 466px) {
   .welcome {
     font-size: 50px;
     height: 80px;
@@ -125,6 +125,31 @@
     }
     to {
       width: 60%;
+    }
+  }
+}
+
+/* Cursor Blinking Effect */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome {
+    font-size: 48px;
+    height: 80px;
+    margin-bottom: 5em;
+    animation: typing-mobile 3s steps(7) forwards, blink 1s step-end infinite;
+  }
+
+  @keyframes typing-mobile {
+    from {
+      width: 0;
+    }
+    to {
+      width: 58%;
     }
   }
 }

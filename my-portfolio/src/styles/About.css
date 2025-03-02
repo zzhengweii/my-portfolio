@@ -84,7 +84,7 @@ h1 {
   font-family: Playfair-Regular;
   color: white;
   font-size: 160px;
-  height: 200px; /* Fixed height */
+  height: 200px;
   display: flex;
   justify-content: center;
 }
@@ -170,7 +170,7 @@ h1 {
       "Hello"
       "Tech"
       "Languages";
-    padding: 0 10px;
+    padding: 0 2em;
   }
 
   .helloTittle {
@@ -236,6 +236,9 @@ h1 {
 @media (max-width: 480px) {
   .about-container {
     padding: 0 0.5em;
+  }
+  .about-container h1 {
+    font-size: 1.5em;
   }
 
   .helloTittle {
