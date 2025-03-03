@@ -35,3 +35,9 @@
 #projects {
   height: auto;
 }
+
+@media (max-width: 1200px) {
+  .website {
+    overflow-x: hidden;
+  }
+}

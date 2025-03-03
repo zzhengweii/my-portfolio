@@ -162,7 +162,6 @@
   .project-card {
     padding: 1.5em;
     width: fit-content;
-    height: fit-content;
   }
 
   .project-thumbnail {
@@ -197,7 +196,6 @@
   }
 
   .project-thumbnail {
-    height: auto;
     width: 100%;
   }
 
@@ -218,7 +216,10 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 688px) {
+  .projects-container {
+    padding: 1em;
+  }
   .projects-grid {
     grid-template-columns: 1fr;
   }
@@ -231,7 +232,7 @@
   }
 
   .project-thumbnail {
-    height: 150px;
+    height: fit-content;
     margin-top: 10px;
   }
 
