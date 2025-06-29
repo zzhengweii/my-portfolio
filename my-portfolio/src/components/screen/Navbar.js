@@ -1,11 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../../styles/Navbar.css";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const lastScrollY = useRef(window.scrollY);
+  const hideTimeout = useRef(null);
+
+  // Hover handlers
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    clearTimeout(hideTimeout.current);
+    setShowNavbar(true); // ensure it's shown
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    // Hide after delay only if scrollY > 10
+    if (window.scrollY > 10) {
+      hideTimeout.current = setTimeout(() => {
+        setShowNavbar(false);
+      }, 1500);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY < 10) {
+          setShowNavbar(true);
+          clearTimeout(hideTimeout.current);
+        } else if (currentScrollY < lastScrollY.current) {
+          setShowNavbar(true);
+          clearTimeout(hideTimeout.current);
+          if (!isHovered) {
+            hideTimeout.current = setTimeout(() => {
+              setShowNavbar(false);
+            }, 1500);
+          }
+        } else if (currentScrollY > lastScrollY.current) {
+          clearTimeout(hideTimeout.current);
+          if (!isHovered) {
+            setShowNavbar(false);
+          }
+        }
+
+        lastScrollY.current = currentScrollY;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(hideTimeout.current);
+    };
+  }, [isHovered]); // re-run effect if hover state changes
 
   return (
-    <nav className="navbar">
+    <nav
+      className={`navbar glassy-navbar ${showNavbar ? "show" : "hide"}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Hamburger Menu Button */}
       <button
         className={`menu-button ${menuOpen ? "open" : ""}`}

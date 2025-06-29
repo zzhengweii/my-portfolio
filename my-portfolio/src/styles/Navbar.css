@@ -2,14 +2,46 @@
 
 /* Navbar container */
 .navbar {
-  background-color: transparent;
   position: sticky;
-  color: #fff;
-  padding: 1rem;
+  top: 20px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+  z-index: 1000;
+  transition: top 0.3s, opacity 0.3s, transform 0.3s;
+  background-color: transparent;
   text-align: center;
-  position: relative;
-  z-index: 1000; /* Ensures navbar stays above other elements */
-  height: 10vh;
+  height: auto;
+  /* Remove fixed height for better glass effect */
+}
+
+/* Glassmorphism effect */
+.glassy-navbar {
+  background: rgba(40, 48, 72, 0.55);
+  border-radius: 2em;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  padding: 0.7em 2.5em;
+}
+
+/* Hide/show animation */
+.navbar.hide {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-60px);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Navigation list (desktop) */
@@ -29,11 +61,11 @@
   font-size: 25px;
   text-decoration: none;
   transition: color 0.3s ease, border-bottom 0.3s ease;
-  display: inline-block; /* Ensures hover effect works */
+  display: inline-block;
 }
 
 .navbar-link:hover {
-  color: #ffcc80; /* High contrast hover color */
+  color: #ffcc80;
   border-bottom: 2px solid #ffcc80;
 }
 
@@ -43,6 +75,22 @@
 
 /* Mobile styles */
 @media (max-width: 768px) {
+  .navbar {
+    width: 100vw;
+    left: 0;
+    right: 0;
+    margin: 0;
+    border-radius: 0 0 2em 2em;
+    padding: 0;
+  }
+
+  .glassy-navbar {
+    border-radius: 0 0 2em 2em;
+    width: 100vw;
+    margin-top: 0;
+    padding: 1em 0.5em;
+  }
+
   .navbar-list {
     flex-direction: column;
     align-items: center;
@@ -57,14 +105,14 @@
     background-color: rgba(255, 255, 255, 0.907);
     display: flex;
     justify-content: center;
-    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s; /* Adjusted transition */
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
   }
 
   /* Show menu when open */
   .navbar-list.open {
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.3s ease-out; /* Smooth fade-out */
+    transition: opacity 0.3s ease-out;
   }
 
   .navbar-link {
@@ -91,7 +139,7 @@
     width: 40px;
     height: 40px;
     padding: 5px;
-    z-index: 1100; /* Ensures button stays on top */
+    z-index: 1100;
   }
 
   .menu-button svg {

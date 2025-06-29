@@ -142,6 +142,7 @@ h1 {
   display: flex;
   gap: 0.5em;
   margin: 5px 0;
+  flex-wrap: wrap;
 }
 
 .experience-item .skill-icon {

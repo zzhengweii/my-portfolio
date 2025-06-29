@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import reactLogo from "../../assets/icons/React.png";
 import sqlLogo from "../../assets/icons/SQL.png";
-import nodeLogo from "../../assets/icons/NodeJS.png";
+import nodeLogo from "../../assets/icons/nodeJS.png";
 import excelLogo from "../../assets/icons/excel.png";
+import powerBiLogo from "../../assets/icons/powerBI.png";
+import fastApiLogo from "../../assets/icons/fastAPI.png";
+import pandasLogo from "../../assets/icons/pandas.png";
+import keurig from "../../assets/logos/Keurig.png";
 import EAIM from "../../assets/logos/EAIM.png";
 import crocs from "../../assets/logos/crocs.png";
 import army from "../../assets/logos/army.png";
@@ -10,6 +14,21 @@ import "../../styles/Experience.css";
 
 const Experience = () => {
   const experiences = [
+    {
+      title: "Data Analyst Intern",
+      company: "East Asia Institute of Management",
+      year: "May 2025 - Current",
+      description:
+        "Spearheaded digitalisation of data processes, analysed Tier 1 data and developed interactive dashboards, and automated data workflows to enhance operational efficiency in Tier 1 Sourcing Team",
+      companyLogo: keurig,
+      skillsImages: [
+        excelLogo,
+        reactLogo,
+        fastApiLogo,
+        pandasLogo,
+        powerBiLogo,
+      ],
+    },
     {
       title: "Software Engineer/ Data Analyst Intern",
       company: "East Asia Institute of Management",
@@ -38,6 +57,17 @@ const Experience = () => {
       skillsImages: [excelLogo],
     },
   ];
+
+  // Skill labels for tooltips
+  const skillLabels = {
+    [reactLogo]: "REACT",
+    [sqlLogo]: "SQL",
+    [nodeLogo]: "NODE.JS",
+    [excelLogo]: "EXCEL",
+    [powerBiLogo]: "POWER BI",
+    [fastApiLogo]: "FASTAPI",
+    [pandasLogo]: "PANDAS",
+  };
 
   const [isVisible, setIsVisible] = useState(
     new Array(experiences.length).fill(false)
@@ -95,15 +125,7 @@ const Experience = () => {
                       <div key={i} className="tooltip-container">
                         <img src={img} alt="Skill" className="skill-icon" />
                         <span className="tooltip">
-                          {img.includes("React")
-                            ? "REACT"
-                            : img.includes("SQL")
-                            ? "SQL"
-                            : img.includes("Node")
-                            ? "NODE.JS"
-                            : img.includes("excel")
-                            ? "EXCEL"
-                            : "Skill"}
+                          {skillLabels[img] || "Skill"}
                         </span>
                       </div>
                     ))}
