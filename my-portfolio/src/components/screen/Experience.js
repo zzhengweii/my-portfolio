@@ -22,11 +22,11 @@ const Experience = () => {
         "Spearheaded digitalisation of data processes, analysed Tier 1 data and developed interactive dashboards, and automated data workflows to enhance operational efficiency in Tier 1 Sourcing Team",
       companyLogo: keurig,
       skillsImages: [
-        excelLogo,
         reactLogo,
         fastApiLogo,
         pandasLogo,
         powerBiLogo,
+        excelLogo,
       ],
     },
     {

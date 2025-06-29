@@ -91,18 +91,20 @@ const About = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 1, delay: 1.2 }}
         >
-          <div className="headings">FRAMEWORK:</div>
-          {["PANDAS", "NUMPY", "REACT", "REACT NATIVE"].map((item, index) => (
-            <motion.div
-              key={item}
-              className="item2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: 1.5 + index * 0.2 }}
-            >
-              {item}
-            </motion.div>
-          ))}
+          <div className="headings">FRAMEWORK & LIBRARIES:</div>
+          {["PANDAS", "NUMPY", "REACT", "REACT NATIVE", "VUE"].map(
+            (item, index) => (
+              <motion.div
+                key={item}
+                className="item2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: 1.5 + index * 0.2 }}
+              >
+                {item}
+              </motion.div>
+            )
+          )}
         </motion.div>
         <motion.div
           className="headings-container"
@@ -111,19 +113,25 @@ const About = () => {
           transition={{ duration: 1, delay: 1.4 }}
         >
           <div className="headings">DATABASE & TOOLS:</div>
-          {["MYSQL", "FIREBASE", "TABLEAU", "EXCEL", "GIT"].map(
-            (item, index) => (
-              <motion.div
-                key={item}
-                className="item3"
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.5, delay: 1.7 + index * 0.2 }}
-              >
-                {item}
-              </motion.div>
-            )
-          )}
+          {[
+            "MYSQL",
+            "FIREBASE",
+            "SNOWFLAKE",
+            "TABLEAU",
+            "POWER BI",
+            "EXCEL",
+            "GIT",
+          ].map((item, index) => (
+            <motion.div
+              key={item}
+              className="item3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.5, delay: 1.7 + index * 0.2 }}
+            >
+              {item}
+            </motion.div>
+          ))}
         </motion.div>
       </motion.div>
       <motion.div
