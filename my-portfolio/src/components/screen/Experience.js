@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import reactLogo from "../../assets/icons/React.png";
 import sqlLogo from "../../assets/icons/SQL.png";
-import nodeLogo from "../../assets/icons/nodeJS.png";
+import nodeLogo from "../../assets/icons/NodeJS.png";
 import excelLogo from "../../assets/icons/excel.png";
 import powerBiLogo from "../../assets/icons/powerBI.png";
 import fastApiLogo from "../../assets/icons/fastAPI.png";
