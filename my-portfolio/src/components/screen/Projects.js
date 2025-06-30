@@ -7,8 +7,18 @@ import zwekers from "../../assets/images/dashboard.png";
 import orbital from "../../assets/images/orbital.png";
 import eaim from "../../assets/images/EAIMLogin.png";
 import portfolio from "../../assets/images/portfolio.png";
+import pawfectHome from "../../assets/images/pawfect.png";
 
 const projects = [
+  {
+    tittle: "PawfectHome",
+    description:
+      "full-stack web application designed to connect pet adopters and listers, fostering a safe and loving community for pet rehoming",
+    thumbnail: pawfectHome,
+    stack: "Vue.js, CSS, JavaScript, Firebase, Node.js",
+    code: "https://github.com/zzhengweii/PawfectHome",
+    live: "https://pawfecthome-a7b3d.web.app/",
+  },
   {
     title: "Entity Relationship Visualisation & Chatbot WebApp",
     description:
