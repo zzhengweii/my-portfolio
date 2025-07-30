@@ -4,128 +4,64 @@
   font-family: Playfair-Regular;
   font-size: 200px; /* Default size */
   color: white;
-  overflow: hidden;
   white-space: nowrap;
-  border-right: 2px solid;
+  border-right: 2px solid white;
   margin-inline: auto;
   height: 195px;
   display: flex;
   margin-bottom: 1.5em;
   align-items: center;
-  animation: typing-large 3s steps(7) forwards, blink 1s step-end infinite;
+  justify-content: center;
+  animation: blink 1s step-end infinite 3s; /* Start blinking after 3s */
+  min-width: 0; /* Allow shrinking */
+  padding-right: 4px; /* Space for cursor */
 }
 
-/* Large screens (default width) */
-@keyframes typing-large {
-  from {
-    width: 0;
-  }
-  to {
-    width: 59%;
-  }
-}
+/* Remove old typing animations - now handled by Framer Motion */
 
 /* Responsive adjustments */
 
 @media (max-width: 1440px) {
   .welcome {
     font-size: 150px;
-    animation: typing-medium 3s steps(7) forwards, blink 1s step-end infinite;
-  }
-
-  @keyframes typing-large {
-    from {
-      width: 0;
-    }
-    to {
-      width: 71%;
-    }
+    height: 145px;
   }
 }
 
 @media (max-width: 1200px) {
   .welcome {
-    font-size: 150px;
-    animation: typing-medium 3s steps(7) forwards, blink 1s step-end infinite;
-  }
-
-  @keyframes typing-medium {
-    from {
-      width: 0;
-    }
-    to {
-      width: 74%;
-    }
+    font-size: 130px;
+    height: 125px;
   }
 }
 
 @media (max-width: 992px) {
   .welcome {
     font-size: 120px;
-    height: 140px;
-    animation: typing-tablet 3s steps(7) forwards, blink 1s step-end infinite;
-  }
-
-  @keyframes typing-tablet {
-    from {
-      width: 0;
-    }
-    to {
-      width: 74%;
-    }
+    height: 115px;
   }
 }
 
 @media (max-width: 768px) {
   .welcome {
     font-size: 80px;
-    height: 110px;
-    animation: typing-small 3s steps(7) forwards, blink 1s step-end infinite;
-  }
-
-  @keyframes typing-small {
-    from {
-      width: 0;
-    }
-    to {
-      width: 54%;
-    }
+    height: 85px;
   }
 }
 
 @media (max-width: 738px) {
   .welcome {
-    font-size: 80px;
-    height: 110px;
+    font-size: 70px;
+    height: 75px;
     margin-bottom: 3em;
-    animation: typing-small 3s steps(8) forwards, blink 1s step-end infinite;
-  }
-
-  @keyframes typing-small {
-    from {
-      width: 0;
-    }
-    to {
-      width: 81%;
-    }
   }
 }
 
 @media (max-width: 466px) {
   .welcome {
     font-size: 50px;
-    height: 80px;
+    height: 55px;
     margin-bottom: 5em;
-    animation: typing-mobile 3s steps(7) forwards, blink 1s step-end infinite;
-  }
-
-  @keyframes typing-mobile {
-    from {
-      width: 0;
-    }
-    to {
-      width: 60%;
-    }
   }
 }
 
@@ -139,24 +75,7 @@
 @media (max-width: 480px) {
   .welcome {
     font-size: 48px;
-    height: 80px;
+    height: 53px;
     margin-bottom: 5em;
-    animation: typing-mobile 3s steps(7) forwards, blink 1s step-end infinite;
-  }
-
-  @keyframes typing-mobile {
-    from {
-      width: 0;
-    }
-    to {
-      width: 58%;
-    }
-  }
-}
-
-/* Cursor Blinking Effect */
-@keyframes blink {
-  50% {
-    border-color: transparent;
   }
 }

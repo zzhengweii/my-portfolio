@@ -62,14 +62,48 @@ const Navbar = () => {
   }, [isHovered]); // re-run effect if hover state changes
 
   return (
-    <nav
-      className={`navbar glassy-navbar ${showNavbar ? "show" : "hide"}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {/* Hamburger Menu Button */}
+    <>
+      {/* Desktop Navbar */}
+      <nav
+        className={`navbar glassy-navbar ${showNavbar ? "show" : "hide"}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Navigation Links - Only visible on desktop */}
+        <ul className="navbar-list">
+          <li>
+            <a href="#home" className="navbar-link">
+              HOME
+            </a>
+          </li>
+          <li>
+            <a href="#about" className="navbar-link">
+              ABOUT
+            </a>
+          </li>
+          <li>
+            <a href="#experience" className="navbar-link">
+              EXPERIENCE
+            </a>
+          </li>
+          <li>
+            <a href="#projects" className="navbar-link">
+              PROJECTS
+            </a>
+          </li>
+          <li>
+            <a href="#contact" className="navbar-link">
+              CONTACT
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Mobile/Tablet Hamburger Menu Button */}
       <button
-        className={`menu-button ${menuOpen ? "open" : ""}`}
+        className={`menu-button ${menuOpen ? "open" : ""} ${
+          showNavbar ? "show" : "hide"
+        }`}
         onClick={() => setMenuOpen(!menuOpen)}
       >
         <svg
@@ -83,55 +117,45 @@ const Navbar = () => {
         </svg>
       </button>
 
-      {/* Navigation Links */}
-      <ul className={`navbar-list ${menuOpen ? "open" : ""}`}>
-        <li>
-          <a
-            href="#home"
-            className="navbar-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            HOME
-          </a>
-        </li>
-        <li>
-          <a
-            href="#about"
-            className="navbar-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            ABOUT
-          </a>
-        </li>
-        <li>
-          <a
-            href="#experience"
-            className="navbar-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            EXPERIENCE
-          </a>
-        </li>
-        <li>
-          <a
-            href="#projects"
-            className="navbar-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            PROJECTS
-          </a>
-        </li>
-        <li>
-          <a
-            href="#contact"
-            className="navbar-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            CONTACT
-          </a>
-        </li>
-      </ul>
-    </nav>
+      {/* Mobile/Tablet Menu Overlay */}
+      <div className={`mobile-menu-overlay ${menuOpen ? "open" : ""}`}>
+        <a
+          href="#home"
+          className="navbar-link"
+          onClick={() => setMenuOpen(false)}
+        >
+          HOME
+        </a>
+        <a
+          href="#about"
+          className="navbar-link"
+          onClick={() => setMenuOpen(false)}
+        >
+          ABOUT
+        </a>
+        <a
+          href="#experience"
+          className="navbar-link"
+          onClick={() => setMenuOpen(false)}
+        >
+          EXPERIENCE
+        </a>
+        <a
+          href="#projects"
+          className="navbar-link"
+          onClick={() => setMenuOpen(false)}
+        >
+          PROJECTS
+        </a>
+        <a
+          href="#contact"
+          className="navbar-link"
+          onClick={() => setMenuOpen(false)}
+        >
+          CONTACT
+        </a>
+      </div>
+    </>
   );
 };
 

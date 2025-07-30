@@ -86,7 +86,8 @@ h1 {
   font-size: 160px;
   height: 200px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 /* Tech categories */
@@ -94,69 +95,122 @@ h1 {
   display: flex;
   flex-direction: column;
   grid-area: Languages;
-  gap: 3em;
+  gap: 2.5em;
+  padding: 0 1em;
 }
 
 .headings-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 1em;
 }
 
 .headings {
   font-family: RobotoMono-Bold;
   color: white;
   font-size: 22px;
-  margin-right: 5px;
+  margin-bottom: 0.8em;
+  text-align: left;
+}
+
+.tech-items-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8em;
+  align-items: flex-start;
 }
 
 .item1 {
   font-family: RobotoMono-Regular;
   background-color: #e7cfac;
   border-radius: 20px;
-  width: auto;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 19px;
-  padding: 0 8px;
-  margin: 0 3px;
-  min-width: 1.5em;
+  font-size: 18px;
+  padding: 0.3em 1.2em;
+  min-height: 2.5em;
+  min-width: 80px;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.item1:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 207, 172, 0.3);
 }
 
 .item2 {
   font-family: RobotoMono-Regular;
   background-color: #d9b28d;
   border-radius: 20px;
-  width: auto;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 19px;
-  padding: 0 8px;
-  margin: 0 3px;
-  min-width: 1.5em;
+  font-size: 18px;
+  padding: 0.3em 1.2em;
+  min-height: 2.5em;
+  min-width: 80px;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.item2:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(217, 178, 141, 0.3);
 }
 
 .item3 {
   font-family: RobotoMono-Regular;
   background-color: #edb27a;
   border-radius: 20px;
-  width: auto;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 19px;
-  padding: 0 8px;
-  margin: 0 3px;
-  min-width: 1.5em;
+  font-size: 18px;
+  padding: 0.3em 1.2em;
+  min-height: 2.5em;
+  min-width: 80px;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.item3:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(237, 178, 122, 0.3);
 }
 
 @media (max-width: 1200px) and (min-width: 769px) {
   .tech-container {
     justify-content: flex-start;
+    align-items: center;
+  }
+
+  .tech-category {
+    gap: 2em;
+    padding: 0 0.5em;
+  }
+
+  .headings {
+    font-size: 20px;
+  }
+
+  .item1,
+  .item2,
+  .item3 {
+    font-size: 16px;
+    padding: 0.5em 1em;
+    min-width: 70px;
+  }
+
+  .tech-items-wrapper {
+    gap: 0.6em;
   }
 }
 
@@ -187,6 +241,25 @@ h1 {
 
   .tech-container {
     font-size: 120px;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .tech-category {
+    gap: 1.8em;
+    padding: 0;
+  }
+
+  .headings {
+    font-size: 19px;
+  }
+
+  .item1,
+  .item2,
+  .item3 {
+    font-size: 15px;
+    padding: 0.5em 0.9em;
+    min-width: 65px;
   }
 }
 
@@ -209,27 +282,42 @@ h1 {
 
   .description {
     font-size: 17px;
-    padding: 0 4.5em;
+    padding: 0 2em;
   }
 
   .tech-container {
     font-size: 80px;
     max-height: 1.5em;
     display: flex;
-    justify-items: center;
+    justify-content: flex-start;
+    align-items: center;
   }
 
   .about-image img {
     width: 300px;
   }
+
+  .tech-category {
+    gap: 1.5em;
+    padding: 0;
+  }
+
   .headings {
     font-size: 18px;
+    text-align: center;
   }
 
   .item1,
   .item2,
   .item3 {
-    font-size: 15px;
+    font-size: 14px;
+    padding: 0.4em 0.8em;
+    min-width: 60px;
+  }
+
+  .tech-items-wrapper {
+    justify-content: center;
+    gap: 0.5em;
   }
 }
 
@@ -253,12 +341,15 @@ h1 {
 
   .description {
     font-size: 16px;
-    padding: 0 2em;
+    padding: 0 1em;
   }
 
   .tech-container {
     font-size: 50px;
-    text-align: center;
+    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
   }
 
   .about-image {
@@ -271,21 +362,26 @@ h1 {
     width: 180px;
   }
 
-  .headings-container {
-    flex-wrap: wrap;
-    justify-content: center;
+  .tech-category {
+    gap: 1.2em;
   }
 
   .headings {
     font-size: 16px;
-    width: 100%;
     text-align: center;
+    margin-bottom: 0.6em;
   }
 
   .item1,
   .item2,
   .item3 {
-    font-size: 14px;
-    margin: 5px;
+    font-size: 12px;
+    padding: 0.4em 0.7em;
+    min-width: 55px;
+  }
+
+  .tech-items-wrapper {
+    justify-content: center;
+    gap: 0.4em;
   }
 }
