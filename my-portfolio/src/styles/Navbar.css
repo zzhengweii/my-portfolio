@@ -195,6 +195,13 @@
     display: none;
   }
 
+  /* Ensure hamburger button is visible on tablets */
+  .menu-button {
+    display: block !important;
+    right: 30px;
+    bottom: 30px;
+  }
+
   /* Use the global mobile menu overlay for tablets */
   .mobile-menu-overlay .navbar-link {
     font-size: 32px;
