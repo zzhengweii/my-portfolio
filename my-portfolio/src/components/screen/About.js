@@ -40,9 +40,11 @@ const About = () => {
           <div className="helloTittle">Hello</div>
           <p>👋 I’m Ow Zheng Wei,</p>
           <div className="description">
-            Y2 Business Analytics Student at the National University of
-            Singapore. Passionate about Data Science and Machine Learning. If we
-            share similar interests, let’s connect 🚀!
+            Currently a Penultimate Business Analytics Student specialising in
+            Machine Learning & Financial Analytics at the National University of
+            Singapore. Passionate about making real-world impacts with Data
+            Analytics, Data Science and Machine Learning. If we share similar
+            interests, let’s connect 🚀!
           </div>
         </div>
       </motion.div>
@@ -57,7 +59,7 @@ const About = () => {
         <img src={picture} alt="Profile" />
       </motion.div>
 
-      {/* Tech Section */}
+      {/* Skill Section */}
       <motion.div
         className="tech-category"
         initial={{ opacity: 0, y: 20 }}
@@ -70,18 +72,40 @@ const About = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 1, delay: 1 }}
         >
-          <div className="headings">LANGUAGES:</div>
+          <div className="headings">PROGRAMMING LANGUAGES:</div>
           <div className="tech-items-wrapper">
-            {["PYTHON", "SQL", "R", "JAVA SCRIPT", "JAVA", "HTML", "CSS"].map(
+            {["PYTHON", "R", "JAVASCRIPT", "SQL"].map((item, index) => (
+              <motion.div
+                key={item}
+                className="item1"
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
+              >
+                {item}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="headings-container"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 1, delay: 1.2 }}
+        >
+          <div className="headings">DATA SCIENCE & MACHINE LEARNING:</div>
+          <div className="tech-items-wrapper">
+            {["SCIKIT-LEARN", "PANDAS", "NUMPY", "FEATURE ENGINEERING"].map(
               (item, index) => (
                 <motion.div
                   key={item}
-                  className="item1"
+                  className="item2"
                   initial={{ opacity: 0, y: 20 }}
                   animate={
                     inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
-                  transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
+                  transition={{ duration: 0.5, delay: 1.4 + index * 0.1 }}
                 >
                   {item}
                 </motion.div>
@@ -89,57 +113,76 @@ const About = () => {
             )}
           </div>
         </motion.div>
-        <motion.div
-          className="headings-container"
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 1, delay: 1.2 }}
-        >
-          <div className="headings">FRAMEWORK & LIBRARIES:</div>
-          <div className="tech-items-wrapper">
-            {[
-              "PANDAS",
-              "NUMPY",
-              "SQLALCHEMY",
-              "REACT",
-              "REACT NATIVE",
-              "VUE",
-            ].map((item, index) => (
-              <motion.div
-                key={item}
-                className="item2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.5, delay: 1.4 + index * 0.1 }}
-              >
-                {item}
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+
         <motion.div
           className="headings-container"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 1, delay: 1.4 }}
         >
-          <div className="headings">DATABASE & TOOLS:</div>
+          <div className="headings">DATA VISUALISATION & BI:</div>
           <div className="tech-items-wrapper">
-            {[
-              "MYSQL",
-              "FIREBASE",
-              "SNOWFLAKE",
-              "TABLEAU",
-              "POWER BI",
-              "EXCEL",
-              "GIT",
-            ].map((item, index) => (
+            {["POWER BI", "TABLEAU", "EXCEL", "VBA"].map((item, index) => (
               <motion.div
                 key={item}
                 className="item3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: 1.6 + index * 0.1 }}
+              >
+                {item}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="headings-container"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 1, delay: 1.6 }}
+        >
+          <div className="headings">DATABASES & API:</div>
+          <div className="tech-items-wrapper">
+            {["MYSQL", "FIREBASE", "SNOWFLAKE", "FLASK", "FASTAPI"].map(
+              (item, index) => (
+                <motion.div
+                  key={item}
+                  className="item4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={
+                    inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                  }
+                  transition={{ duration: 0.5, delay: 1.8 + index * 0.1 }}
+                >
+                  {item}
+                </motion.div>
+              )
+            )}
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="headings-container"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 1, delay: 1.8 }}
+        >
+          <div className="headings">TOOLS & PLATFORMS:</div>
+          <div className="tech-items-wrapper">
+            {[
+              "GIT",
+              "POWER AUTOMATE",
+              "POWER QUERY",
+              "COPILOT STUDIO",
+              "ETL PIPELINES",
+            ].map((item, index) => (
+              <motion.div
+                key={item}
+                className="item5"
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: 2.0 + index * 0.1 }}
               >
                 {item}
               </motion.div>
@@ -156,7 +199,7 @@ const About = () => {
           alignItems: "center",
         }}
       >
-        <div className="tech-container">Tech</div>
+        <div className="tech-container">Skills</div>
       </motion.div>
     </motion.div>
   );

@@ -4,7 +4,7 @@
 .about-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto 1fr 1fr 0.5fr;
+  grid-template-rows: auto auto auto auto;
   gap: 0px 0px;
   grid-template-areas:
     "About About About "
@@ -12,17 +12,19 @@
     "Hello Hello Image "
     "Languages Languages Tech ";
   padding: 0 2em;
+  align-items: center; /* Vertically align Hello and Image in their row */
 }
 
 /* About title */
 h1 {
   width: 100%;
-  height: 50px; /* Fixed height */
+  height: auto;
   display: flex;
   align-items: flex-start;
   color: white;
   font-family: Inter-Bold;
   grid-area: About;
+  margin-bottom: 0;
 }
 
 /* Sub-container for text and image */
@@ -38,14 +40,17 @@ h1 {
   display: flex;
   flex-direction: column;
   padding-right: 2em;
+  margin-top: 0;
 }
 
 .helloTittle {
   font-family: Playfair-Regular;
   color: white;
   font-size: 160px;
-  align-self: flex-start;
-  margin-top: -100px;
+  line-height: 1;
+  align-self: flex-start; /* Align to left/top */
+  margin: 0;
+  text-align: left;
 }
 
 .about-text p {
@@ -66,9 +71,8 @@ h1 {
   grid-area: Image;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  margin-top: -30px;
-  margin-bottom: 60px;
+  align-items: center; /* Vertically center the image */
+  margin: 0; /* Remove offsets for consistent alignment */
 }
 
 /* Image container */
@@ -84,10 +88,11 @@ h1 {
   font-family: Playfair-Regular;
   color: white;
   font-size: 160px;
-  height: 200px;
+  height: auto;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin-top: 4em;
 }
 
 /* Tech categories */
@@ -97,6 +102,7 @@ h1 {
   grid-area: Languages;
   gap: 2.5em;
   padding: 0 1em;
+  margin-top: 4em;
 }
 
 .headings-container {
@@ -122,7 +128,7 @@ h1 {
 
 .item1 {
   font-family: RobotoMono-Regular;
-  background-color: #e7cfac;
+  background-color: #f5e6d3;
   border-radius: 20px;
   text-align: center;
   display: flex;
@@ -139,12 +145,12 @@ h1 {
 
 .item1:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(231, 207, 172, 0.3);
+  box-shadow: 0 4px 12px rgba(245, 230, 211, 0.3);
 }
 
 .item2 {
   font-family: RobotoMono-Regular;
-  background-color: #d9b28d;
+  background-color: #e7d4b8;
   border-radius: 20px;
   text-align: center;
   display: flex;
@@ -161,12 +167,12 @@ h1 {
 
 .item2:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(217, 178, 141, 0.3);
+  box-shadow: 0 4px 12px rgba(231, 212, 184, 0.3);
 }
 
 .item3 {
   font-family: RobotoMono-Regular;
-  background-color: #edb27a;
+  background-color: #d9c2a0;
   border-radius: 20px;
   text-align: center;
   display: flex;
@@ -183,7 +189,51 @@ h1 {
 
 .item3:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(237, 178, 122, 0.3);
+  box-shadow: 0 4px 12px rgba(217, 194, 160, 0.3);
+}
+
+.item4 {
+  font-family: RobotoMono-Regular;
+  background-color: #cbaf88;
+  border-radius: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  padding: 0.3em 1.2em;
+  min-height: 2.5em;
+  min-width: 80px;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.item4:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(203, 175, 136, 0.3);
+}
+
+.item5 {
+  font-family: RobotoMono-Regular;
+  background-color: #bd9d70;
+  border-radius: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  padding: 0.3em 1.2em;
+  min-height: 2.5em;
+  min-width: 80px;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.item5:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(189, 157, 112, 0.3);
 }
 
 @media (max-width: 1200px) and (min-width: 769px) {
@@ -203,7 +253,9 @@ h1 {
 
   .item1,
   .item2,
-  .item3 {
+  .item3,
+  .item4,
+  .item5 {
     font-size: 16px;
     padding: 0.5em 1em;
     min-width: 70px;
@@ -256,7 +308,9 @@ h1 {
 
   .item1,
   .item2,
-  .item3 {
+  .item3,
+  .item4,
+  .item5 {
     font-size: 15px;
     padding: 0.5em 0.9em;
     min-width: 65px;
@@ -309,7 +363,9 @@ h1 {
 
   .item1,
   .item2,
-  .item3 {
+  .item3,
+  .item4,
+  .item5 {
     font-size: 14px;
     padding: 0.4em 0.8em;
     min-width: 60px;
@@ -374,7 +430,9 @@ h1 {
 
   .item1,
   .item2,
-  .item3 {
+  .item3,
+  .item4,
+  .item5 {
     font-size: 12px;
     padding: 0.4em 0.7em;
     min-width: 55px;

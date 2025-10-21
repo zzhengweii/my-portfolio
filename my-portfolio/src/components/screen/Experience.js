@@ -6,6 +6,7 @@ import excelLogo from "../../assets/icons/excel.png";
 import powerBiLogo from "../../assets/icons/powerBI.png";
 import fastApiLogo from "../../assets/icons/fastAPI.png";
 import pandasLogo from "../../assets/icons/pandas.png";
+import copilotLogo from "../../assets/icons/Copilot.png";
 import keurig from "../../assets/logos/Keurig.png";
 import EAIM from "../../assets/logos/EAIM.png";
 import crocs from "../../assets/logos/crocs.png";
@@ -16,10 +17,10 @@ const Experience = () => {
   const experiences = [
     {
       title: "Data Analyst Intern",
-      company: "East Asia Institute of Management",
+      company: "Keurig Dr Pepper Singapore",
       year: "May 2025 - Current",
       description:
-        "Spearheaded digitalisation of data processes, analysed Tier 1 data and developed interactive dashboards, and automated data workflows to enhance operational efficiency in Tier 1 Sourcing Team",
+        "Spearheaded, AI-driven analytics, automated BI dashboards and data pipelines to replace manual reporting, cutting approximately 10 hrs/week, and enabling more than $100K savings for Tier‑1 sourcing",
       companyLogo: keurig,
       skillsImages: [
         reactLogo,
@@ -27,6 +28,7 @@ const Experience = () => {
         pandasLogo,
         powerBiLogo,
         excelLogo,
+        copilotLogo,
       ],
     },
     {
@@ -34,7 +36,7 @@ const Experience = () => {
       company: "East Asia Institute of Management",
       year: "Dec 2024 - Jan 2025",
       description:
-        "Designed dashboards and visualisations, analysed datasets for insights, and enhanced BI solutions for scalability and performance",
+        "Built React dashboards and SQL‑driven insights that boosted operational efficiency 25% and improved decisions via rapid, user‑tested iterations",
       companyLogo: EAIM,
       skillsImages: [sqlLogo, reactLogo, nodeLogo],
     },
@@ -43,7 +45,7 @@ const Experience = () => {
       company: "Crocs",
       year: "Mar 2023 - Jun 2023",
       description:
-        "Provided product knowledge, guided customers through new launches, and achieved 50% higher sales in-store",
+        "Exceeded sales targets by 30% through consultative service and product expertise while supporting inventory and visual merchandising",
       companyLogo: crocs,
       skillsImages: [],
     },
@@ -52,7 +54,7 @@ const Experience = () => {
       company: "Singapore Army",
       year: "Jan 2021 - Nov 2022",
       description:
-        "Co-managed a team and participated in planning for infiltration missions to gather critical intelligence",
+        "Led a 4‑person intelligence team to execute reconnaissance and mission planning under pressure, delivering actionable intel and raising unit readiness",
       companyLogo: army,
       skillsImages: [excelLogo],
     },
@@ -67,6 +69,7 @@ const Experience = () => {
     [powerBiLogo]: "POWER BI",
     [fastApiLogo]: "FASTAPI",
     [pandasLogo]: "PANDAS",
+    [copilotLogo]: "COPILOT",
   };
 
   const [isVisible, setIsVisible] = useState(
