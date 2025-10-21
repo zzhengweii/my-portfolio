@@ -199,7 +199,7 @@ const About = () => {
           alignItems: "center",
         }}
       >
-        <div className="tech-container">Skills</div>
+        <div className="tech-container">SKILLS</div>
       </motion.div>
     </motion.div>
   );
