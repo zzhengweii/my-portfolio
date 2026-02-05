@@ -8,10 +8,27 @@ import orbital from "../../assets/images/orbital.png";
 import eaim from "../../assets/images/EAIMLogin.png";
 import portfolio from "../../assets/images/portfolio.png";
 import pawfectHome from "../../assets/images/pawfect.png";
+import keurig from "../../assets/images/KeurigDashboard.png";
+import healthcare from "../../assets/images/healthcare.png";
 
 const projects = [
   {
-    tittle: "PawfectHome",
+    title: "Healthcare Insurance Fraud Detection Using Machine Learning",
+    description:
+      "A comprehensive machine learning solution for detecting fraudulent healthcare providers using ensemble methods and advanced tree-based algorithms",
+    thumbnail: healthcare,
+    stack: "Python, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn",
+    code: "https://github.com/zzhengweii/insurance-fraud-machine-learning-model/tree/main",
+  },
+  {
+    title: "Keurig Business Intelligence Portal",
+    description:
+      "Developed a comprehensive BI portal for Keurig Dr Pepper Singapore, integrating data from multiple excel sheets to provide real-time insights and streamline decision-making processes",
+    thumbnail: keurig,
+    stack: "React.js, FastAPI, Pandas, PowerBI, Excel",
+  },
+  {
+    title: "PawfectHome",
     description:
       "full-stack web application designed to connect pet adopters and listers, fostering a safe and loving community for pet rehoming",
     thumbnail: pawfectHome,
