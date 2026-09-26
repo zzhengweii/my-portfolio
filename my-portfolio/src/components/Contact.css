@@ -146,6 +146,8 @@
 .stamp svg {
   display: block;
   width: 100%;
+  /* the plane flies off the stamp */
+  overflow: visible;
 }
 
 .stamp__paper {
@@ -276,5 +278,167 @@
   .postcard__side {
     border-left: 0;
     border-top: 1px solid var(--line-strong);
+  }
+}
+
+/*
+ * Sending the postcard. When it comes into view the stamp lands and the
+ * postmark franks it; then the stamp's little plane takes off every few
+ * seconds, leaving a dashed trail. Individual transform properties (scale,
+ * translate) are used so they add to the scroll parallax set from JS.
+ */
+.postcard__marks:not(.is-seen) .stamp,
+.postcard__marks:not(.is-seen) .postmark {
+  opacity: 0;
+}
+
+.postcard__marks.is-seen .stamp {
+  animation: stamp-land 520ms var(--ease-out) both;
+}
+
+.postcard__marks.is-seen .postmark {
+  animation: postmark-frank 560ms cubic-bezier(0.3, 1.4, 0.5, 1) 380ms both;
+}
+
+@keyframes stamp-land {
+  from {
+    opacity: 0;
+    translate: 0 -18px;
+    scale: 1.1;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes postmark-frank {
+  from {
+    opacity: 0;
+    scale: 1.45;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 0.55;
+    scale: 1;
+  }
+}
+
+.postcard__marks:not(.is-playing) * {
+  animation-play-state: paused !important;
+}
+
+.stamp__plane {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.postcard__marks.is-seen .stamp__plane {
+  animation: plane-send 6.5s var(--ease-in-out) 1.4s infinite;
+}
+
+@keyframes plane-send {
+  0%,
+  10% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  14% {
+    opacity: 1;
+    transform: translate(-2px, 1px) rotate(6deg);
+  }
+  32% {
+    opacity: 1;
+    transform: translate(54px, -39px) rotate(-12deg);
+  }
+  38% {
+    opacity: 0;
+    transform: translate(70px, -51px) rotate(-16deg);
+  }
+  39%,
+  80% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg) scale(0.6);
+  }
+  92%,
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
+.stamp__trail {
+  fill: none;
+  stroke: var(--accent-line);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dasharray: 3 4;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+}
+
+/* The mask draws the dashed trail on behind the plane. */
+.stamp__trail-reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 8;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+}
+
+.postcard__marks.is-seen .stamp__trail {
+  animation: trail-fade 6.5s linear 1.4s infinite;
+}
+
+.postcard__marks.is-seen .stamp__trail-reveal {
+  animation: trail-draw 6.5s var(--ease-in-out) 1.4s infinite;
+}
+
+@keyframes trail-fade {
+  0%,
+  12% {
+    opacity: 0;
+  }
+  16% {
+    opacity: 0.9;
+  }
+  40% {
+    opacity: 0.7;
+  }
+  58%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes trail-draw {
+  0%,
+  13% {
+    stroke-dashoffset: 1;
+  }
+  38%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .postcard__marks .stamp,
+  .postcard__marks .postmark,
+  .postcard__marks .stamp__plane,
+  .postcard__marks .stamp__trail,
+  .postcard__marks .stamp__trail-reveal {
+    animation: none !important;
+  }
+
+  .postcard__marks .stamp {
+    opacity: 1;
+  }
+
+  .postcard__marks .postmark {
+    opacity: 0.55;
   }
 }

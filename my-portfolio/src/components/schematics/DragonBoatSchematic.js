@@ -14,11 +14,7 @@ import "./DragonBoatSchematic.css";
 // Once drawn, the crew paddles in time to the drum while the lane markers
 // stream past, and scrolling the page pulls the boat up its lane. Like the
 // vessel, each crew position can be picked to highlight it.
-export const BOAT_PARTS = [
-  "Drummer",
-  "Twenty paddlers on ten benches",
-  "Coxswain",
-];
+export const BOAT_PARTS = ["Drummer", "Twenty paddlers", "Coxswain"];
 
 // What each crew position does, shown in the readout beside the drawing.
 export const BOAT_NOTES = [

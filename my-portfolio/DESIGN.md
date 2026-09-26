@@ -139,6 +139,9 @@ the drawing, so the card does not stretch on desktop and tablet (a fixed
 - Project index: a preview card follows the cursor on a spring, tilts with
   horizontal velocity, and cross-fades between projects. Sibling rows dim.
 - Magnetic pull on the primary CTA.
+- Contact postcard: when it comes into view the stamp lands and the
+  postmark franks it, then the stamp's paper plane takes off every few
+  seconds with a dashed trail, as if the message is on its way.
 - Touch screens and windows up to 1024px: project rows show a thumbnail
   instead of the cursor preview. Tapping it opens the picture in a dialog;
   the thumbnail grows into it (shared layout) and shrinks back on close.

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
+  useInView,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -107,6 +108,29 @@ function Stamp({ style }) {
         />
         <line className="sx" x1="48" y1="42" x2="48" y2="34" />
         <circle className="sx" cx="48" cy="31" r="3" />
+        {/* The little plane takes off now and then with a dashed trail:
+            the message is on its way. */}
+        <defs>
+          <mask
+            id="stamp-trail-reveal"
+            maskUnits="userSpaceOnUse"
+            x="60"
+            y="-60"
+            width="120"
+            height="110"
+          >
+            <path
+              className="stamp__trail-reveal"
+              d="M80 31 C96 24 112 10 150 -20"
+              pathLength="1"
+            />
+          </mask>
+        </defs>
+        <path
+          className="stamp__trail"
+          d="M80 31 C96 24 112 10 150 -20"
+          mask="url(#stamp-trail-reveal)"
+        />
         <path className="stamp__plane" d="M74 30 L86 25 L80 37 L78 32 Z" />
         <text className="stamp__value" x="10" y="20">
           Z/W
@@ -159,6 +183,10 @@ function Postmark({ style }) {
 export default function Contact() {
   const marksRef = useRef(null);
   const reduce = useReducedMotion();
+  // Once the card is in view the stamp lands and gets franked; after that
+  // the stamp's plane keeps taking off, but only while it is on screen.
+  const seen = useInView(marksRef, { once: true, amount: 0.6 });
+  const playing = useInView(marksRef, { amount: 0.2 });
   const small = useMediaQuery("(max-width: 700px)");
   // The stamp and postmark sit at different depths on the card.
   const { scrollYProgress } = useScroll({
@@ -191,7 +219,7 @@ export default function Contact() {
             </h2>
             <p className="postcard__text">
               Always happy to talk about data science, machine learning or
-              dragon boat.
+              anything.
             </p>
             <div className="postcard__email">
               <a
@@ -205,7 +233,10 @@ export default function Contact() {
           </div>
 
           <div className="postcard__side">
-            <div ref={marksRef} className="postcard__marks">
+            <div
+              ref={marksRef}
+              className={`postcard__marks${seen || reduce ? " is-seen" : ""}${playing ? " is-playing" : ""}`}
+            >
               <Postmark style={{ y: markY, rotate: markRotate }} />
               <Stamp style={{ y: stampY, rotate: stampRotate }} />
             </div>
@@ -234,7 +265,7 @@ export default function Contact() {
         </Reveal>
 
         <footer className="footer">
-          <p>&copy; 2026 Zheng Wei Ow</p>
+          <p>&copy; 2026 Ow Zheng Wei</p>
           <a href="#home" className="footer__top">
             <RollText>Back to top</RollText>
             <PiArrowUp aria-hidden="true" />

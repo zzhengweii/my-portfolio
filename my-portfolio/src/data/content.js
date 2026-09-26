@@ -303,7 +303,7 @@ export const races = [
     distance: 200,
   },
   {
-    year: null,
+    year: "2026",
     event: "Dragon Boat Sprint @ The Kallang",
     race: "DB12 100m Kallang Sprint Open",
     medal: "gold",

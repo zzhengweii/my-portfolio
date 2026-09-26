@@ -16,10 +16,14 @@ const RANK = { gold: 0, silver: 1, bronze: 2 };
 
 const describe = (r) => `${r.year ? `${r.year} ` : ""}${r.event}`;
 
-// Results list: newest first, undated results last.
+// Results list: newest first. `races` is in CV order (oldest first), so
+// within a year the later entry comes first too.
 const RESULTS = races
   .map((race, index) => ({ ...race, index }))
-  .sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0));
+  .sort(
+    (a, b) =>
+      (Number(b.year) || 0) - (Number(a.year) || 0) || b.index - a.index,
+  );
 
 export default function MedalPlot() {
   // active: a dot being hovered or focused (shows its tooltip).
