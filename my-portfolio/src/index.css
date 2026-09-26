@@ -309,8 +309,9 @@ button,
     top: auto;
     left: auto;
     right: max(12px, env(safe-area-inset-right, 0px));
-    bottom: max(12px, env(safe-area-inset-bottom, 0px));
-    transform: translateY(calc(100% + 24px));
+    /* high enough to clear mobile browser toolbars */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+    transform: translateY(calc(100% + 112px));
   }
 }
 
