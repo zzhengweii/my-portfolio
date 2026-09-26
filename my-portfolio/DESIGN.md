@@ -8,7 +8,9 @@ tokens, layout and motion so future edits stay consistent.
 Data-science student portfolio for recruiters and hiring managers in finance
 and tech. Dark, playful-technical language: a night-time tiny planet (after
 messenger.abeto.co) drawn with blueprint line-work (after Orano's innovation
-experience), with tactile hover physics (after op.al).
+experience), with tactile hover physics (after op.al). Colours come from a
+canyon palette (after a photo of Antelope Canyon): near-black, sage, sand
+and one coral accent.
 
 Layout leans asymmetric and motion is rich, but density stays moderate: the
 references are experiential sites, while the audience scans fast, so every
@@ -17,35 +19,36 @@ section reads without motion.
 ## Tokens
 
 Defined as CSS variables in `src/index.css`. Night is the default look; a
-day theme (`:root[data-theme="day"]`) redefines the same tokens as blueprint
-paper with navy ink. The values below are night.
+day theme (`:root[data-theme="day"]`) redefines the same tokens as sand
+paper with near-black ink. Source palette: near-black `#0C0D0D`, sage
+`#B7B9A8`, sand `#D1B5A3`, coral `#E36858`.
 
-| Token         | Value                     | Use                                     |
-| ------------- | ------------------------- | --------------------------------------- |
-| `--bg`        | `#0A0F16`                 | Page background (blue-black night)      |
-| `--bg-raised` | `#0E151F`                 | Alternate section tint                  |
-| `--surface`   | `#121B27`                 | Panels, preview frames                  |
-| `--ink`       | `#EAF0F6`                 | Primary text                            |
-| `--ink-2`     | `#A7B4C4`                 | Body text                               |
-| `--ink-3`     | `#7A889B`                 | Labels, meta (5.3:1 on bg)              |
-| `--line`      | `rgb(143 176 214 / 0.14)` | Hairlines                               |
-| `--schematic` | `rgb(143 176 214 / 0.72)` | Drawing strokes                         |
-| `--accent`    | `#F4B55B`                 | The one accent: lamps, CTAs, highlights |
+| Token                             | Night                     | Day                    | Use                                            |
+| --------------------------------- | ------------------------- | ---------------------- | ---------------------------------------------- |
+| `--bg`                            | `#0C0D0D`                 | `#F4EEE8`              | Page background                                |
+| `--bg-raised`                     | `#131514`                 | `#ECE4DC`              | Cards, alternate band                          |
+| `--surface`                       | `#1A1C1A`                 | `#FAF7F3`              | Panels, preview frames                         |
+| `--ink`                           | `#F3EEE9`                 | `#0C0D0D`              | Primary text                                   |
+| `--ink-2`                         | `#D1B5A3` (sand)          | `#48423C`              | Body text                                      |
+| `--ink-3`                         | `#958B82`                 | `#6D645C`              | Labels, meta (4.6:1 or better everywhere)      |
+| `--line`                          | `rgb(183 185 168 / 0.14)` | `rgb(60 50 40 / 0.14)` | Hairlines                                      |
+| `--schematic`                     | `rgb(183 185 168 / 0.72)` | `rgb(70 74 58 / 0.78)` | Drawing strokes (sage)                         |
+| `--accent`                        | `#E36858`                 | `#E36858`              | The one accent: CTAs, sensors, highlights      |
+| `--accent-line` / `--accent-text` | `#E36858` / `#EC7B6C`     | `#BE4A36` / `#A33A29`  | Accent strokes and accent text on each surface |
 
-One accent only. Medals in the dragon boat plot are an ordinal ramp in the
-same warm family (gold `#F4B55B`, silver `#ADA392`, bronze `#8C6231`), with
-lightness order and contrast checked against `--bg`, plus a legend and a table.
+One accent only. Text on the coral button is `#0C0D0D` (5.9:1). Every text
+token clears 4.5:1 on `--bg`, `--bg-raised` and `--surface` in both themes.
 
-### Day theme
+Medals in the dragon boat plot are an ordinal ramp in one warm family, gold
+lightest to bronze darkest, validated per theme (monotone lightness, visible
+steps, light end clears the card) and backed by a legend and a table:
+night gold `#E8B86A`, silver `#B3A393`, bronze `#A0603F`; day gold
+`#C7963E`, silver `#8E8070`, bronze `#74402A`.
 
-| Token         | Day value                                                                                |
-| ------------- | ---------------------------------------------------------------------------------------- |
-| `--bg`        | `#EEF2F7`                                                                                |
-| `--ink`       | `#0D1726`                                                                                |
-| `--ink-3`     | `#5B6879`                                                                                |
-| `--schematic` | `rgb(28 70 132 / 0.72)`                                                                  |
-| `--accent`    | `#F2A93B` (fills), `--accent-line` `#B06D00` (strokes), `--accent-text` `#8F5300` (text) |
-| Medals        | gold `#D39A2E`, silver `#9A9282`, bronze `#855733`                                       |
+The planet follows the same palette: sage lowlands, sand shores and paths,
+coral canyon rock on the peaks, sage-teal water, coral roofs and a coral
+haze. By night it is lit by a sage-white moon with peach-lit windows; by
+day a coral sun rises.
 
 The sun and moon button in the nav switches themes. The new theme grows out
 of the button as a circle (View Transitions API, instant with reduced motion
@@ -76,8 +79,8 @@ small floating surfaces (cursor preview, tooltips, thumbnails) use
 
 - three.js, lazy-loaded so the hero text paints first. SVG outline placeholder
   while the chunk loads and as the fallback when WebGL is unavailable.
-- Low-poly flat-shaded terrain, toon lighting from a moon, light-blue edge
-  lines for coastlines and buildings. Warm amber only where light is emitted
+- Low-poly flat-shaded terrain, toon lighting from a moon, sage edge lines
+  for coastlines and buildings. Warm peach only where light is emitted
   (windows, lanterns).
 - A small character in a white shirt walks on top while the world turns
   under it. Drag in any direction to revolve it freely (quaternion
@@ -98,7 +101,11 @@ Drawings: vessel side elevation with sensor callouts (featured project),
 dragon boat top view plus a medals-by-distance dot plot, FinTech credit-risk
 pipeline with flowing data dashes.
 
-### Vessel (interactive)
+### Vessel (animated and interactive)
+
+The ship is always under way: she pitches on the swell, the waterline
+streams astern, smoke puffs leave the funnel and the propeller churns a
+wash.
 
 The five numbered signals are shared between the drawing and the list of
 toggle buttons beside it. Hover or focus previews a signal, click or tap

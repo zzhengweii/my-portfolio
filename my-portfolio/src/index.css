@@ -2,44 +2,46 @@
 :root {
   color-scheme: dark;
 
-  --bg: #0a0f16;
-  --bg-raised: #0e151f;
-  --surface: #121b27;
-  --surface-2: #172231;
-  --ink: #eaf0f6;
-  --ink-2: #a7b4c4;
-  --ink-3: #7a889b;
-  --line: rgb(143 176 214 / 0.14);
-  --line-strong: rgb(143 176 214 / 0.26);
-  --schematic: rgb(143 176 214 / 0.72);
-  --schematic-dim: rgb(143 176 214 / 0.38);
-  --accent: #f4b55b;
-  --accent-hover: #f7c276;
-  --accent-ink: #1a1206;
-  --accent-soft: rgb(244 181 91 / 0.14);
+  /* Canyon palette: near-black #0C0D0D, sage #B7B9A8, sand #D1B5A3 and
+     one accent, coral #E36858. Night is the canyon after dark. */
+  --bg: #0c0d0d;
+  --bg-raised: #131514;
+  --surface: #1a1c1a;
+  --surface-2: #212321;
+  --ink: #f3eee9;
+  --ink-2: #d1b5a3;
+  --ink-3: #958b82;
+  --line: rgb(183 185 168 / 0.14);
+  --line-strong: rgb(183 185 168 / 0.26);
+  --schematic: rgb(183 185 168 / 0.72);
+  --schematic-dim: rgb(183 185 168 / 0.38);
+  --accent: #e36858;
+  --accent-hover: #ea7e70;
+  --accent-ink: #0c0d0d;
+  --accent-soft: rgb(227 104 88 / 0.15);
   /* accent for strokes, small marks and focus rings; and for accent text */
-  --accent-line: #f4b55b;
-  --accent-text: #f4b55b;
+  --accent-line: #e36858;
+  --accent-text: #ec7b6c;
 
-  --glass: rgb(14 21 31 / 0.72);
-  --glass-strong: rgb(14 21 31 / 0.82);
-  --label-bg: rgb(10 15 22 / 0.86);
-  --hover-wash: rgb(143 176 214 / 0.08);
-  --indicator: rgb(143 176 214 / 0.12);
-  --glow: rgb(79 123 184 / 0.11);
-  --grid-dot: rgb(143 176 214 / 0.13);
-  --shadow-deep: rgb(3 8 16 / 0.8);
-  --shadow-soft: rgb(3 6 10 / 0.35);
-  --stamp-paper: #17222f;
+  --glass: rgb(19 21 20 / 0.72);
+  --glass-strong: rgb(19 21 20 / 0.84);
+  --label-bg: rgb(12 13 13 / 0.86);
+  --hover-wash: rgb(183 185 168 / 0.08);
+  --indicator: rgb(183 185 168 / 0.12);
+  --glow: rgb(227 104 88 / 0.08);
+  --grid-dot: rgb(183 185 168 / 0.12);
+  --shadow-deep: rgb(0 0 0 / 0.78);
+  --shadow-soft: rgb(0 0 0 / 0.36);
+  --stamp-paper: #1d1f1d;
   --grain-opacity: 0.045;
   /* page-wide parallax sky (Sky.css): far specks, near drafting marks */
-  --sky-far: rgb(214 226 240 / 0.42);
-  --sky-near: rgb(143 176 214 / 0.3);
+  --sky-far: rgb(209 181 163 / 0.4);
+  --sky-near: rgb(183 185 168 / 0.28);
 
   /* medal ramp (ordinal), validated against this theme's surface */
-  --gold: #f4b55b;
-  --silver: #ada392;
-  --bronze: #8c6231;
+  --gold: #e8b86a;
+  --silver: #b3a393;
+  --bronze: #a0603f;
 
   --font-sans:
     "Bricolage Grotesque Variable", ui-sans-serif, system-ui, -apple-system,
@@ -69,44 +71,44 @@
   --z-skip: 70;
 }
 
-/* Day: blueprint paper. Same structure, light surfaces, navy ink. */
+/* Day: the canyon in sunlight. Sand paper, near-black ink, sage drawings. */
 :root[data-theme="day"] {
   color-scheme: light;
 
-  --bg: #eef2f7;
-  --bg-raised: #e6ecf3;
-  --surface: #f8fafc;
+  --bg: #f4eee8;
+  --bg-raised: #ece4dc;
+  --surface: #faf7f3;
   --surface-2: #ffffff;
-  --ink: #0d1726;
-  --ink-2: #3d4b5e;
-  --ink-3: #5b6879;
-  --line: rgb(32 64 110 / 0.14);
-  --line-strong: rgb(32 64 110 / 0.24);
-  --schematic: rgb(28 70 132 / 0.72);
-  --schematic-dim: rgb(28 70 132 / 0.36);
-  --accent: #f2a93b;
-  --accent-hover: #f5b75a;
-  --accent-soft: rgb(242 169 59 / 0.18);
-  --accent-line: #b06d00;
-  --accent-text: #8f5300;
+  --ink: #0c0d0d;
+  --ink-2: #48423c;
+  --ink-3: #6d645c;
+  --line: rgb(60 50 40 / 0.14);
+  --line-strong: rgb(60 50 40 / 0.24);
+  --schematic: rgb(70 74 58 / 0.78);
+  --schematic-dim: rgb(70 74 58 / 0.42);
+  --accent: #e36858;
+  --accent-hover: #e97c6e;
+  --accent-soft: rgb(227 104 88 / 0.16);
+  --accent-line: #be4a36;
+  --accent-text: #a33a29;
 
-  --glass: rgb(248 250 252 / 0.78);
-  --glass-strong: rgb(248 250 252 / 0.9);
+  --glass: rgb(250 247 243 / 0.78);
+  --glass-strong: rgb(250 247 243 / 0.9);
   --label-bg: rgb(255 255 255 / 0.9);
-  --hover-wash: rgb(32 64 110 / 0.06);
-  --indicator: rgb(32 64 110 / 0.08);
-  --glow: rgb(79 123 184 / 0.14);
-  --grid-dot: rgb(32 64 110 / 0.14);
-  --shadow-deep: rgb(30 50 80 / 0.22);
-  --shadow-soft: rgb(30 50 80 / 0.12);
+  --hover-wash: rgb(60 50 40 / 0.06);
+  --indicator: rgb(60 50 40 / 0.08);
+  --glow: rgb(227 104 88 / 0.1);
+  --grid-dot: rgb(70 74 58 / 0.14);
+  --shadow-deep: rgb(70 50 35 / 0.22);
+  --shadow-soft: rgb(70 50 35 / 0.12);
   --stamp-paper: #ffffff;
   --grain-opacity: 0.03;
-  --sky-far: rgb(28 70 132 / 0.16);
-  --sky-near: rgb(28 70 132 / 0.24);
+  --sky-far: rgb(90 70 55 / 0.16);
+  --sky-near: rgb(70 74 58 / 0.22);
 
-  --gold: #d39a2e;
-  --silver: #9a9282;
-  --bronze: #855733;
+  --gold: #c7963e;
+  --silver: #8e8070;
+  --bronze: #74402a;
 }
 
 /* The theme switch grows out of the toggle (see theme.js). */

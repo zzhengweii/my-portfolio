@@ -123,9 +123,9 @@ export default function VesselSchematic({
       role="img"
       aria-label="Side elevation of a container vessel, with sensors on the engine, propeller shaft, fuel line and mast, and weather arrows at the bow."
     >
-      {/* Waterline, waves and current */}
+      {/* Waterline (it streams astern while she is under way), waves and current */}
       <line
-        className="sx sx--hidden"
+        className="sx sx--hidden vx-waterline"
         x1="40"
         y1="292"
         x2="1160"
@@ -229,6 +229,30 @@ export default function VesselSchematic({
                 y={c.y}
                 width="38"
                 height="20"
+              />
+            ))}
+          </g>
+
+          {/* Under way: funnel smoke and propeller wash drift astern */}
+          <g data-fade="" style={{ "--d": 800 }}>
+            {[0, 1, 2].map((i) => (
+              <circle
+                key={`puff-${i}`}
+                className="vessel-puff"
+                cx="297"
+                cy="64"
+                r="6"
+                style={{ "--i": i }}
+              />
+            ))}
+            {[0, 1, 2, 3].map((i) => (
+              <circle
+                key={`bubble-${i}`}
+                className="vessel-bubble"
+                cx="154"
+                cy={322 + (i % 2) * 14}
+                r="2.6"
+                style={{ "--i": i }}
               />
             ))}
           </g>

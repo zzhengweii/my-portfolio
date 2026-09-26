@@ -184,26 +184,28 @@ function terrain(p) {
   };
 }
 
+// Canyon palette: sage lowlands, sand shores and paths, coral canyon rock
+// on the peaks and sage-teal water.
 const PALETTE = {
-  deep: new Color("#0d1e31"),
-  shallow: new Color("#143049"),
-  shore: new Color("#2a3a4b"),
-  path: new Color("#3a4757"),
-  grassLow: new Color("#15302e"),
-  grassMid: new Color("#1a3935"),
-  grassHigh: new Color("#20433c"),
-  rock: new Color("#2d3d38"),
+  deep: new Color("#0f1c1b"),
+  shallow: new Color("#162825"),
+  shore: new Color("#3b3129"),
+  path: new Color("#4a3f36"),
+  grassLow: new Color("#212922"),
+  grassMid: new Color("#283029"),
+  grassHigh: new Color("#30382f"),
+  rock: new Color("#4d2d26"),
 };
 
 const PALETTE_DAY = {
-  deep: new Color("#2d78b0"),
-  shallow: new Color("#4f9fd0"),
-  shore: new Color("#e8d9ad"),
-  path: new Color("#eadfc4"),
-  grassLow: new Color("#6c9f60"),
-  grassMid: new Color("#7aab69"),
-  grassHigh: new Color("#8cb879"),
-  rock: new Color("#a3ab9c"),
+  deep: new Color("#2f6d68"),
+  shallow: new Color("#4f928a"),
+  shore: new Color("#e2c9b4"),
+  path: new Color("#eadbcc"),
+  grassLow: new Color("#879078"),
+  grassMid: new Color("#949c86"),
+  grassHigh: new Color("#a2a893"),
+  rock: new Color("#c56a54"),
 };
 
 function faceColor(t, palette, out) {
@@ -456,14 +458,14 @@ function buildSkyline(batch, rand) {
     const tower = mbs.clone().multiply(local(i * 0.036, 0, 0));
     batch.add(
       new BoxGeometry(0.026, 0.17, 0.016),
-      "#2c3d57",
+      "#33352f",
       tower.clone().multiply(local(0, 0.085, 0)),
     );
     addWindows(batch, tower, 0.026, 0.17, 0.016, rand, 0.5);
   }
   batch.add(
     new BoxGeometry(0.15, 0.008, 0.024),
-    "#34486a",
+    "#3d3f38",
     mbs.clone().multiply(local(0.012, 0.174, 0)),
   );
 
@@ -478,7 +480,7 @@ function buildSkyline(batch, rand) {
     [79, -24, 0.022, 0.1, 0.022, false],
     [110, -27, 0.026, 0.11, 0.024, false],
   ];
-  const tones = ["#22324a", "#26384f", "#1f2d43", "#2a3c56"];
+  const tones = ["#2a2c28", "#2f312c", "#262825", "#34362f"];
   cbd.forEach(([phi, psi, w, h, d, crown], i) => {
     const m = surfaceMatrix(phi * DEG, psi * DEG, rand() * 0.3);
     addTower(batch, m, {
@@ -505,7 +507,7 @@ function buildSkyline(batch, rand) {
       w: 0.052,
       h: 0.062,
       d: 0.014,
-      color: "#2b3a4f",
+      color: "#35322d",
       rand,
     });
   });
@@ -516,13 +518,13 @@ function buildEsplanade(batch) {
   const dome = new SphereGeometry(0.03, 9, 5, 0, Math.PI * 2, 0, Math.PI / 2);
   batch.add(
     dome,
-    "#3a4b61",
+    "#413b33",
     base.clone().multiply(local(-0.022, 0, 0, 1, 0.8, 1.25)),
     { edgeAngle: 1 },
   );
   batch.add(
     dome,
-    "#3a4b61",
+    "#413b33",
     base.clone().multiply(local(0.03, 0, 0.01, 0.9, 0.7, 1.1)),
     { edgeAngle: 1 },
   );
@@ -532,8 +534,8 @@ function buildTrees(batch, rand) {
   const cone = new ConeGeometry(0.016, 0.05, 5);
   const crown = new IcosahedronGeometry(0.018, 0);
   const trunk = new CylinderGeometry(0.0022, 0.0028, 0.016, 4);
-  const greens = ["#1a3b36", "#1e4640", "#173430", "#21493f"];
-  const greensDay = ["#4d8a4c", "#5b9957", "#437d45", "#66a35e"];
+  const greens = ["#1f2a23", "#25302a", "#1b251f", "#2b362d"];
+  const greensDay = ["#6c7a58", "#7a8864", "#63704f", "#85936e"];
   const up = new Vector3();
   let placed = 0;
   let guard = 0;
@@ -583,7 +585,7 @@ function buildTrees(batch, rand) {
     const leaf = { edges: false, day: greensDay[pick] };
     batch.add(trunk, "#2a2522", m.clone().multiply(local(0, 0.008, 0)), {
       edges: false,
-      day: "#8a6a4f",
+      day: "#7d5f4a",
     });
     if (rand() < 0.6)
       batch.add(
@@ -632,8 +634,8 @@ function buildHouses(batch, rand) {
   const roof = new ConeGeometry(0.021, 0.014, 4);
   const win = new PlaneGeometry(0.007, 0.007);
   const porch = new BoxGeometry(0.0055, 0.0055, 0.0055);
-  const walls = ["#3a4a5e", "#344357", "#3f4f63"];
-  const wallsDay = ["#efe6d6", "#e7dcc8", "#f4ede1"];
+  const walls = ["#3b3530", "#35302b", "#403934"];
+  const wallsDay = ["#f1e6dc", "#eadccf", "#f6ede5"];
   HOUSES.forEach(([phi, psi], i) => {
     const m = surfaceMatrix(phi * DEG, psi * DEG, (rand() - 0.5) * 0.6);
     batch.add(
@@ -647,7 +649,7 @@ function buildHouses(batch, rand) {
       new Quaternion().setFromAxisAngle(UP, Math.PI / 4),
       new Vector3(1.25, 1, 1.1),
     );
-    batch.add(roof, "#233146", m.clone().multiply(r), { day: "#d27d56" });
+    batch.add(roof, "#3d2622", m.clone().multiply(r), { day: "#d9705c" });
     batch.glow(
       win,
       m
@@ -666,7 +668,7 @@ function buildLamps(batch) {
     const phi = (i / 18) * Math.PI * 2 + 5 * DEG;
     const psi = (i % 2 === 0 ? 1 : -1) * (PATH_HALF + 1.5 * DEG);
     const m = surfaceMatrix(phi, psi, 0);
-    batch.add(pole, "#3b4a5c", m.clone().multiply(local(0, 0.05, 0)), {
+    batch.add(pole, "#3a3833", m.clone().multiply(local(0, 0.05, 0)), {
       edges: false,
     });
     batch.glow(head, m.clone().multiply(local(0, 0.102, 0)));
@@ -744,17 +746,17 @@ function buildVessel(gradientMap, lineMat, glowMat) {
     if (y < 0) hp.setX(i, hp.getX(i) * 0.9);
   }
   hullShape.computeVertexNormals();
-  const hull = toonMesh(hullShape, "#5a2f2f", gradientMap);
+  const hull = toonMesh(hullShape, "#7a3a2e", gradientMap);
   hull.position.y = 0.006;
   hull.add(edgeLines(hullShape, lineMat));
   g.add(hull);
 
   const containerColors = [
-    "#4b6282",
-    "#6e5b40",
-    "#3f5c58",
-    "#5b4f6e",
-    "#4b6282",
+    "#6d7262",
+    "#8c6e5c",
+    "#a4503f",
+    "#5e6152",
+    "#8c6e5c",
   ];
   containerColors.forEach((c, i) => {
     const box = new BoxGeometry(0.018, 0.012, 0.026);
@@ -765,13 +767,13 @@ function buildVessel(gradientMap, lineMat, glowMat) {
   });
 
   const bridgeGeo = new BoxGeometry(0.018, 0.026, 0.03);
-  const bridge = toonMesh(bridgeGeo, "#c8d2de", gradientMap);
+  const bridge = toonMesh(bridgeGeo, "#e3d9cf", gradientMap);
   bridge.position.set(-0.062, 0.03, 0);
   bridge.add(edgeLines(bridgeGeo, lineMat));
   g.add(bridge);
 
   const funnelGeo = new CylinderGeometry(0.004, 0.005, 0.016, 6);
-  const funnel = toonMesh(funnelGeo, "#2b3647", gradientMap);
+  const funnel = toonMesh(funnelGeo, "#2c2a27", gradientMap);
   funnel.position.set(-0.07, 0.05, 0);
   g.add(funnel);
 
@@ -795,20 +797,20 @@ function buildDragonBoat(gradientMap, lineMat) {
     hp.setZ(i, hp.getZ(i) * taper);
   }
   hullGeo.computeVertexNormals();
-  const hull = toonMesh(hullGeo, "#d08a36", gradientMap);
+  const hull = toonMesh(hullGeo, "#d8705c", gradientMap);
   hull.position.y = 0.004;
   hull.add(edgeLines(hullGeo, lineMat));
   g.add(hull);
 
   // Dragon head and tail.
   const headGeo = new BoxGeometry(0.012, 0.022, 0.008);
-  const head = toonMesh(headGeo, "#d08a36", gradientMap);
+  const head = toonMesh(headGeo, "#d8705c", gradientMap);
   head.position.set(0.066, 0.016, 0);
   head.rotation.z = -0.35;
   head.add(edgeLines(headGeo, lineMat));
   g.add(head);
   const tailGeo = new ConeGeometry(0.005, 0.02, 4);
-  const tail = toonMesh(tailGeo, "#d08a36", gradientMap);
+  const tail = toonMesh(tailGeo, "#d8705c", gradientMap);
   tail.position.set(-0.066, 0.014, 0);
   tail.rotation.z = 0.5;
   g.add(tail);
@@ -818,19 +820,19 @@ function buildDragonBoat(gradientMap, lineMat) {
   const crew = new Group();
   for (let i = 0; i < 10; i++) {
     for (const side of [-1, 1]) {
-      const p = toonMesh(paddlerGeo, "#e6ecf2", gradientMap);
+      const p = toonMesh(paddlerGeo, "#efe7df", gradientMap);
       p.position.set(-0.042 + i * 0.0092, 0.012, side * 0.0045);
       crew.add(p);
     }
   }
   const drummer = toonMesh(
     new SphereGeometry(0.0045, 6, 5),
-    "#f4b55b",
+    "#e8d2c0",
     gradientMap,
   );
   drummer.position.set(0.054, 0.013, 0);
   crew.add(drummer);
-  const steerer = toonMesh(paddlerGeo, "#e6ecf2", gradientMap);
+  const steerer = toonMesh(paddlerGeo, "#efe7df", gradientMap);
   steerer.position.set(-0.056, 0.014, 0);
   crew.add(steerer);
   g.add(crew);
@@ -841,7 +843,7 @@ function buildFlyer(gradientMap, lineMat, glowMat) {
   const g = new Group();
   const legGeo = new BoxGeometry(0.004, 0.07, 0.004);
   for (const s of [-1, 1]) {
-    const leg = toonMesh(legGeo, "#3b4a5c", gradientMap);
+    const leg = toonMesh(legGeo, "#3a3833", gradientMap);
     leg.position.set(s * 0.012, 0.033, 0);
     leg.rotation.z = -s * 0.28;
     g.add(leg);
@@ -849,7 +851,7 @@ function buildFlyer(gradientMap, lineMat, glowMat) {
   const wheel = new Group();
   wheel.position.y = 0.068;
   const rimGeo = new TorusGeometry(0.052, 0.0024, 4, 30);
-  const rim = new Mesh(rimGeo, new MeshBasicMaterial({ color: "#6f86a3" }));
+  const rim = new Mesh(rimGeo, new MeshBasicMaterial({ color: "#8d917f" }));
   wheel.add(rim);
   const spokes = [];
   for (let i = 0; i < 14; i++) {
@@ -878,7 +880,7 @@ function buildPaperPlane(gradientMap, lineMat) {
   const geo = new BufferGeometry();
   geo.setAttribute("position", new Float32BufferAttribute(v, 3));
   geo.computeVertexNormals();
-  const mesh = toonMesh(geo, "#eef2f6", gradientMap, { side: DoubleSide });
+  const mesh = toonMesh(geo, "#f3eee9", gradientMap, { side: DoubleSide });
   mesh.add(new LineSegments(new EdgesGeometry(geo, 1), lineMat));
   return mesh;
 }
@@ -887,10 +889,10 @@ function buildCharacter(gradientMap) {
   const root = new Group();
   const body = new Group();
   root.add(body);
-  const shirt = new MeshToonMaterial({ color: "#eef2f6", gradientMap });
-  const pants = new MeshToonMaterial({ color: "#1a212c", gradientMap });
+  const shirt = new MeshToonMaterial({ color: "#f3eee9", gradientMap });
+  const pants = new MeshToonMaterial({ color: "#1c1d1c", gradientMap });
   const skin = new MeshToonMaterial({ color: "#e0b995", gradientMap });
-  const hair = new MeshToonMaterial({ color: "#14161b", gradientMap });
+  const hair = new MeshToonMaterial({ color: "#141313", gradientMap });
 
   const legGeo = new CapsuleGeometry(0.0058, 0.03, 3, 6);
   legGeo.translate(0, -0.021, 0);
@@ -928,7 +930,7 @@ function buildCharacter(gradientMap) {
   fringe.position.set(0.011, 0.119, 0);
   fringe.rotation.z = -0.45;
   const eyeGeo = new SphereGeometry(0.0021, 6, 5);
-  const eyeMat = new MeshBasicMaterial({ color: "#0b0e13" });
+  const eyeMat = new MeshBasicMaterial({ color: "#0c0d0d" });
   const eyeL = new Mesh(eyeGeo, eyeMat);
   const eyeR = new Mesh(eyeGeo, eyeMat);
   eyeL.position.set(0.0158, 0.106, 0.0058);
@@ -939,7 +941,7 @@ function buildCharacter(gradientMap) {
   const shadow = new Mesh(
     new CircleGeometry(0.03, 20),
     new MeshBasicMaterial({
-      color: "#05080c",
+      color: "#050505",
       transparent: true,
       opacity: 0.45,
       depthWrite: false,
@@ -966,7 +968,7 @@ function buildStars(rand) {
     return new Points(
       g,
       new PointsMaterial({
-        color: "#c9d6e6",
+        color: "#e8ddd2",
         size,
         sizeAttenuation: false,
         transparent: true,
@@ -1040,30 +1042,30 @@ export function createWorld(
     themed.push({ obj, key, night, day: dayValue });
 
   const lineMat = new LineBasicMaterial({ transparent: true });
-  themeColor(lineMat, "color", "#8fb0d6", "#2c4f7c");
+  themeColor(lineMat, "color", "#b7b9a8", "#4f5343");
   themeNumber(lineMat, "opacity", 0.42, 0.34);
   const terrainLineMat = new LineBasicMaterial({ transparent: true });
-  themeColor(terrainLineMat, "color", "#8fb0d6", "#2c4f7c");
+  themeColor(terrainLineMat, "color", "#b7b9a8", "#4f5343");
   themeNumber(terrainLineMat, "opacity", 0.24, 0.16);
   const glowMat = new MeshBasicMaterial({ toneMapped: false });
-  themeColor(glowMat, "color", "#ffc46b", "#cfdbe7");
+  themeColor(glowMat, "color", "#ffa384", "#ece3d8");
   const rand = mulberry32(20260926);
 
   // Lights: moonlight (or sunlight) from the upper left, a rim from behind.
   const hemi = new HemisphereLight();
-  themeColor(hemi, "color", "#2f4a66", "#d6e9ff");
-  themeColor(hemi, "groundColor", "#0b1220", "#7d9a6a");
+  themeColor(hemi, "color", "#3b4038", "#eeebe4");
+  themeColor(hemi, "groundColor", "#0c0d0d", "#a3a58f");
   themeNumber(hemi, "intensity", 0.9, 1.5);
   const ambient = new AmbientLight();
-  themeColor(ambient, "color", "#1b2940", "#ffffff");
+  themeColor(ambient, "color", "#232520", "#ffffff");
   themeNumber(ambient, "intensity", 0.5, 0.55);
   const keyLight = new DirectionalLight();
   keyLight.position.set(-3, 3.2, 2.4);
-  themeColor(keyLight, "color", "#d6e4ff", "#fff0d2");
+  themeColor(keyLight, "color", "#e4e6da", "#fff0e2");
   themeNumber(keyLight, "intensity", 4.4, 3.6);
   const rim = new DirectionalLight();
   rim.position.set(3, 1.5, -3.5);
-  themeColor(rim, "color", "#7b9bd0", "#ffffff");
+  themeColor(rim, "color", "#c9a58f", "#ffffff");
   themeNumber(rim, "intensity", 2.2, 1.2);
   scene.add(hemi, ambient, keyLight, rim);
 
@@ -1086,7 +1088,7 @@ export function createWorld(
     new LineSegments(new EdgesGeometry(terrainGeo, 16), terrainLineMat),
   );
   const contourMat = new LineBasicMaterial({ transparent: true });
-  themeColor(contourMat, "color", "#8fb0d6", "#2c4f7c");
+  themeColor(contourMat, "color", "#b7b9a8", "#4f5343");
   themeNumber(contourMat, "opacity", 0.16, 0.12);
   planet.add(new LineSegments(buildContours(terrainGeo), contourMat));
 
@@ -1143,24 +1145,24 @@ export function createWorld(
     side: BackSide,
     blending: NormalBlending,
   });
-  themeColor(atmosphereMat.uniforms.glowColor, "value", "#4f7bb8", "#7fb4ea");
+  themeColor(atmosphereMat.uniforms.glowColor, "value", "#b86452", "#e7b09c");
   themeNumber(atmosphereMat.uniforms.strength, "value", 0.32, 0.5);
   scene.add(new Mesh(new SphereGeometry(1.09, 48, 32), atmosphereMat));
 
-  const cityGlow = new PointLight("#ffb454", 1.6, 0.9, 2);
+  const cityGlow = new PointLight("#ff9f7f", 1.6, 0.9, 2);
   cityGlow.position.copy(sph(98 * DEG, -20 * DEG)).multiplyScalar(1.12);
   themeNumber(cityGlow, "intensity", 1.6, 0);
   planet.add(cityGlow);
 
   const waveMat = new LineBasicMaterial({ transparent: true });
-  themeColor(waveMat, "color", "#8fb0d6", "#ffffff");
+  themeColor(waveMat, "color", "#b7b9a8", "#ffffff");
   themeNumber(waveMat, "opacity", 0.35, 0.75);
   planet.add(new LineSegments(buildWaves(rand), waveMat));
   planet.add(
     new Points(
       buildLanes(),
       new PointsMaterial({
-        color: "#f4b55b",
+        color: "#e36858",
         size: 1.6,
         sizeAttenuation: false,
         transparent: true,
@@ -1184,7 +1186,7 @@ export function createWorld(
     gapSize: 0.014,
     transparent: true,
   });
-  themeColor(routeMat, "color", "#8fb0d6", "#8a7a5a");
+  themeColor(routeMat, "color", "#d1b5a3", "#8a6a55");
   themeNumber(routeMat, "opacity", 0.5, 0.55);
   const route = new Line(
     new BufferGeometry().setFromPoints(routePts),
@@ -1217,7 +1219,7 @@ export function createWorld(
     gapSize: 0.03,
     transparent: true,
   });
-  themeColor(orbitMat, "color", "#8fb0d6", "#2c4f7c");
+  themeColor(orbitMat, "color", "#b7b9a8", "#4f5343");
   themeNumber(orbitMat, "opacity", 0.3, 0.3);
   const orbitLine = new Line(
     new BufferGeometry().setFromPoints(orbitPts),
@@ -1234,7 +1236,7 @@ export function createWorld(
   character.root.position.set(0, 1 + LAND_H, 0);
   character.root.scale.setScalar(1.35);
   const shadowMat = character.root.children.find((c) => c.isMesh).material;
-  themeColor(shadowMat, "color", "#05080c", "#1d2b3a");
+  themeColor(shadowMat, "color", "#050505", "#3a2d25");
   themeNumber(shadowMat, "opacity", 0.45, 0.22);
   scene.add(character.root);
 
@@ -1253,9 +1255,9 @@ export function createWorld(
       depthWrite: false,
     });
   const moon = new Group();
-  const moonHaloMat = fading("#8fb0d6", 0.035);
-  const moonDiscMat = fading("#dfe7f0");
-  const moonShadeMat = fading("#0a0f16");
+  const moonHaloMat = fading("#b7b9a8", 0.035);
+  const moonDiscMat = fading("#efe7de");
+  const moonShadeMat = fading("#0c0d0d");
   const moonHalo = new Mesh(new CircleGeometry(0.6, 40), moonHaloMat);
   moonHalo.position.z = -0.02;
   const moonDisc = new Mesh(new CircleGeometry(0.26, 40), moonDiscMat);
@@ -1268,10 +1270,10 @@ export function createWorld(
   scene.add(moon);
 
   const sun = new Group();
-  const sunHaloMat = fading("#ffe3a1", 0);
-  const sunDiscMat = fading("#ffd166", 0);
+  const sunHaloMat = fading("#f3c9b8", 0);
+  const sunDiscMat = fading("#ee8a6f", 0);
   const sunRayMat = new LineBasicMaterial({
-    color: "#f2a93b",
+    color: "#e36858",
     transparent: true,
     opacity: 0,
   });

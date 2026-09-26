@@ -10,7 +10,7 @@ import { flushSync } from "react-dom";
 // Night is the default look; day is an opt-in light theme. The choice is
 // applied as <html data-theme="..."> (set before first paint by a small
 // script in index.html) and remembered in localStorage.
-const THEME_COLORS = { night: "#0A0F16", day: "#EEF2F7" };
+const THEME_COLORS = { night: "#0C0D0D", day: "#F4EEE8" };
 
 const ThemeContext = createContext({ theme: "night", toggle: () => {} });
 

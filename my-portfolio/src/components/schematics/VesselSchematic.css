@@ -25,22 +25,94 @@
   opacity: 0.42;
 }
 
-/* The ship rides the swell (she also sails with the scroll, from JS). */
+/*
+ * Under way, even before a signal is picked: she pitches on the swell, the
+ * waterline streams astern, smoke leaves the funnel and the propeller
+ * churns a wash. (She also sails along the sheet with the scroll, from JS.)
+ */
 .vessel-bob {
   transform-origin: 620px 300px;
 }
 
 .schematic--vessel.is-drawn .vessel-bob {
-  animation: vessel-bob 6s ease-in-out infinite alternate;
+  animation: vessel-bob 5s ease-in-out infinite alternate;
 }
 
 @keyframes vessel-bob {
   from {
-    transform: translateY(-1px) rotate(-0.35deg);
+    transform: translateY(-2px) rotate(-0.5deg);
   }
   to {
-    transform: translateY(1.5px) rotate(0.35deg);
+    transform: translateY(2px) rotate(0.5deg);
   }
+}
+
+.schematic--vessel.is-drawn .vx-waterline {
+  animation: vx-water 0.9s linear infinite;
+}
+
+@keyframes vx-water {
+  to {
+    stroke-dashoffset: 8;
+  }
+}
+
+.vessel-puff,
+.vessel-bubble {
+  fill: none;
+  stroke: var(--schematic-dim);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.schematic--vessel.is-drawn .vessel-puff {
+  animation: vessel-puff 3.6s ease-out infinite;
+  animation-delay: calc(var(--i) * 1.2s);
+}
+
+@keyframes vessel-puff {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-48px, -44px) scale(2.2);
+  }
+}
+
+.schematic--vessel.is-drawn .vessel-bubble {
+  animation: vessel-bubble 1.8s ease-out infinite;
+  animation-delay: calc(var(--i) * 0.45s);
+}
+
+.schematic--vessel[data-active="0"] .vessel-bubble {
+  animation-duration: 0.9s;
+  animation-delay: calc(var(--i) * 0.22s);
+}
+
+@keyframes vessel-bubble {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-46px, -6px) scale(1.4);
+  }
+}
+
+.schematic--vessel.is-drawn .vx-wave {
+  animation: vx-wave 2.6s ease-in-out infinite alternate;
 }
 
 /* Signals: sensor node, leader and numbered balloon */

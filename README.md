@@ -1,12 +1,14 @@
 # My Portfolio 🌐
 
-Welcome to my personal portfolio! This website showcases my experience, projects and NUS activities. It is built with React.js, with a night-time tiny planet rendered in [three.js](https://threejs.org/) and animations powered by [Framer Motion](https://motion.dev/). The website is deployed on [Vercel](https://vercel.com/) for fast and reliable hosting. 🚀
+Welcome to my personal portfolio! This website showcases my experience, projects and NUS activities. It is built with React.js, with a tiny planet rendered in [three.js](https://threejs.org/) and animations powered by [Framer Motion](https://motion.dev/). The website is deployed on [Vercel](https://vercel.com/) for fast and reliable hosting. 🚀
 
 ## Features ✨
 
-- **Tiny planet hero**: A low-poly world you can drag to spin, with labels that track landmarks and link to each section. 🪐
-- **Schematic drawings**: Blueprint-style SVG drawings of my featured vessel project, a dragon boat lineup and the FinTech credit-risk pipeline. 📐
-- **Hover details**: Project previews that follow the cursor, text that rolls on hover, and a magnetic call to action. 🖱️
+- **Tiny planet hero**: A low-poly world you can drag to revolve in any direction, with labels that track landmarks and link to each section. 🪐
+- **Day and night**: A canyon palette (near-black, sage, sand and coral) with a day mode; the planet's moon sets and a sun rises when you switch. 🌗
+- **Schematic drawings**: Blueprint-style SVG drawings that come alive: a vessel under way whose sensors you can click to trace through the ship, a dragon boat crew paddling in time to the drum, and the FinTech credit-risk pipeline. 📐
+- **Parallax**: Depth across the whole page as you scroll, from a slow-drifting sky to the ship sailing along its sheet. 🌌
+- **Hover details**: Project previews that follow the cursor, text that rolls on hover, and a magnetic call to action. On phones and tablets, project pictures open in a pop-up. 🖱️
 - **Responsive and accessible**: Works across desktop, tablet and mobile, with keyboard focus states and full reduced-motion support. 📱💻
 - **Design plan**: Tokens, layout and motion rules live in [`my-portfolio/DESIGN.md`](my-portfolio/DESIGN.md). 🎨
 
