@@ -5,7 +5,7 @@ import DragonBoatSchematic, {
 } from "./schematics/DragonBoatSchematic";
 import FintechSchematic from "./schematics/FintechSchematic";
 import MedalPlot from "./MedalPlot";
-import { Parallax, Reveal, useMediaQuery } from "./ui/motion";
+import { Parallax, Reveal } from "./ui/motion";
 import "./Activities.css";
 
 export default function Activities() {
@@ -18,7 +18,6 @@ export default function Activities() {
     (i) => setPinned((current) => (current === i ? null : i)),
     [],
   );
-  const finePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
 
   return (
     <section
