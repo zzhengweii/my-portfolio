@@ -49,7 +49,11 @@
   color: var(--ink-2);
 }
 
+/* Above the paper plane's flight layer, so the plane takes off from
+   behind the address. */
 .postcard__email {
+  position: relative;
+  z-index: 4;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -59,6 +63,9 @@
 }
 
 .postcard__address-link {
+  /* card-coloured backing so the plane hides behind it */
+  background: var(--bg-raised);
+  box-shadow: 0 0 0 8px var(--bg-raised);
   font-size: clamp(1.2rem, 2.3vw, 1.85rem);
   font-weight: 560;
   letter-spacing: -0.02em;

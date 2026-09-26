@@ -130,9 +130,51 @@ const slope = ([a, b, c, d], t) => {
   return 3 * u * u * (b - a) + 6 * u * t * (c - b) + 3 * t * t * (d - c);
 };
 
+// Smooth curve through waypoints (Catmull-Rom as cubic Bezier segments),
+// each segment given a share of the flight in proportion to its length.
+function curveThrough(points) {
+  const segs = [];
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(0, i - 1)];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[Math.min(points.length - 1, i + 2)];
+    segs.push({
+      x: [
+        p1[0],
+        p1[0] + (p2[0] - p0[0]) / 6,
+        p2[0] - (p3[0] - p1[0]) / 6,
+        p2[0],
+      ],
+      y: [
+        p1[1],
+        p1[1] + (p2[1] - p0[1]) / 6,
+        p2[1] - (p3[1] - p1[1]) / 6,
+        p2[1],
+      ],
+      len: Math.hypot(p2[0] - p1[0], p2[1] - p1[1]),
+    });
+  }
+  const total = segs.reduce((sum, seg) => sum + seg.len, 0) || 1;
+  let acc = 0;
+  segs.forEach((seg) => {
+    seg.t0 = acc / total;
+    acc += seg.len;
+    seg.t1 = acc / total;
+  });
+  return segs;
+}
+
+// Which segment a progress value falls in, and how far along it.
+const at = (segs, t) => {
+  const seg = segs.find((s) => t <= s.t1) || segs[segs.length - 1];
+  return [seg, (t - seg.t0) / (seg.t1 - seg.t0 || 1)];
+};
+
 /*
  * Sending the message: a paper plane takes off from the email address and
- * flies an arc into the stamp, drawing a dashed trail behind it. The route
+ * wanders a curvy, slightly different route into the stamp each time,
+ * drawing a dashed trail behind it. It takes off from behind the address. The route
  * is measured from the live layout at every launch, so it fits any screen.
  */
 function PaperPlane({ cardRef, fromRef, toRef, active, trigger, onArrive }) {
@@ -141,15 +183,20 @@ function PaperPlane({ cardRef, fromRef, toRef, active, trigger, onArrive }) {
   const [trail, setTrail] = useState(null);
   const progress = useMotionValue(0);
   const trailOpacity = useMotionValue(0);
-  const x = useTransform(progress, (t) =>
-    route.current ? bezier(route.current.x, t) : -99,
-  );
-  const y = useTransform(progress, (t) =>
-    route.current ? bezier(route.current.y, t) : -99,
-  );
+  const x = useTransform(progress, (t) => {
+    if (!route.current) return -99;
+    const [seg, u] = at(route.current, t);
+    return bezier(seg.x, u);
+  });
+  const y = useTransform(progress, (t) => {
+    if (!route.current) return -99;
+    const [seg, u] = at(route.current, t);
+    return bezier(seg.y, u);
+  });
   const rotate = useTransform(progress, (t) => {
-    const r = route.current;
-    return r ? (Math.atan2(slope(r.y, t), slope(r.x, t)) * 180) / Math.PI : 0;
+    if (!route.current) return 0;
+    const [seg, u] = at(route.current, t);
+    return (Math.atan2(slope(seg.y, u), slope(seg.x, u)) * 180) / Math.PI;
   });
   const opacity = useTransform(progress, [0, 0.06, 0.86, 1], [0, 1, 1, 0]);
   const scale = useTransform(progress, [0, 0.1, 0.8, 1], [0.5, 1, 1, 0.35]);
@@ -163,26 +210,54 @@ function PaperPlane({ cardRef, fromRef, toRef, active, trigger, onArrive }) {
     const c = card.getBoundingClientRect();
     const f = from.getBoundingClientRect();
     const s = to.getBoundingClientRect();
-    const x0 = f.left - c.left + 8;
-    const y0 = f.top - c.top - 10;
+    // Take off from behind the address, then wander a fresh, curvy route
+    // each time before gliding into the stamp.
+    const x0 = f.left - c.left + f.width * 0.35;
+    const y0 = f.top - c.top + f.height / 2;
     const x3 = s.left - c.left + s.width / 2;
     const y3 = s.top - c.top + s.height / 2;
-    // Taxi off the address almost level, then turn and climb (or dive, on
-    // narrow screens where the stamp sits below) into the stamp.
     const dx = x3 - x0;
-    const r = {
-      x: [x0, x0 + dx * 0.45, x3 - dx * 0.08, x3],
-      y: [y0, y0 - 6, y3 + (y0 - y3) * 0.85, y3],
+    const dy = y3 - y0;
+    const dist = Math.hypot(dx, dy) || 1;
+    // unit normal to the straight line, for sideways wobble
+    const nx = -dy / dist;
+    const ny = dx / dist;
+    const wobble = (amount) => (Math.random() * 2 - 1) * amount * dist;
+    const via = (t, amount) => {
+      const w = wobble(amount);
+      return [x0 + dx * t + nx * w, y0 + dy * t + ny * w];
     };
-    route.current = r;
+    const points = [
+      [x0, y0],
+      [x0 + Math.min(90, dist * 0.12), y0 - 34 - Math.random() * 30],
+      via(0.32 + Math.random() * 0.08, 0.28),
+      via(0.6 + Math.random() * 0.1, 0.3),
+      via(0.86, 0.1),
+      [x3, y3],
+    ];
+    // Keep every waypoint well inside the card.
+    const pad = 36;
+    points.forEach((pt) => {
+      pt[0] = Math.min(c.width - pad, Math.max(pad, pt[0]));
+      pt[1] = Math.min(c.height - pad, Math.max(pad, pt[1]));
+    });
+    const segs = curveThrough(points);
+    route.current = segs;
     setTrail({
       w: c.width,
       h: c.height,
-      d: `M${r.x[0]} ${r.y[0]} C${r.x[1]} ${r.y[1]} ${r.x[2]} ${r.y[2]} ${r.x[3]} ${r.y[3]}`,
+      d:
+        `M${segs[0].x[0]} ${segs[0].y[0]}` +
+        segs
+          .map(
+            (g) =>
+              ` C${g.x[1]} ${g.y[1]} ${g.x[2]} ${g.y[2]} ${g.x[3]} ${g.y[3]}`,
+          )
+          .join(""),
     });
     progress.jump(0);
     trailOpacity.jump(1);
-    await animate(progress, 1, { duration: 1.8, ease: [0.45, 0.05, 0.3, 1] });
+    await animate(progress, 1, { duration: 2.6, ease: [0.4, 0.05, 0.3, 1] });
     onArrive();
     await animate(trailOpacity, 0, { duration: 0.8, ease: "easeOut" });
     busy.current = false;
