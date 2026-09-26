@@ -16,7 +16,7 @@ import "./DragonBoatSchematic.css";
 export const BOAT_PARTS = [
   "Drummer",
   "Twenty paddlers on ten benches",
-  "Coxwain",
+  "Coxswain",
 ];
 
 const BENCHES = Array.from({ length: 10 }, (_, i) => 190 + i * 34);
