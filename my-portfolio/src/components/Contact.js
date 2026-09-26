@@ -355,7 +355,7 @@ export default function Contact() {
             </h2>
             <p className="postcard__text">
               Always happy to talk about data science, machine learning or
-              anything.
+              anything {":) "}.
             </p>
             <div className="postcard__email">
               <a

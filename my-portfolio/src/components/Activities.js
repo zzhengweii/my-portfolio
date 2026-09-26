@@ -83,7 +83,7 @@ export default function Activities() {
                 </ol>
                 <p className="readout" aria-live="polite">
                   {active === null ? (
-                    `${finePointer ? "Hover over" : "Tap"} a crew position to highlight it.`
+                    "Hover over a crew position to learn more."
                   ) : (
                     <>
                       <strong>{BOAT_PARTS[active]}.</strong>{" "}
@@ -106,7 +106,7 @@ export default function Activities() {
               <h3 id="fintech-title" className="cell__title">
                 NUS FinTech Society
               </h3>
-              <p className="cell__role">ML Analyst</p>
+              <p className="cell__role">ML Analyst since Sep 2026</p>
             </header>
             <p className="cell__text">
               Building a low-latency credit-risk inference engine for instant
