@@ -140,8 +140,13 @@ the drawing, so the card does not stretch on desktop and tablet (a fixed
   horizontal velocity, and cross-fades between projects. Sibling rows dim.
 - Magnetic pull on the primary CTA.
 - Contact postcard: when it comes into view the stamp lands and the
-  postmark franks it, then the stamp's paper plane takes off every few
-  seconds with a dashed trail, as if the message is on its way.
+  postmark franks it. Then, while it is on screen, a coral paper plane
+  taxis off the email address and climbs into the stamp every few seconds,
+  drawing a dashed trail; on arrival the stamp jumps and the postmark thumps
+  down again. Copying the address (or pointing at it) sends one at once.
+  The airmail stripes drift along the top edge.
+- Skills pills: the hovered pill fills with coral from the left and lifts,
+  the rest of its group steps back and the group label turns coral.
 - Touch screens and windows up to 1024px: project rows show a thumbnail
   instead of the cursor preview. Tapping it opens the picture in a dialog;
   the thumbnail grows into it (shared layout) and shrinks back on close.
@@ -158,20 +163,23 @@ the drawing, so the card does not stretch on desktop and tablet (a fixed
 Depth runs through the whole page, all scroll-linked transforms on the
 compositor (`useParallax` and `Parallax` in `ui/motion.js`):
 
-| Layer                            | Rate or travel                              |
-| -------------------------------- | ------------------------------------------- |
-| Sky: far specks (stars at night) | 8% of scroll speed, fixed behind everything |
-| Sky: near drafting marks         | 24% of scroll speed                         |
-| Hero copy                        | lifts 220px faster than the page and fades  |
-| Planet                           | lags 320px and shrinks to 0.84              |
-| Section titles                   | drift 56px against their content            |
-| About photo                      | pans 18% inside its frame                   |
-| Experience figures               | float 64px against the text                 |
-| Vessel                           | sails 110 units along the sheet             |
-| Dragon boat                      | pulls 80 units up its lane                  |
-| FinTech diagram                  | drifts 44px inside its card                 |
-| Stamp and postmark               | drift and tilt in opposite directions       |
+| Layer                               | Rate or travel                                       |
+| ----------------------------------- | ---------------------------------------------------- |
+| Sky: far specks (stars at night)    | 8% of scroll speed, fixed behind everything          |
+| Sky: near drafting marks            | 24% of scroll speed                                  |
+| Sky: soft glows (coral, sage, sand) | 40% of scroll speed, loud enough to read in daylight |
+| Hero copy                           | lifts 220px faster than the page and fades           |
+| Planet                              | lags 320px and shrinks to 0.84                       |
+| Section titles                      | drift 56px against their content                     |
+| About photo                         | pans 18% inside its frame                            |
+| Experience figures                  | float 64px against the text                          |
+| Vessel                              | sails 110 units along the sheet                      |
+| Dragon boat                         | pulls 80 units up its lane                           |
+| FinTech diagram                     | drifts 44px inside its card                          |
+| Stamp and postmark                  | drift and tilt in opposite directions                |
 
+In day mode the sky specks and marks are darker and the glows stronger, so
+the depth reads as clearly on sand paper as it does at night.
 The sky sits at `z-index: -1` with the page colour on `<html>` only, so
 opaque cards hide it and the translucent experience band lets it through.
 Travel drops to 60% under 700px wide and everything is still with reduced

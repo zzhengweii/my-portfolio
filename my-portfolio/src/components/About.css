@@ -95,12 +95,61 @@
   gap: 8px;
 }
 
+.toolkit h3 {
+  transition: color 240ms ease;
+}
+
 .toolkit li {
+  position: relative;
+  /* keeps the coral fill behind the text, inside the pill */
+  isolation: isolate;
+  overflow: hidden;
   padding: 5px 12px;
   border-radius: 999px;
   font-size: 0.9375rem;
   color: var(--ink-2);
   box-shadow: inset 0 0 0 1px var(--line-strong);
+  transition:
+    color 240ms ease,
+    box-shadow 240ms ease,
+    opacity 240ms ease,
+    transform 300ms var(--ease-out);
+}
+
+/* Hover: coral sweeps in from the left and back out to the right. */
+.toolkit li::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 340ms var(--ease-out);
+}
+
+/* The hovered pill lifts and fills; the rest of its group steps back and
+   the group's label picks up the accent. */
+@media (hover: hover) and (pointer: fine) {
+  .toolkit li:hover {
+    color: var(--accent-ink);
+    box-shadow: inset 0 0 0 1px var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .toolkit li:hover::before {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .toolkit ul:has(li:hover) li:not(:hover) {
+    opacity: 0.45;
+  }
+
+  .toolkit:has(li:hover) h3 {
+    color: var(--accent-text);
+  }
 }
 
 @media (max-width: 960px) {
@@ -132,5 +181,15 @@
     clip-path: none;
     transform: none;
     transition: none;
+  }
+
+  .toolkit li,
+  .toolkit li::before,
+  .toolkit h3 {
+    transition: none;
+  }
+
+  .toolkit li:hover {
+    transform: none;
   }
 }

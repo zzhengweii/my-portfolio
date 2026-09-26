@@ -283,9 +283,11 @@
 
 /*
  * Sending the postcard. When it comes into view the stamp lands and the
- * postmark franks it; then the stamp's little plane takes off every few
- * seconds, leaving a dashed trail. Individual transform properties (scale,
- * translate) are used so they add to the scroll parallax set from JS.
+ * postmark franks it. Then, while the card is on screen, a paper plane
+ * flies from the email address into the stamp every few seconds (see
+ * PaperPlane in Contact.js) and the airmail stripes drift along the top.
+ * Individual transform properties (scale, translate) are used here so they
+ * add to the transforms set from JS.
  */
 .postcard__marks:not(.is-seen) .stamp,
 .postcard__marks:not(.is-seen) .postmark {
@@ -327,110 +329,87 @@
   }
 }
 
-.postcard__marks:not(.is-playing) * {
-  animation-play-state: paused !important;
+/* Airmail stripes: one tile is one horizontal repeat of the -45deg pattern
+   (56px along the stripes = 79.196px across), so the drift loops seamlessly. */
+.postcard::before {
+  background-size: 79.196px 6px;
 }
 
-.stamp__plane {
-  transform-box: fill-box;
-  transform-origin: center;
+.postcard.is-live::before {
+  animation: airmail 4s linear infinite;
 }
 
-.postcard__marks.is-seen .stamp__plane {
-  animation: plane-send 6.5s var(--ease-in-out) 1.4s infinite;
-}
-
-@keyframes plane-send {
-  0%,
-  10% {
-    opacity: 1;
-    transform: translate(0, 0) rotate(0deg);
-  }
-  14% {
-    opacity: 1;
-    transform: translate(-2px, 1px) rotate(6deg);
-  }
-  32% {
-    opacity: 1;
-    transform: translate(54px, -39px) rotate(-12deg);
-  }
-  38% {
-    opacity: 0;
-    transform: translate(70px, -51px) rotate(-16deg);
-  }
-  39%,
-  80% {
-    opacity: 0;
-    transform: translate(0, 0) rotate(0deg) scale(0.6);
-  }
-  92%,
-  100% {
-    opacity: 1;
-    transform: translate(0, 0) rotate(0deg) scale(1);
+@keyframes airmail {
+  to {
+    background-position: 79.196px 0;
   }
 }
 
-.stamp__trail {
+.flight {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.flight__trail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.flight__path {
   fill: none;
   stroke: var(--accent-line);
-  stroke-width: 1;
+  stroke-width: 1.25;
   stroke-linecap: round;
-  stroke-dasharray: 3 4;
-  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 4 6;
+}
+
+/* Mask that uncovers the dashed trail behind the plane. */
+.flight__reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.flight__plane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 22px;
+  margin: -11px 0 0 -16px;
   opacity: 0;
 }
 
-/* The mask draws the dashed trail on behind the plane. */
-.stamp__trail-reveal {
+.flight__plane svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.flight__wing {
+  fill: var(--accent);
+  stroke: var(--accent-line);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.flight__fold {
   fill: none;
-  stroke: #fff;
-  stroke-width: 8;
-  stroke-dasharray: 1 1;
-  stroke-dashoffset: 1;
-}
-
-.postcard__marks.is-seen .stamp__trail {
-  animation: trail-fade 6.5s linear 1.4s infinite;
-}
-
-.postcard__marks.is-seen .stamp__trail-reveal {
-  animation: trail-draw 6.5s var(--ease-in-out) 1.4s infinite;
-}
-
-@keyframes trail-fade {
-  0%,
-  12% {
-    opacity: 0;
-  }
-  16% {
-    opacity: 0.9;
-  }
-  40% {
-    opacity: 0.7;
-  }
-  58%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes trail-draw {
-  0%,
-  13% {
-    stroke-dashoffset: 1;
-  }
-  38%,
-  100% {
-    stroke-dashoffset: 0;
-  }
+  stroke: var(--accent-ink);
+  stroke-opacity: 0.45;
+  stroke-width: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .postcard__marks .stamp,
   .postcard__marks .postmark,
-  .postcard__marks .stamp__plane,
-  .postcard__marks .stamp__trail,
-  .postcard__marks .stamp__trail-reveal {
+  .postcard::before {
     animation: none !important;
   }
 

@@ -1,7 +1,8 @@
 /*
- * Page-wide parallax sky behind every section: far specks drift at 5% of the
- * scroll speed, near drafting marks at 14%, the content at 100%. Opaque cards
- * sit in front of it. The layers loop by one tile, so they never run out.
+ * Page-wide parallax sky behind every section: far specks drift at 8% of the
+ * scroll speed, near drafting marks at 24%, soft glows at 40%, the content
+ * at 100%. Opaque cards sit in front of it. Each layer loops by one tile, so
+ * it never runs out.
  */
 .sky {
   position: fixed;
@@ -36,4 +37,29 @@
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='1200'%3E%3Ccircle cx='875' cy='31' r='2.6' fill='none' stroke='%23fff'/%3E%3Cpath d='M369 51h8M373 47v8' stroke='%23fff'/%3E%3Cpath d='M68 278h8M72 274v8' stroke='%23fff'/%3E%3Cpath d='M394 897h8M398 893v8' stroke='%23fff'/%3E%3Ccircle cx='678' cy='431' r='1.5' fill='%23fff'/%3E%3Cpath d='M476 594h8M480 590v8' stroke='%23fff'/%3E%3Cpath d='M197 1029h8M201 1025v8' stroke='%23fff'/%3E%3Ccircle cx='1111' cy='539' r='1.5' fill='%23fff'/%3E%3Cpath d='M1134 992h8M1138 988v8' stroke='%23fff'/%3E%3Cpath d='M1140 233h8M1144 229v8' stroke='%23fff'/%3E%3Ccircle cx='909' cy='693' r='1.5' fill='%23fff'/%3E%3Ccircle cx='792' cy='966' r='1.5' fill='%23fff'/%3E%3Ccircle cx='1259' cy='720' r='1.5' fill='%23fff'/%3E%3Ccircle cx='914' cy='399' r='2.6' fill='none' stroke='%23fff'/%3E%3Ccircle cx='551' cy='200' r='2.6' fill='none' stroke='%23fff'/%3E%3Ccircle cx='142' cy='547' r='1.5' fill='%23fff'/%3E%3Ccircle cx='1290' cy='1178' r='2.6' fill='none' stroke='%23fff'/%3E%3Ccircle cx='334' cy='375' r='2.6' fill='none' stroke='%23fff'/%3E%3C/svg%3E");
   -webkit-mask-size: 1400px 1200px;
   mask-size: 1400px 1200px;
+}
+
+/* Big soft washes of coral, sage and sand. Each ellipse stays inside its
+   1600px tile, so the repeat has no seams. */
+.sky__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(100% + 1600px);
+  will-change: transform;
+  background-image:
+    radial-gradient(44vw 260px at 6% 300px, var(--sky-glow-a), transparent 70%),
+    radial-gradient(
+      40vw 250px at 94% 800px,
+      var(--sky-glow-b),
+      transparent 70%
+    ),
+    radial-gradient(
+      42vw 250px at 14% 1300px,
+      var(--sky-glow-c),
+      transparent 70%
+    );
+  background-size: 100% 1600px;
+  background-repeat: repeat-y;
 }
