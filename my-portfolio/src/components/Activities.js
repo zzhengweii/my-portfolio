@@ -83,7 +83,7 @@ export default function Activities() {
                 </ol>
                 <p className="readout" aria-live="polite">
                   {active === null ? (
-                    "Hover over a crew position to learn more."
+                    `${finePointer ? "Hover over" : "Tap"} a crew position to learn more.`
                   ) : (
                     <>
                       <strong>{BOAT_PARTS[active]}.</strong>{" "}
