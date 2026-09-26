@@ -17,10 +17,10 @@
   aspect-ratio: 4 / 5;
 }
 
-/* 7% taller than the frame at each end: room for the scroll pan. */
+/* 11% taller than the frame at each end: room for the scroll pan. */
 .about__pan {
   position: absolute;
-  inset: -7% 0;
+  inset: -11% 0;
 }
 
 /* Wipes up from the bottom once, like a print coming out of the plotter. */

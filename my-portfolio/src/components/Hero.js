@@ -87,13 +87,13 @@ export default function Hero() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const k = reduce ? 0 : stacked ? 0.5 : 1;
-  const copyY = useTransform(scrollYProgress, (v) => v * -150 * k);
+  const k = reduce ? 0 : stacked ? 0.6 : 1;
+  const copyY = useTransform(scrollYProgress, (v) => v * -220 * k);
   const copyOpacity = useTransform(scrollYProgress, (v) =>
     reduce ? 1 : Math.max(0, 1 - v * 1.2),
   );
-  const worldY = useTransform(scrollYProgress, (v) => v * 220 * k);
-  const worldScale = useTransform(scrollYProgress, (v) => 1 - v * 0.12 * k);
+  const worldY = useTransform(scrollYProgress, (v) => v * 320 * k);
+  const worldScale = useTransform(scrollYProgress, (v) => 1 - v * 0.16 * k);
 
   return (
     <section ref={ref} id="home" className="hero" aria-labelledby="hero-title">

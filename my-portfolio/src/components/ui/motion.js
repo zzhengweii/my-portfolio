@@ -54,7 +54,7 @@ export function Reveal({
  * Scroll-linked drift for parallax depth. `distance` is how far (px) the
  * element travels over its whole pass through the viewport: positive drifts
  * up faster than the page (feels closer), negative lags behind (feels
- * further away). Halved on small screens, off with reduced motion.
+ * further away). 60% on small screens, off with reduced motion.
  */
 export function useParallax(
   ref,
@@ -64,7 +64,7 @@ export function useParallax(
   const reduce = useReducedMotion();
   const small = useMediaQuery("(max-width: 700px)");
   const reach = useRef(distance);
-  reach.current = reduce ? 0 : small ? distance / 2 : distance;
+  reach.current = reduce ? 0 : small ? distance * 0.6 : distance;
   const { scrollYProgress } = useScroll({ target: ref, offset });
   return useTransform(scrollYProgress, (v) => (1 - 2 * v) * reach.current);
 }

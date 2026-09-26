@@ -12,8 +12,7 @@
   animation-play-state: paused !important;
 }
 
-.vessel-shell,
-.signal {
+.vessel-shell {
   transition: opacity 280ms ease;
 }
 
@@ -115,41 +114,7 @@
   animation: vx-wave 2.6s ease-in-out infinite alternate;
 }
 
-/* Signals: sensor node, leader and numbered balloon */
-.signal {
-  cursor: pointer;
-}
-
-.signal__hit {
-  fill: transparent;
-  pointer-events: all;
-}
-
-.signal__leader {
-  fill: none;
-  stroke: var(--schematic-dim);
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-  transition: stroke 200ms ease;
-}
-
-.signal__balloon {
-  fill: var(--bg);
-  stroke: var(--schematic);
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-  transition:
-    fill 200ms ease,
-    stroke 200ms ease;
-}
-
-.signal__n {
-  font-family: var(--font-mono);
-  font-size: 15px;
-  fill: var(--ink);
-  transition: fill 200ms ease;
-}
-
+/* Sensor nodes on the shared signals (index.css has leader and balloon). */
 .signal__node {
   fill: var(--bg);
   stroke: var(--accent-line);
@@ -169,19 +134,6 @@
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-}
-
-.signal.is-active .signal__leader {
-  stroke: var(--accent-line);
-}
-
-.signal.is-active .signal__balloon {
-  fill: var(--accent);
-  stroke: var(--accent-line);
-}
-
-.signal.is-active .signal__n {
-  fill: var(--accent-ink);
 }
 
 /* Until a signal is picked, the sensors ping in turn as an invitation. */

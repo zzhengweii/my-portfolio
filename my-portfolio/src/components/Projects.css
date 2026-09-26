@@ -53,64 +53,6 @@
   gap: 2px;
 }
 
-/* Each signal is a toggle that traces it in the drawing above. */
-.part {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: calc(100% + 10px);
-  margin-left: -5px;
-  padding: 4px 12px 4px 5px;
-  border-radius: 999px;
-  text-align: left;
-  color: var(--ink-2);
-  transition:
-    background-color 200ms ease,
-    color 200ms ease,
-    transform 140ms var(--ease-out);
-}
-
-.part:active {
-  transform: scale(0.97);
-}
-
-.part .balloon {
-  transition:
-    background-color 200ms ease,
-    color 200ms ease,
-    box-shadow 200ms ease;
-}
-
-.part.is-active {
-  color: var(--ink);
-  background: var(--hover-wash);
-}
-
-.part.is-active .balloon {
-  color: var(--accent-ink);
-  background: var(--accent);
-  box-shadow: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .part:hover {
-    color: var(--ink);
-  }
-}
-
-/* Fixed height, so tracing a signal never shifts the sheet below. */
-.sheet__readout {
-  min-height: 5.2em;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--ink-2);
-}
-
-.sheet__readout strong {
-  font-weight: 560;
-  color: var(--ink);
-}
-
 .sheet__pipeline {
   grid-column: 1 / -1;
   display: grid;
@@ -594,8 +536,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .part,
-  .part .balloon,
   .index__title,
   .index__thumb,
   .index__zoom,

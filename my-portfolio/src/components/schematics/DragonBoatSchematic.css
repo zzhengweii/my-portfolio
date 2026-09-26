@@ -16,6 +16,42 @@
   animation-play-state: paused !important;
 }
 
+/*
+ * Crew positions (data-active on the <svg>): 0 drummer, 1 paddlers,
+ * 2 coxswain. As on the vessel, picking one fades the boat and the other
+ * positions back and traces that position in the accent. The crew keeps
+ * paddling throughout.
+ */
+.boat-shell,
+.boat-crew {
+  transition: opacity 280ms ease;
+}
+
+.boat-crew .sx {
+  transition: stroke 200ms ease;
+}
+
+.schematic--boat[data-active] .boat-shell {
+  opacity: 0.32;
+}
+
+.schematic--boat[data-active] .signal:not(.is-active) {
+  opacity: 0.42;
+}
+
+.schematic--boat[data-active]:not([data-active="0"]) .boat-crew--drum,
+.schematic--boat[data-active]:not([data-active="1"]) .boat-crew--paddlers,
+.schematic--boat[data-active]:not([data-active="2"]) .boat-crew--cox {
+  opacity: 0.32;
+}
+
+/* !important: the drum's beat animation also sets its stroke. */
+.schematic--boat[data-active="0"] .boat-crew--drum .sx,
+.schematic--boat[data-active="1"] .boat-crew--paddlers .sx,
+.schematic--boat[data-active="2"] .boat-crew--cox .sx {
+  stroke: var(--accent-line) !important;
+}
+
 /* Lane markers: buoy dots streaming towards the stern. */
 .boat-lane {
   fill: none;

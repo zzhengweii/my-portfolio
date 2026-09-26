@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
+import { PiCaretDown } from "react-icons/pi";
 import { races } from "../data/content";
 
 // Unit dot plot: one dot per podium, stacked by race distance. Medals are an
@@ -25,6 +26,8 @@ export default function MedalPlot() {
   // linked: a result row being hovered (lifts its dot).
   const [active, setActive] = useState(null);
   const [linked, setLinked] = useState(null);
+  // The results list starts hidden; the toggle shows and hides it.
+  const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
   const scroller = useRef(null);
   const rows = useRef({});
@@ -37,7 +40,7 @@ export default function MedalPlot() {
   useEffect(() => {
     const box = scroller.current;
     const row = rows.current[active];
-    if (active === null || !box || !row) return;
+    if (!open || active === null || !box || !row) return;
     const head = box.querySelector("thead")?.offsetHeight || 0;
     const top = row.offsetTop - head;
     const bottom = row.offsetTop + row.offsetHeight - box.clientHeight;
@@ -47,7 +50,7 @@ export default function MedalPlot() {
         behavior: reduce ? "auto" : "smooth",
       });
     }
-  }, [active, reduce]);
+  }, [active, open, reduce]);
 
   return (
     <figure className="medals">
@@ -120,16 +123,26 @@ export default function MedalPlot() {
       </ul>
 
       <div className="medals__results">
-        <p id="medal-results" className="medals__results-title label">
+        <button
+          type="button"
+          id="medal-results"
+          className="medals__toggle"
+          aria-expanded={open}
+          aria-controls="medal-results-list"
+          onClick={() => setOpen((value) => !value)}
+        >
           All {races.length} results
-        </p>
-        {/* Fixed height: the list scrolls instead of stretching the card. */}
+          <PiCaretDown aria-hidden="true" />
+        </button>
+        {/* When shown, the list fills the space under the plot and scrolls
+            inside it instead of stretching the card. */}
         <div
           ref={scroller}
-          className="medals__scroll"
+          id="medal-results-list"
+          className={`medals__scroll${open ? " is-open" : ""}`}
           role="region"
           aria-labelledby="medal-results"
-          tabIndex={0}
+          tabIndex={open ? 0 : -1}
         >
           <table className="medals__table">
             <thead>

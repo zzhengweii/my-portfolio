@@ -26,7 +26,7 @@ export default function About() {
     offset: ["start end", "end start"],
   });
   const pan = useTransform(scrollYProgress, (v) =>
-    reduce ? "0%" : `${(v - 0.5) * 12}%`,
+    reduce ? "0%" : `${(v - 0.5) * 18}%`,
   );
 
   return (

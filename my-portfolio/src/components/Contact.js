@@ -15,7 +15,7 @@ import {
 } from "react-icons/pi";
 import { links } from "../data/content";
 import RollText from "./ui/RollText";
-import { EASE_OUT, Reveal } from "./ui/motion";
+import { EASE_OUT, Reveal, useMediaQuery } from "./ui/motion";
 import "./Contact.css";
 
 const COPY_STATES = {
@@ -159,21 +159,22 @@ function Postmark({ style }) {
 export default function Contact() {
   const marksRef = useRef(null);
   const reduce = useReducedMotion();
+  const small = useMediaQuery("(max-width: 700px)");
   // The stamp and postmark sit at different depths on the card.
   const { scrollYProgress } = useScroll({
     target: marksRef,
     offset: ["start end", "end start"],
   });
-  const k = reduce ? 0 : 1;
-  const stampY = useTransform(scrollYProgress, (v) => (0.5 - v) * 40 * k);
+  const k = reduce ? 0 : small ? 0.6 : 1;
+  const stampY = useTransform(scrollYProgress, (v) => (0.5 - v) * 64 * k);
   const stampRotate = useTransform(
     scrollYProgress,
-    (v) => 3 + (v - 0.5) * -8 * k,
+    (v) => 3 + (v - 0.5) * -12 * k,
   );
-  const markY = useTransform(scrollYProgress, (v) => (0.5 - v) * -36 * k);
+  const markY = useTransform(scrollYProgress, (v) => (0.5 - v) * -60 * k);
   const markRotate = useTransform(
     scrollYProgress,
-    (v) => -9 + (v - 0.5) * 10 * k,
+    (v) => -9 + (v - 0.5) * 14 * k,
   );
 
   return (

@@ -25,7 +25,7 @@ export default function Experience() {
       aria-labelledby="experience-title"
     >
       <div className="container">
-        <Parallax distance={28}>
+        <Parallax distance={56}>
           <Reveal as="h2" className="section-title" id="experience-title">
             Experience
           </Reveal>
@@ -67,7 +67,7 @@ export default function Experience() {
                   )}
                 </div>
                 {job.figures.length > 0 && (
-                  <Parallax as="ul" className="stop__figures" distance={36}>
+                  <Parallax as="ul" className="stop__figures" distance={64}>
                     {job.figures.map((figure) => (
                       <li key={figure.label}>
                         <strong className="figure__value">

@@ -14,9 +14,9 @@ const NEAR = 1200;
 export default function Sky() {
   const reduce = useReducedMotion();
   const { scrollY } = useScroll();
-  const far = useTransform(scrollY, (v) => (reduce ? 0 : -((v * 0.05) % FAR)));
+  const far = useTransform(scrollY, (v) => (reduce ? 0 : -((v * 0.08) % FAR)));
   const near = useTransform(scrollY, (v) =>
-    reduce ? 0 : -((v * 0.14) % NEAR),
+    reduce ? 0 : -((v * 0.24) % NEAR),
   );
   return (
     <div className="sky" aria-hidden="true">

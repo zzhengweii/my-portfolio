@@ -478,6 +478,128 @@ button,
 }
 
 /*
+ * Interactive drawings (vessel, dragon boat). A numbered signal is a leader
+ * and balloon with generous transparent hit areas; picking one lights it in
+ * the accent. The list beside each drawing offers the same choices as
+ * toggle rows, and a fixed-height readout describes the pick.
+ */
+.signal {
+  cursor: pointer;
+  transition: opacity 280ms ease;
+}
+
+.signal__hit {
+  fill: transparent;
+  pointer-events: all;
+}
+
+.signal__leader {
+  fill: none;
+  stroke: var(--schematic-dim);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 200ms ease;
+}
+
+.signal__balloon {
+  fill: var(--bg);
+  stroke: var(--schematic);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition:
+    fill 200ms ease,
+    stroke 200ms ease;
+}
+
+.signal__n {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  fill: var(--ink);
+  transition: fill 200ms ease;
+}
+
+.signal.is-active .signal__leader {
+  stroke: var(--accent-line);
+}
+
+.signal.is-active .signal__balloon {
+  fill: var(--accent);
+  stroke: var(--accent-line);
+}
+
+.signal.is-active .signal__n {
+  fill: var(--accent-ink);
+}
+
+.part {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: calc(100% + 10px);
+  margin-left: -5px;
+  padding: 4px 12px 4px 5px;
+  border-radius: 999px;
+  text-align: left;
+  color: var(--ink-2);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    transform 140ms var(--ease-out);
+}
+
+.part:active {
+  transform: scale(0.97);
+}
+
+.part .balloon {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.part.is-active {
+  color: var(--ink);
+  background: var(--hover-wash);
+}
+
+.part.is-active .balloon {
+  color: var(--accent-ink);
+  background: var(--accent);
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .part:hover {
+    color: var(--ink);
+  }
+}
+
+/* Fixed height, so a pick never shifts the layout below. */
+.readout {
+  min-height: 5.2em;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.readout strong {
+  font-weight: 560;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal,
+  .signal__leader,
+  .signal__balloon,
+  .signal__n,
+  .part,
+  .part .balloon {
+    transition: none;
+  }
+}
+
+/*
  * Drawings draw themselves in once (useDrawOnView). Strokes marked
  * [data-draw] get their dash lengths from JS because Chromium ignores
  * pathLength under non-scaling-stroke. [data-fade] parts fade in after.

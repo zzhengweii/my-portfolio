@@ -27,27 +27,43 @@ export const facts = [
   { term: "Languages", detail: "English, Chinese" },
 ];
 
+// Grouped as on the resume's technical skills.
 export const toolkit = [
   {
-    group: "Modelling",
+    group: "Languages and databases",
+    items: ["Python", "R", "SQL", "JavaScript", "MySQL", "Snowflake"],
+  },
+  {
+    group: "ML and data science",
     items: [
-      "Python",
       "scikit-learn",
+      "Pandas",
+      "NumPy",
       "XGBoost",
       "LightGBM",
       "PyTorch",
+      "Hugging Face",
       "SHAP",
       "Optuna",
-      "Hugging Face",
+      "Random Forest",
+      "Decision Trees",
+      "SVM",
+      "PCA",
+      "Feature engineering",
+      "Jupyter Notebook",
     ],
   },
   {
-    group: "Data and deployment",
-    items: ["SQL", "R", "Snowflake", "FastAPI", "Docker", "AWS"],
-  },
-  {
-    group: "Reporting",
-    items: ["Power BI", "Tableau", "React"],
+    group: "Engineering and BI",
+    items: [
+      "FastAPI",
+      "Flask",
+      "Docker",
+      "AWS (SageMaker, EC2)",
+      "React",
+      "Power BI",
+      "Tableau",
+    ],
   },
 ];
 

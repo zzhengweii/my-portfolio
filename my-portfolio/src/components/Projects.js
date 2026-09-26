@@ -108,7 +108,7 @@ function FeaturedSheet({ project }) {
             </li>
           ))}
         </ol>
-        <p className="sheet__readout" aria-live="polite">
+        <p className="readout" aria-live="polite">
           {active === null ? (
             `${finePointer ? "Hover over" : "Tap"} a signal to trace it through the ship.`
           ) : (
@@ -304,7 +304,7 @@ export default function Projects() {
       aria-labelledby="projects-title"
     >
       <div className="container">
-        <Parallax distance={28}>
+        <Parallax distance={56}>
           <Reveal as="h2" className="section-title" id="projects-title">
             Selected projects
           </Reveal>

@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import DragonBoatSchematic, {
+  BOAT_NOTES,
   BOAT_PARTS,
 } from "./schematics/DragonBoatSchematic";
 import FintechSchematic from "./schematics/FintechSchematic";
 import MedalPlot from "./MedalPlot";
-import { Parallax, Reveal } from "./ui/motion";
+import { Parallax, Reveal, useMediaQuery } from "./ui/motion";
 import "./Activities.css";
 
 export default function Activities() {
+  // Same selection model as the vessel: hovering or focusing previews a
+  // crew position, clicking or tapping pins it until picked again.
+  const [pinned, setPinned] = useState(null);
+  const [hovered, setHovered] = useState(null);
+  const active = hovered ?? pinned;
+  const pick = useCallback(
+    (i) => setPinned((current) => (current === i ? null : i)),
+    [],
+  );
+  const finePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
+
   return (
     <section
       id="activities"
@@ -15,7 +27,7 @@ export default function Activities() {
       aria-labelledby="activities-title"
     >
       <div className="container">
-        <Parallax distance={28}>
+        <Parallax distance={56}>
           <Reveal as="h2" className="section-title" id="activities-title">
             At NUS
           </Reveal>
@@ -39,17 +51,46 @@ export default function Activities() {
             </p>
             <div className="boat">
               <div className="boat__drawing">
-                <DragonBoatSchematic />
-                <ol className="boat__parts">
+                <DragonBoatSchematic
+                  active={active}
+                  onHover={setHovered}
+                  onPick={pick}
+                />
+                <ol className="boat__parts" aria-label="Crew positions">
                   {BOAT_PARTS.map((part, i) => (
                     <li key={part}>
-                      <span className="balloon mono" aria-hidden="true">
-                        {i + 1}
-                      </span>
-                      {part}
+                      <button
+                        type="button"
+                        className={`part${active === i ? " is-active" : ""}`}
+                        aria-pressed={pinned === i}
+                        onClick={() => pick(i)}
+                        onPointerEnter={(e) =>
+                          e.pointerType === "mouse" && setHovered(i)
+                        }
+                        onPointerLeave={(e) =>
+                          e.pointerType === "mouse" && setHovered(null)
+                        }
+                        onFocus={() => setHovered(i)}
+                        onBlur={() => setHovered(null)}
+                      >
+                        <span className="balloon mono" aria-hidden="true">
+                          {i + 1}
+                        </span>
+                        {part}
+                      </button>
                     </li>
                   ))}
                 </ol>
+                <p className="readout" aria-live="polite">
+                  {active === null ? (
+                    `${finePointer ? "Hover over" : "Tap"} a crew position to highlight it.`
+                  ) : (
+                    <>
+                      <strong>{BOAT_PARTS[active]}.</strong>{" "}
+                      {BOAT_NOTES[active]}
+                    </>
+                  )}
+                </p>
               </div>
               <MedalPlot />
             </div>
@@ -72,7 +113,7 @@ export default function Activities() {
               checkout financing, combining tabular credit models with
               DistilBERT signals from transaction text.
             </p>
-            <Parallax className="cell__diagram" distance={22}>
+            <Parallax className="cell__diagram" distance={44}>
               <FintechSchematic />
             </Parallax>
           </Reveal>

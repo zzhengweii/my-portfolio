@@ -124,9 +124,13 @@ Once drawn, the crew paddles in time: paddles swing about the gunwale
 swirl that drifts astern, the drum flashes with a ring on every catch and
 the steerer's oar makes small corrections. Lane buoys and the wake stream
 past. Every part runs on one clock (`--stroke`, 1.2s) and pauses together
-off screen. The results list sits in a fixed-height scroll panel with a
-sticky header that fills the space beside the drawing, so the card never
-grows; pointing at a dot scrolls the panel to its row.
+off screen. Like the vessel, the drummer, paddlers and coxswain can be picked from the
+drawing or from the list beside it: the rest of the boat fades back, that
+position is traced in coral and a fixed-height readout explains the role.
+A toggle shows and hides the results list (hidden to start). Shown, it
+is a scroll panel with a sticky header that grows into the space beside
+the drawing, so the card does not stretch on desktop and tablet (a fixed
+300px on phones); pointing at a dot scrolls the panel to its row.
 
 ## Hover and motion
 
@@ -153,21 +157,22 @@ compositor (`useParallax` and `Parallax` in `ui/motion.js`):
 
 | Layer                            | Rate or travel                              |
 | -------------------------------- | ------------------------------------------- |
-| Sky: far specks (stars at night) | 5% of scroll speed, fixed behind everything |
-| Sky: near drafting marks         | 14% of scroll speed                         |
-| Hero copy                        | lifts 150px faster than the page and fades  |
-| Planet                           | lags 220px and shrinks to 0.88              |
-| Section titles                   | drift 28px against their content            |
-| About photo                      | pans 12% inside its frame                   |
-| Experience figures               | float 36px against the text                 |
-| Vessel                           | sails 60 units along the sheet              |
-| Dragon boat                      | pulls 44 units up its lane                  |
-| FinTech diagram                  | drifts 22px inside its card                 |
+| Sky: far specks (stars at night) | 8% of scroll speed, fixed behind everything |
+| Sky: near drafting marks         | 24% of scroll speed                         |
+| Hero copy                        | lifts 220px faster than the page and fades  |
+| Planet                           | lags 320px and shrinks to 0.84              |
+| Section titles                   | drift 56px against their content            |
+| About photo                      | pans 18% inside its frame                   |
+| Experience figures               | float 64px against the text                 |
+| Vessel                           | sails 110 units along the sheet             |
+| Dragon boat                      | pulls 80 units up its lane                  |
+| FinTech diagram                  | drifts 44px inside its card                 |
 | Stamp and postmark               | drift and tilt in opposite directions       |
 
 The sky sits at `z-index: -1` with the page colour on `<html>` only, so
 opaque cards hide it and the translucent experience band lets it through.
-Travel halves under 700px wide and everything is still with reduced motion.
+Travel drops to 60% under 700px wide and everything is still with reduced
+motion.
 
 ## Copy rules
 

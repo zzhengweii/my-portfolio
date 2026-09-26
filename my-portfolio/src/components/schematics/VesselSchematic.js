@@ -111,7 +111,7 @@ export default function VesselSchematic({
     offset: ["start end", "end start"],
   });
   const sail = useTransform(scrollYProgress, (v) =>
-    reduce ? 0 : (v - 0.5) * 60,
+    reduce ? 0 : (v - 0.5) * 110,
   );
 
   return (
