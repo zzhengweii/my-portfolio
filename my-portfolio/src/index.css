@@ -302,16 +302,26 @@ button,
   transform: translateY(0);
 }
 
-/* Tablets and phones: tucked in the bottom-right corner, within thumb reach
-   and clear of the nav. */
+/* Tablets and phones: a floating button in the bottom-right corner, high
+   enough to clear mobile browser toolbars. It slips away while scrolling
+   down (is-away, set in SkipLink.js) and returns on scroll up or a pause. */
 @media (max-width: 1024px) {
   .skip-link {
     top: auto;
     left: auto;
-    right: max(12px, env(safe-area-inset-right, 0px));
-    /* high enough to clear mobile browser toolbars */
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
-    transform: translateY(calc(100% + 112px));
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 128px);
+    box-shadow: 0 10px 30px -10px var(--shadow-deep);
+    transform: none;
+    transition:
+      transform 280ms var(--ease-out),
+      opacity 200ms ease;
+  }
+
+  .skip-link.is-away:not(:focus-visible) {
+    opacity: 0;
+    transform: translateY(24px);
+    pointer-events: none;
   }
 }
 
