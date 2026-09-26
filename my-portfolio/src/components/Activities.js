@@ -4,7 +4,7 @@ import DragonBoatSchematic, {
 } from "./schematics/DragonBoatSchematic";
 import FintechSchematic from "./schematics/FintechSchematic";
 import MedalPlot from "./MedalPlot";
-import { Reveal } from "./ui/motion";
+import { Parallax, Reveal } from "./ui/motion";
 import "./Activities.css";
 
 export default function Activities() {
@@ -15,9 +15,11 @@ export default function Activities() {
       aria-labelledby="activities-title"
     >
       <div className="container">
-        <Reveal as="h2" className="section-title" id="activities-title">
-          At NUS
-        </Reveal>
+        <Parallax distance={28}>
+          <Reveal as="h2" className="section-title" id="activities-title">
+            At NUS
+          </Reveal>
+        </Parallax>
 
         <div className="bento">
           <Reveal
@@ -70,9 +72,9 @@ export default function Activities() {
               checkout financing, combining tabular credit models with
               DistilBERT signals from transaction text.
             </p>
-            <div className="cell__diagram">
+            <Parallax className="cell__diagram" distance={22}>
               <FintechSchematic />
-            </div>
+            </Parallax>
           </Reveal>
         </div>
       </div>

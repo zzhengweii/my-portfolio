@@ -1,10 +1,10 @@
 /*
- * The tiny planet in the hero: a night-time low-poly world with blueprint
- * edge lines. Plain three.js (no React) so the render loop never touches
- * React state. createWorld() returns handles for the wrapper component.
+ * The tiny planet in the hero: a low-poly world with blueprint edge lines
+ * that turns from night to day with the site theme. Plain three.js (no
+ * React) so the render loop never touches React state. createWorld()
+ * returns handles for the wrapper component.
  */
 import {
-  AdditiveBlending,
   AmbientLight,
   BackSide,
   BoxGeometry,
@@ -31,6 +31,7 @@ import {
   MeshBasicMaterial,
   MeshToonMaterial,
   NearestFilter,
+  NormalBlending,
   PerspectiveCamera,
   PlaneGeometry,
   PointLight,
@@ -40,6 +41,7 @@ import {
   RedFormat,
   Scene,
   ShaderMaterial,
+  SRGBColorSpace,
   SphereGeometry,
   TorusGeometry,
   Vector3,
@@ -193,6 +195,43 @@ const PALETTE = {
   rock: new Color("#2d3d38"),
 };
 
+const PALETTE_DAY = {
+  deep: new Color("#2d78b0"),
+  shallow: new Color("#4f9fd0"),
+  shore: new Color("#e8d9ad"),
+  path: new Color("#eadfc4"),
+  grassLow: new Color("#6c9f60"),
+  grassMid: new Color("#7aab69"),
+  grassHigh: new Color("#8cb879"),
+  rock: new Color("#a3ab9c"),
+};
+
+function faceColor(t, palette, out) {
+  if (t.sea > 0.5)
+    return out
+      .copy(palette.shallow)
+      .lerp(palette.deep, smoothstep(0.6, 1, t.sea));
+  if (t.sea > 0.16) return out.copy(palette.shore);
+  if (t.pathEdge < 0.5) return out.copy(palette.path);
+  if (t.n > 0.78) return out.copy(palette.rock);
+  if (t.n > 0.56) return out.copy(palette.grassHigh);
+  if (t.n > 0.44) return out.copy(palette.grassMid);
+  return out.copy(palette.grassLow);
+}
+
+// Lifts a night colour into its daytime counterpart (lighter, a touch more
+// saturated), worked out in sRGB so it matches what the eye expects.
+function dayify(color) {
+  const hsl = {};
+  color.getHSL(hsl, SRGBColorSpace);
+  return new Color().setHSL(
+    hsl.h,
+    Math.min(1, hsl.s * 1.1 + 0.08),
+    Math.min(0.86, 0.3 + hsl.l * 1.9),
+    SRGBColorSpace,
+  );
+}
+
 function buildTerrain() {
   const geo = new IcosahedronGeometry(1, 26);
   const pos = geo.attributes.position;
@@ -205,6 +244,7 @@ function buildTerrain() {
   geo.computeVertexNormals();
 
   const colors = new Float32Array(pos.count * 3);
+  const colorsDay = new Float32Array(pos.count * 3);
   const a = new Vector3();
   const b = new Vector3();
   const c = new Vector3();
@@ -213,23 +253,22 @@ function buildTerrain() {
     a.fromBufferAttribute(pos, i);
     b.fromBufferAttribute(pos, i + 1);
     c.fromBufferAttribute(pos, i + 2);
-    const centroid = a.add(b).add(c).normalize();
-    const t = terrain(centroid);
-    if (t.sea > 0.5)
-      tint.copy(PALETTE.shallow).lerp(PALETTE.deep, smoothstep(0.6, 1, t.sea));
-    else if (t.sea > 0.16) tint.copy(PALETTE.shore);
-    else if (t.pathEdge < 0.5) tint.copy(PALETTE.path);
-    else if (t.n > 0.78) tint.copy(PALETTE.rock);
-    else if (t.n > 0.56) tint.copy(PALETTE.grassHigh);
-    else if (t.n > 0.44) tint.copy(PALETTE.grassMid);
-    else tint.copy(PALETTE.grassLow);
-    for (let k = 0; k < 3; k++) {
-      colors[(i + k) * 3] = tint.r;
-      colors[(i + k) * 3 + 1] = tint.g;
-      colors[(i + k) * 3 + 2] = tint.b;
+    const t = terrain(a.add(b).add(c).normalize());
+    for (const [palette, arr] of [
+      [PALETTE, colors],
+      [PALETTE_DAY, colorsDay],
+    ]) {
+      faceColor(t, palette, tint);
+      for (let k = 0; k < 3; k++) {
+        arr[(i + k) * 3] = tint.r;
+        arr[(i + k) * 3 + 1] = tint.g;
+        arr[(i + k) * 3 + 2] = tint.b;
+      }
     }
   }
   geo.setAttribute("color", new Float32BufferAttribute(colors, 3));
+  geo.userData.night = colors.slice();
+  geo.userData.day = colorsDay;
   return geo;
 }
 
@@ -288,18 +327,24 @@ class Batch {
     this.glows = [];
   }
 
-  add(geo, color, matrix, { edges = true, edgeAngle = 25 } = {}) {
+  add(geo, color, matrix, { edges = true, edgeAngle = 25, day } = {}) {
     let g = geo.index ? geo.toNonIndexed() : geo.clone();
     g.deleteAttribute("uv");
     g.computeVertexNormals();
     const col = new Color(color);
+    const colDay = day ? new Color(day) : dayify(col);
     const arr = new Float32Array(g.attributes.position.count * 3);
+    const arrDay = new Float32Array(arr.length);
     for (let i = 0; i < arr.length; i += 3) {
       arr[i] = col.r;
       arr[i + 1] = col.g;
       arr[i + 2] = col.b;
+      arrDay[i] = colDay.r;
+      arrDay[i + 1] = colDay.g;
+      arrDay[i + 2] = colDay.b;
     }
     g.setAttribute("color", new Float32BufferAttribute(arr, 3));
+    g.setAttribute("colorDay", new Float32BufferAttribute(arrDay, 3));
     if (edges) {
       const e = new EdgesGeometry(g, edgeAngle);
       e.applyMatrix4(matrix);
@@ -488,6 +533,7 @@ function buildTrees(batch, rand) {
   const crown = new IcosahedronGeometry(0.018, 0);
   const trunk = new CylinderGeometry(0.0022, 0.0028, 0.016, 4);
   const greens = ["#1a3b36", "#1e4640", "#173430", "#21493f"];
+  const greensDay = ["#4d8a4c", "#5b9957", "#437d45", "#66a35e"];
   const up = new Vector3();
   let placed = 0;
   let guard = 0;
@@ -533,18 +579,26 @@ function buildTrees(batch, rand) {
     if (inCity || inHdb || nearDome || nearHouse) continue;
     const s = 0.75 + rand() * 0.6;
     const m = surfaceMatrix(phi, psi, rand() * Math.PI, -0.002, s);
-    const color = greens[Math.floor(rand() * greens.length)];
+    const pick = Math.floor(rand() * greens.length);
+    const leaf = { edges: false, day: greensDay[pick] };
     batch.add(trunk, "#2a2522", m.clone().multiply(local(0, 0.008, 0)), {
       edges: false,
+      day: "#8a6a4f",
     });
     if (rand() < 0.6)
-      batch.add(cone, color, m.clone().multiply(local(0, 0.04, 0)), {
-        edges: false,
-      });
+      batch.add(
+        cone,
+        greens[pick],
+        m.clone().multiply(local(0, 0.04, 0)),
+        leaf,
+      );
     else
-      batch.add(crown, color, m.clone().multiply(local(0, 0.032, 0)), {
-        edges: false,
-      });
+      batch.add(
+        crown,
+        greens[pick],
+        m.clone().multiply(local(0, 0.032, 0)),
+        leaf,
+      );
     placed++;
   }
 }
@@ -579,19 +633,21 @@ function buildHouses(batch, rand) {
   const win = new PlaneGeometry(0.007, 0.007);
   const porch = new BoxGeometry(0.0055, 0.0055, 0.0055);
   const walls = ["#3a4a5e", "#344357", "#3f4f63"];
+  const wallsDay = ["#efe6d6", "#e7dcc8", "#f4ede1"];
   HOUSES.forEach(([phi, psi], i) => {
     const m = surfaceMatrix(phi * DEG, psi * DEG, (rand() - 0.5) * 0.6);
     batch.add(
       wall,
       walls[i % walls.length],
       m.clone().multiply(local(0, 0.009, 0)),
+      { day: wallsDay[i % wallsDay.length] },
     );
     const r = new Matrix4().compose(
       new Vector3(0, 0.025, 0),
       new Quaternion().setFromAxisAngle(UP, Math.PI / 4),
       new Vector3(1.25, 1, 1.1),
     );
-    batch.add(roof, "#233146", m.clone().multiply(r));
+    batch.add(roof, "#233146", m.clone().multiply(r), { day: "#d27d56" });
     batch.glow(
       win,
       m
@@ -943,7 +999,10 @@ function placeMover(obj, phi, psi, heading, lift) {
 /* World                                                               */
 /* ------------------------------------------------------------------ */
 
-export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
+export function createWorld(
+  canvas,
+  { reducedMotion = false, onFrame, day = false } = {},
+) {
   const renderer = new WebGLRenderer({
     canvas,
     antialias: true,
@@ -967,31 +1026,46 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
   gradientMap.generateMipmaps = false;
   gradientMap.needsUpdate = true;
 
-  const lineMat = new LineBasicMaterial({
-    color: "#8fb0d6",
-    transparent: true,
-    opacity: 0.42,
-  });
-  const terrainLineMat = new LineBasicMaterial({
-    color: "#8fb0d6",
-    transparent: true,
-    opacity: 0.24,
-  });
-  const glowMat = new MeshBasicMaterial({
-    color: "#ffc46b",
-    toneMapped: false,
-  });
+  // Everything that changes between night and day registers here and is
+  // blended by applyTheme(k), k = 0 night .. 1 day.
+  const themed = [];
+  const themeColor = (obj, key, night, dayValue) =>
+    themed.push({
+      obj,
+      key,
+      night: new Color(night),
+      day: new Color(dayValue),
+    });
+  const themeNumber = (obj, key, night, dayValue) =>
+    themed.push({ obj, key, night, day: dayValue });
+
+  const lineMat = new LineBasicMaterial({ transparent: true });
+  themeColor(lineMat, "color", "#8fb0d6", "#2c4f7c");
+  themeNumber(lineMat, "opacity", 0.42, 0.34);
+  const terrainLineMat = new LineBasicMaterial({ transparent: true });
+  themeColor(terrainLineMat, "color", "#8fb0d6", "#2c4f7c");
+  themeNumber(terrainLineMat, "opacity", 0.24, 0.16);
+  const glowMat = new MeshBasicMaterial({ toneMapped: false });
+  themeColor(glowMat, "color", "#ffc46b", "#cfdbe7");
   const rand = mulberry32(20260926);
 
-  // Lights: moonlight from the upper left, a cool rim from behind.
-  scene.add(new HemisphereLight("#2f4a66", "#0b1220", 0.9));
-  scene.add(new AmbientLight("#1b2940", 0.5));
-  const moonLight = new DirectionalLight("#d6e4ff", 4.4);
-  moonLight.position.set(-3, 3.2, 2.4);
-  scene.add(moonLight);
-  const rim = new DirectionalLight("#7b9bd0", 2.2);
+  // Lights: moonlight (or sunlight) from the upper left, a rim from behind.
+  const hemi = new HemisphereLight();
+  themeColor(hemi, "color", "#2f4a66", "#d6e9ff");
+  themeColor(hemi, "groundColor", "#0b1220", "#7d9a6a");
+  themeNumber(hemi, "intensity", 0.9, 1.5);
+  const ambient = new AmbientLight();
+  themeColor(ambient, "color", "#1b2940", "#ffffff");
+  themeNumber(ambient, "intensity", 0.5, 0.55);
+  const keyLight = new DirectionalLight();
+  keyLight.position.set(-3, 3.2, 2.4);
+  themeColor(keyLight, "color", "#d6e4ff", "#fff0d2");
+  themeNumber(keyLight, "intensity", 4.4, 3.6);
+  const rim = new DirectionalLight();
   rim.position.set(3, 1.5, -3.5);
-  scene.add(rim);
+  themeColor(rim, "color", "#7b9bd0", "#ffffff");
+  themeNumber(rim, "intensity", 2.2, 1.2);
+  scene.add(hemi, ambient, keyLight, rim);
 
   const planet = new Group();
   scene.add(planet);
@@ -1011,16 +1085,10 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
   planet.add(
     new LineSegments(new EdgesGeometry(terrainGeo, 16), terrainLineMat),
   );
-  planet.add(
-    new LineSegments(
-      buildContours(terrainGeo),
-      new LineBasicMaterial({
-        color: "#8fb0d6",
-        transparent: true,
-        opacity: 0.16,
-      }),
-    ),
-  );
+  const contourMat = new LineBasicMaterial({ transparent: true });
+  themeColor(contourMat, "color", "#8fb0d6", "#2c4f7c");
+  themeNumber(contourMat, "opacity", 0.16, 0.12);
+  planet.add(new LineSegments(buildContours(terrainGeo), contourMat));
 
   // Static props, batched into one mesh, one edge set and one glow set.
   const batch = new Batch();
@@ -1030,6 +1098,9 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
   buildTrees(batch, rand);
   buildLamps(batch);
   const propsGeo = mergeGeometries(batch.solids);
+  propsGeo.userData.night = propsGeo.attributes.color.array.slice();
+  propsGeo.userData.day = propsGeo.attributes.colorDay.array;
+  propsGeo.deleteAttribute("colorDay");
   planet.add(
     new Mesh(
       propsGeo,
@@ -1046,46 +1117,45 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
   planet.add(new Mesh(mergeGeometries(batch.glows), glowMat));
 
   // Thin atmosphere: the inside of a slightly larger sphere, brightest at the
-  // planet's edge and fading outwards.
-  const atmosphere = new Mesh(
-    new SphereGeometry(1.09, 48, 32),
-    new ShaderMaterial({
-      uniforms: { glowColor: { value: new Color("#4f7bb8") } },
-      vertexShader: `varying vec3 vN; varying vec3 vV;
-        void main() {
-          vec4 mv = modelViewMatrix * vec4(position, 1.0);
-          vN = normalize(normalMatrix * normal);
-          vV = normalize(-mv.xyz);
-          gl_Position = projectionMatrix * mv;
-        }`,
-      fragmentShader: `uniform vec3 glowColor; varying vec3 vN; varying vec3 vV;
-        void main() {
-          float d = dot(normalize(vN), normalize(vV));
-          float f = pow(clamp(-d / 0.4, 0.0, 1.0), 2.2);
-          gl_FragColor = vec4(glowColor, f * 0.32);
-        }`,
-      transparent: true,
-      depthWrite: false,
-      side: BackSide,
-      blending: AdditiveBlending,
-    }),
-  );
-  scene.add(atmosphere);
+  // planet's edge and fading outwards. Normal blending so it also shows up
+  // against the light daytime page.
+  const atmosphereMat = new ShaderMaterial({
+    uniforms: {
+      glowColor: { value: new Color() },
+      strength: { value: 0.32 },
+    },
+    vertexShader: `varying vec3 vN; varying vec3 vV;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vN = normalize(normalMatrix * normal);
+        vV = normalize(-mv.xyz);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: `uniform vec3 glowColor; uniform float strength;
+      varying vec3 vN; varying vec3 vV;
+      void main() {
+        float d = dot(normalize(vN), normalize(vV));
+        float f = pow(clamp(-d / 0.4, 0.0, 1.0), 2.2);
+        gl_FragColor = vec4(glowColor, f * strength);
+      }`,
+    transparent: true,
+    depthWrite: false,
+    side: BackSide,
+    blending: NormalBlending,
+  });
+  themeColor(atmosphereMat.uniforms.glowColor, "value", "#4f7bb8", "#7fb4ea");
+  themeNumber(atmosphereMat.uniforms.strength, "value", 0.32, 0.5);
+  scene.add(new Mesh(new SphereGeometry(1.09, 48, 32), atmosphereMat));
 
   const cityGlow = new PointLight("#ffb454", 1.6, 0.9, 2);
   cityGlow.position.copy(sph(98 * DEG, -20 * DEG)).multiplyScalar(1.12);
+  themeNumber(cityGlow, "intensity", 1.6, 0);
   planet.add(cityGlow);
 
-  planet.add(
-    new LineSegments(
-      buildWaves(rand),
-      new LineBasicMaterial({
-        color: "#8fb0d6",
-        transparent: true,
-        opacity: 0.35,
-      }),
-    ),
-  );
+  const waveMat = new LineBasicMaterial({ transparent: true });
+  themeColor(waveMat, "color", "#8fb0d6", "#ffffff");
+  themeNumber(waveMat, "opacity", 0.35, 0.75);
+  planet.add(new LineSegments(buildWaves(rand), waveMat));
   planet.add(
     new Points(
       buildLanes(),
@@ -1109,15 +1179,16 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
       ),
     );
   }
+  const routeMat = new LineDashedMaterial({
+    dashSize: 0.012,
+    gapSize: 0.014,
+    transparent: true,
+  });
+  themeColor(routeMat, "color", "#8fb0d6", "#8a7a5a");
+  themeNumber(routeMat, "opacity", 0.5, 0.55);
   const route = new Line(
     new BufferGeometry().setFromPoints(routePts),
-    new LineDashedMaterial({
-      color: "#8fb0d6",
-      dashSize: 0.012,
-      gapSize: 0.014,
-      transparent: true,
-      opacity: 0.5,
-    }),
+    routeMat,
   );
   route.computeLineDistances();
   planet.add(route);
@@ -1141,15 +1212,16 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
     const a = (i / 200) * Math.PI * 2;
     orbitPts.push(new Vector3(Math.cos(a) * orbitR, Math.sin(a) * orbitR, 0));
   }
+  const orbitMat = new LineDashedMaterial({
+    dashSize: 0.035,
+    gapSize: 0.03,
+    transparent: true,
+  });
+  themeColor(orbitMat, "color", "#8fb0d6", "#2c4f7c");
+  themeNumber(orbitMat, "opacity", 0.3, 0.3);
   const orbitLine = new Line(
     new BufferGeometry().setFromPoints(orbitPts),
-    new LineDashedMaterial({
-      color: "#8fb0d6",
-      dashSize: 0.035,
-      gapSize: 0.03,
-      transparent: true,
-      opacity: 0.3,
-    }),
+    orbitMat,
   );
   orbitLine.computeLineDistances();
   orbit.add(orbitLine);
@@ -1161,48 +1233,117 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
   const character = buildCharacter(gradientMap);
   character.root.position.set(0, 1 + LAND_H, 0);
   character.root.scale.setScalar(1.35);
+  const shadowMat = character.root.children.find((c) => c.isMesh).material;
+  themeColor(shadowMat, "color", "#05080c", "#1d2b3a");
+  themeNumber(shadowMat, "opacity", 0.45, 0.22);
   scene.add(character.root);
 
   const stars = buildStars(rand);
+  stars.children.forEach((points) =>
+    themeNumber(points.material, "opacity", points.material.opacity, 0),
+  );
   scene.add(stars);
 
-  const moon = new Group();
-  const moonDisc = new Mesh(
-    new CircleGeometry(0.26, 40),
-    new MeshBasicMaterial({ color: "#dfe7f0" }),
-  );
-  const moonShade = new Mesh(
-    new CircleGeometry(0.25, 40),
-    new MeshBasicMaterial({ color: "#0a0f16" }),
-  );
-  moonShade.position.set(0.1, 0.07, 0.01);
-  const moonHalo = new Mesh(
-    new CircleGeometry(0.6, 40),
+  // Moon by night, sun by day. They swap places with a small set and rise.
+  const fading = (color, opacity = 1) =>
     new MeshBasicMaterial({
-      color: "#8fb0d6",
+      color,
       transparent: true,
-      opacity: 0.035,
+      opacity,
       depthWrite: false,
-    }),
-  );
+    });
+  const moon = new Group();
+  const moonHaloMat = fading("#8fb0d6", 0.035);
+  const moonDiscMat = fading("#dfe7f0");
+  const moonShadeMat = fading("#0a0f16");
+  const moonHalo = new Mesh(new CircleGeometry(0.6, 40), moonHaloMat);
   moonHalo.position.z = -0.02;
+  const moonDisc = new Mesh(new CircleGeometry(0.26, 40), moonDiscMat);
+  const moonShade = new Mesh(new CircleGeometry(0.25, 40), moonShadeMat);
+  moonShade.position.set(0.1, 0.07, 0.01);
   moon.add(moonHalo, moonDisc, moonShade);
+  themeNumber(moonHaloMat, "opacity", 0.035, 0);
+  themeNumber(moonDiscMat, "opacity", 1, 0);
+  themeNumber(moonShadeMat, "opacity", 1, 0);
   scene.add(moon);
+
+  const sun = new Group();
+  const sunHaloMat = fading("#ffe3a1", 0);
+  const sunDiscMat = fading("#ffd166", 0);
+  const sunRayMat = new LineBasicMaterial({
+    color: "#f2a93b",
+    transparent: true,
+    opacity: 0,
+  });
+  const sunHalo = new Mesh(new CircleGeometry(0.62, 48), sunHaloMat);
+  sunHalo.position.z = -0.02;
+  const sunDisc = new Mesh(new CircleGeometry(0.27, 48), sunDiscMat);
+  const rays = [];
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2;
+    rays.push(
+      Math.cos(a) * 0.36,
+      Math.sin(a) * 0.36,
+      0.01,
+      Math.cos(a) * 0.5,
+      Math.sin(a) * 0.5,
+      0.01,
+    );
+  }
+  const rayGeo = new BufferGeometry();
+  rayGeo.setAttribute("position", new Float32BufferAttribute(rays, 3));
+  const sunRays = new LineSegments(rayGeo, sunRayMat);
+  sun.add(sunHalo, sunDisc, sunRays);
+  themeNumber(sunHaloMat, "opacity", 0, 0.22);
+  themeNumber(sunDiscMat, "opacity", 0, 1);
+  themeNumber(sunRayMat, "opacity", 0, 0.9);
+  scene.add(sun);
+  const skyAnchor = new Vector3();
+
+  function applyTheme(k) {
+    for (const t of themed) {
+      if (t.night instanceof Color) t.obj[t.key].lerpColors(t.night, t.day, k);
+      else t.obj[t.key] = t.night + (t.day - t.night) * k;
+    }
+    for (const geo of [terrainGeo, propsGeo]) {
+      const attr = geo.attributes.color;
+      const { night, day: dayArr } = geo.userData;
+      for (let i = 0; i < attr.array.length; i++)
+        attr.array[i] = night[i] + (dayArr[i] - night[i]) * k;
+      attr.needsUpdate = true;
+    }
+    // The moon sets as the sun rises from below the same spot.
+    moon.position.copy(skyAnchor).y -= k * 1.1;
+    sun.position.copy(skyAnchor).y -= (1 - k) * 1.1;
+    moon.visible = k < 0.999;
+    sun.visible = k > 0.001;
+  }
 
   /* ---------------- state ---------------- */
   const BASE_SPEED = reducedMotion ? 0 : 0.085; // rad/s, ground moves left
-  let angle = -0.62;
-  let speed = BASE_SPEED;
+  const AXIS_Z = new Vector3(0, 0, 1);
+  const AXIS_X = new Vector3(1, 0, 0);
+  const qStep = new Quaternion();
+  const qInverse = new Quaternion();
+  const under = new Vector3();
+  planet.quaternion.setFromAxisAngle(AXIS_Z, -0.62);
+  let spin = BASE_SPEED; // about the view axis: the walker's direction
+  let tilt = 0; // about the horizontal axis: tumbles the world towards you
+  let scrollBoost = 0;
   let dragging = false;
   let lastX = 0;
+  let lastY = 0;
   let lastMoveTime = 0;
-  let dragVelocity = 0;
   let walkPhase = 0;
   let facing = 0;
+  let walkerY = 1 + LAND_H;
+  let boatPhase = 1;
   // Reduced motion shows one still frame with every labelled landmark in view.
   let time = reducedMotion ? 0.5 : 0;
   let timeScale = 1;
   let pauseTarget = 1;
+  let dayTarget = day ? 1 : 0;
+  let dayProgress = dayTarget;
   let running = false;
   let rafId = 0;
   let lastT = 0;
@@ -1232,7 +1373,7 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
       Math.cos(elev) * dist,
     ).add(target);
     camera.updateProjectionMatrix();
-    // Moon sits in the upper left of the frame, far behind the planet.
+    // Moon and sun sit in the upper left of the frame, far behind the planet.
     camera.position.copy(camera.userData.base);
     camera.lookAt(target);
     camera.updateMatrixWorld();
@@ -1240,8 +1381,14 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
       .unproject(camera)
       .sub(camera.position)
       .normalize();
-    moon.position.copy(camera.position).addScaledVector(ray, 16);
+    skyAnchor.copy(camera.position).addScaledVector(ray, 16);
     moon.lookAt(camera.position);
+    sun.lookAt(camera.position);
+    applyTheme(ease(dayProgress));
+  }
+
+  function ease(x) {
+    return x * x * (3 - 2 * x);
   }
 
   function resize(w, h) {
@@ -1252,6 +1399,18 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
     renderer.setSize(width, height, false);
     frameCamera();
     requestRender();
+  }
+
+  function rotateWorld(aboutZ, aboutX) {
+    if (aboutZ) {
+      qStep.setFromAxisAngle(AXIS_Z, aboutZ);
+      planet.quaternion.premultiply(qStep);
+    }
+    if (aboutX) {
+      qStep.setFromAxisAngle(AXIS_X, aboutX);
+      planet.quaternion.premultiply(qStep);
+    }
+    planet.quaternion.normalize();
   }
 
   function updateMovers(t) {
@@ -1266,17 +1425,17 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
     placeMover(vessel, vPhi, vPsi, vHead, 0.001 + Math.sin(t * 1.6) * 0.0012);
     vessel.rotateX(Math.sin(t * 1.3) * 0.04);
 
-    // Dragon boat laps the reservoir course.
-    const wB = 0.32;
-    const bPhi = -60 * DEG + 24 * DEG * Math.cos(wB * t + 1);
-    const bPsi = 56 * DEG + 2.6 * DEG * Math.sin(wB * t + 1);
+    // Dragon boat laps the reservoir course, surging on every stroke.
+    const bPhi = -60 * DEG + 24 * DEG * Math.cos(boatPhase);
+    const bPsi = 56 * DEG + 2.6 * DEG * Math.sin(boatPhase);
     const bHead = Math.atan2(
-      2.6 * Math.cos(wB * t + 1),
-      -24 * Math.sin(wB * t + 1) * Math.cos(bPsi),
+      2.6 * Math.cos(boatPhase),
+      -24 * Math.sin(boatPhase) * Math.cos(bPsi),
     );
     placeMover(dragonBoat, bPhi, bPsi, bHead, 0.001);
 
     flyer.wheel.rotation.z = -t * 0.12;
+    sunRays.rotation.z = t * 0.05;
 
     const a = t * 0.24 + 2.2;
     planeHolder.position.set(Math.cos(a) * orbitR, Math.sin(a) * orbitR, 0);
@@ -1285,7 +1444,9 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
   }
 
   function updateCharacter(dt) {
-    const pace = Math.min(Math.abs(speed) / 0.085, 3.2);
+    // Walk towards wherever the ground under the walker is coming from.
+    const speed = Math.hypot(spin, tilt);
+    const pace = Math.min(speed / 0.085, 3.2);
     walkPhase += dt * (4.2 + pace * 2.2) * Math.min(pace, 1);
     const swing = Math.min(0.62, 0.45 * pace);
     const s = Math.sin(walkPhase);
@@ -1295,9 +1456,19 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
     character.armR.rotation.z = s * swing * 0.8;
     character.body.position.y =
       Math.abs(Math.cos(walkPhase)) * 0.003 * Math.min(pace, 1.5);
-    const want = speed >= 0 ? 0 : Math.PI;
-    facing += (want - facing) * (1 - Math.exp(-dt * 10));
+    if (speed > 0.01) {
+      const want = Math.atan2(tilt, spin);
+      facing += wrapAngle(want - facing) * (1 - Math.exp(-dt * 10));
+    }
     character.root.rotation.y = facing;
+
+    // Stand on whatever terrain is underfoot; wade when it is water.
+    qInverse.copy(planet.quaternion).invert();
+    under.set(0, 1, 0).applyQuaternion(qInverse);
+    const ground = terrain(under);
+    const groundY = 1 + ground.h - (ground.sea > 0.5 ? 0.012 : 0);
+    walkerY += (groundY - walkerY) * (dt ? 1 - Math.exp(-dt * 12) : 1);
+    character.root.position.y = walkerY;
   }
 
   const centre = new Vector3();
@@ -1339,12 +1510,24 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
 
   function render(dt) {
     timeScale += (pauseTarget - timeScale) * (1 - Math.exp(-dt * 5));
-    if (!dragging)
-      speed +=
-        (BASE_SPEED * timeScale - speed) *
-        (1 - Math.exp(-dt * (pauseTarget ? 1.1 : 5)));
-    angle += speed * dt;
-    planet.rotation.z = angle;
+    scrollBoost *= Math.exp(-dt * 2.5);
+    if (!dragging) {
+      const settle = 1 - Math.exp(-dt * (pauseTarget ? 1.1 : 5));
+      spin += (BASE_SPEED * timeScale + scrollBoost - spin) * settle;
+      tilt *= Math.exp(-dt * 1.6);
+    }
+    rotateWorld(spin * dt, tilt * dt);
+    boatPhase += dt * timeScale * 0.32 * (1 + 0.55 * Math.sin(time * 6.2));
+
+    if (dayProgress !== dayTarget) {
+      const step = dt / 1.4;
+      dayProgress =
+        dayTarget > dayProgress
+          ? Math.min(dayTarget, dayProgress + step)
+          : Math.max(dayTarget, dayProgress - step);
+      applyTheme(ease(dayProgress));
+    }
+
     updateMovers(time);
     updateCharacter(dt);
 
@@ -1362,7 +1545,12 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
   }
 
   function isSettled() {
-    return reducedMotion && !dragging && Math.abs(speed) < 0.0005;
+    return (
+      reducedMotion &&
+      !dragging &&
+      Math.abs(spin) < 0.0005 &&
+      Math.abs(tilt) < 0.0005
+    );
   }
 
   function loop(now) {
@@ -1398,12 +1586,14 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
   }
 
   /* ---------------- input ---------------- */
+  // Drag in any direction: sideways spins the world under the walker,
+  // up and down tumbles it towards or away from you.
   function onPointerDown(e) {
     if (e.button !== undefined && e.button !== 0) return;
     dragging = true;
     lastX = e.clientX;
+    lastY = e.clientY;
     lastMoveTime = performance.now();
-    dragVelocity = 0;
     canvas.setPointerCapture?.(e.pointerId);
     start();
   }
@@ -1415,21 +1605,26 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
     if (!dragging) return;
     const now = performance.now();
     const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
     const dtm = Math.max(1, now - lastMoveTime) / 1000;
     lastX = e.clientX;
+    lastY = e.clientY;
     lastMoveTime = now;
     const radPerPx = 2.2 / Math.max(240, rect.width);
-    angle -= dx * radPerPx;
-    dragVelocity = (-dx * radPerPx) / dtm;
-    speed = clamp(dragVelocity, -3, 3);
+    rotateWorld(-dx * radPerPx, dy * radPerPx);
+    spin = clamp((-dx * radPerPx) / dtm, -3, 3);
+    tilt = clamp((dy * radPerPx) / dtm, -3, 3);
   }
 
   function onPointerUp(e) {
     if (!dragging) return;
     dragging = false;
     canvas.releasePointerCapture?.(e.pointerId);
-    if (performance.now() - lastMoveTime > 80)
-      speed = BASE_SPEED || speed * 0.2;
+    // A drag that stopped before release should not fling the world.
+    if (performance.now() - lastMoveTime > 80) {
+      spin = BASE_SPEED;
+      tilt = 0;
+    }
   }
 
   function onPointerLeave() {
@@ -1470,6 +1665,19 @@ export function createWorld(canvas, { reducedMotion = false, onFrame } = {}) {
     dispose,
     setPaused(paused) {
       pauseTarget = paused ? 0 : 1;
+    },
+    // Page scroll speed (px/s) briefly speeds the walk up.
+    nudge(velocity) {
+      if (reducedMotion || !running) return;
+      scrollBoost = clamp(velocity / 2600, -1.1, 1.1);
+    },
+    setDay(isDay) {
+      dayTarget = isDay ? 1 : 0;
+      if (reducedMotion || !running) {
+        dayProgress = dayTarget;
+        applyTheme(dayProgress);
+        requestRender();
+      }
     },
   };
 }

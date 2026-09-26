@@ -6,8 +6,9 @@
   transition: transform 280ms var(--ease-out);
 }
 
+/* Clear the pill's drop shadow too, which hangs below the bar. */
 .nav.is-hidden {
-  transform: translateY(-110%);
+  transform: translateY(calc(-100% - 64px));
 }
 
 .nav__inner {
@@ -27,7 +28,7 @@
   font-weight: 700;
   font-size: 1.05rem;
   letter-spacing: -0.01em;
-  background: rgb(14 21 31 / 0.72);
+  background: var(--glass);
   box-shadow: inset 0 0 0 1px var(--line);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
@@ -35,7 +36,7 @@
 }
 
 .nav__brand span {
-  color: var(--accent);
+  color: var(--accent-text);
   margin-inline: 1px;
 }
 
@@ -43,13 +44,19 @@
   transform: scale(0.97);
 }
 
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .nav__pill {
   border-radius: 999px;
   padding: 5px;
-  background: rgb(14 21 31 / 0.72);
+  background: var(--glass);
   box-shadow:
     inset 0 0 0 1px var(--line),
-    0 12px 40px rgb(3 6 10 / 0.35);
+    0 12px 40px var(--shadow-soft);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
 }
@@ -84,8 +91,8 @@
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: rgb(143 176 214 / 0.12);
-  box-shadow: inset 0 0 0 1px rgb(143 176 214 / 0.16);
+  background: var(--indicator);
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -94,9 +101,53 @@
   }
 }
 
+.nav__theme {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--glass);
+  box-shadow:
+    inset 0 0 0 1px var(--line),
+    0 12px 40px var(--shadow-soft);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  transition: transform 140ms var(--ease-out);
+}
+
+.nav__theme:active {
+  transform: scale(0.97);
+}
+
+.nav__theme-icon {
+  display: grid;
+  place-items: center;
+}
+
+.nav__theme svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 350ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav__theme:hover svg {
+    transform: rotate(-20deg);
+  }
+
+  .nav__theme[aria-pressed="false"]:hover svg {
+    transform: rotate(45deg);
+  }
+}
+
 @media (prefers-reduced-transparency: reduce) {
   .nav__brand,
   .nav__pill,
+  .nav__theme,
   .nav__menu-btn {
     background: var(--bg-raised);
     backdrop-filter: none;
@@ -113,7 +164,7 @@
   border-radius: 999px;
   font-size: 0.9375rem;
   font-weight: 560;
-  background: rgb(14 21 31 / 0.8);
+  background: var(--glass-strong);
   box-shadow: inset 0 0 0 1px var(--line-strong);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -155,7 +206,7 @@
 }
 
 .sheet-menu a[aria-current="true"] {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 @media (max-width: 860px) {
@@ -165,5 +216,10 @@
 
   .nav__menu-btn {
     display: inline-flex;
+  }
+
+  .nav__theme {
+    width: 40px;
+    height: 40px;
   }
 }

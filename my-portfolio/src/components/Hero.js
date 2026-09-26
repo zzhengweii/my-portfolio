@@ -1,4 +1,17 @@
-import React, { Component, Suspense, lazy, useEffect, useState } from "react";
+import React, {
+  Component,
+  Suspense,
+  lazy,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { PiArrowDownRight, PiHandGrabbing } from "react-icons/pi";
 import PlanetPlaceholder from "./planet/PlanetPlaceholder";
 import RollText from "./ui/RollText";
@@ -23,7 +36,7 @@ class WorldBoundary extends Component {
   }
 }
 
-function WorldStage() {
+function WorldStage({ style }) {
   const [mount, setMount] = useState(false);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -39,7 +52,10 @@ function WorldStage() {
   }, []);
 
   return (
-    <div className={`world${ready && !failed ? " is-ready" : ""}`}>
+    <motion.div
+      className={`world${ready && !failed ? " is-ready" : ""}`}
+      style={style}
+    >
       <PlanetPlaceholder className="world__placeholder" />
       {mount && !failed && (
         <WorldBoundary onError={() => setFailed(true)}>
@@ -57,15 +73,35 @@ function WorldStage() {
           {finePointer ? "Drag to spin" : "Swipe to spin"}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 }
 
 export default function Hero() {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const stacked = useMediaQuery("(max-width: 960px)");
+  // Parallax as the hero scrolls away: the copy lifts off faster than the
+  // page and fades, the planet lags behind and recedes.
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const k = reduce ? 0 : stacked ? 0.5 : 1;
+  const copyY = useTransform(scrollYProgress, (v) => v * -150 * k);
+  const copyOpacity = useTransform(scrollYProgress, (v) =>
+    reduce ? 1 : Math.max(0, 1 - v * 1.2),
+  );
+  const worldY = useTransform(scrollYProgress, (v) => v * 220 * k);
+  const worldScale = useTransform(scrollYProgress, (v) => 1 - v * 0.12 * k);
+
   return (
-    <section id="home" className="hero" aria-labelledby="hero-title">
+    <section ref={ref} id="home" className="hero" aria-labelledby="hero-title">
       <div className="container hero__grid">
-        <div className="hero__copy">
+        <motion.div
+          className="hero__copy"
+          style={{ y: copyY, opacity: copyOpacity }}
+        >
           <p className="hero__eyebrow label">
             Now: Data Scientist Intern at Monee (MariBank)
           </p>
@@ -92,8 +128,8 @@ export default function Hero() {
               <RollText>Contact</RollText>
             </a>
           </div>
-        </div>
-        <WorldStage />
+        </motion.div>
+        <WorldStage style={{ y: worldY, scale: worldScale }} />
       </div>
     </section>
   );

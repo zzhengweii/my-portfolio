@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { experience } from "../data/content";
-import { Reveal } from "./ui/motion";
+import { Parallax, Reveal } from "./ui/motion";
 import "./Experience.css";
 
 export default function Experience() {
@@ -25,9 +25,11 @@ export default function Experience() {
       aria-labelledby="experience-title"
     >
       <div className="container">
-        <Reveal as="h2" className="section-title" id="experience-title">
-          Experience
-        </Reveal>
+        <Parallax distance={28}>
+          <Reveal as="h2" className="section-title" id="experience-title">
+            Experience
+          </Reveal>
+        </Parallax>
 
         <div ref={routeRef} className="route">
           <span className="route__track" aria-hidden="true" />
@@ -65,7 +67,7 @@ export default function Experience() {
                   )}
                 </div>
                 {job.figures.length > 0 && (
-                  <ul className="stop__figures">
+                  <Parallax as="ul" className="stop__figures" distance={36}>
                     {job.figures.map((figure) => (
                       <li key={figure.label}>
                         <strong className="figure__value">
@@ -74,7 +76,7 @@ export default function Experience() {
                         <span className="figure__label">{figure.label}</span>
                       </li>
                     ))}
-                  </ul>
+                  </Parallax>
                 )}
               </Reveal>
             ))}

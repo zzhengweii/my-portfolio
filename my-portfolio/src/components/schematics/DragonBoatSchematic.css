@@ -1,0 +1,214 @@
+/*
+ * Dragon boat crew in motion. One stroke lasts --stroke; every part runs on
+ * that clock and starts after the drawing has finished (--start), so paddles,
+ * drum, paddlers and puddles stay in time. Off screen, everything pauses
+ * together.
+ */
+.schematic--boat {
+  --stroke: 1.2s;
+  --start: 2.3s;
+  /* catch: quick, powerful pull; recovery: slower glide forward */
+  --drive: cubic-bezier(0.35, 0, 0.25, 1);
+  --glide: cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.schematic--boat:not(.is-playing) * {
+  animation-play-state: paused !important;
+}
+
+/* Lane markers: buoy dots streaming towards the stern. */
+.boat-lane {
+  fill: none;
+  stroke: var(--schematic-dim);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 0 20;
+  vector-effect: non-scaling-stroke;
+}
+
+.schematic--boat.is-drawn .boat-lane {
+  animation: boat-lane 0.62s linear infinite;
+}
+
+@keyframes boat-lane {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.boat-wake {
+  fill: none;
+  stroke: var(--schematic-dim);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dasharray: 3 7;
+  vector-effect: non-scaling-stroke;
+}
+
+.schematic--boat.is-drawn .boat-wake {
+  animation: boat-lane 0.62s linear infinite;
+}
+
+.schematic--boat.is-drawn .boat-surge {
+  animation: boat-surge var(--stroke) var(--start) infinite;
+}
+
+@keyframes boat-surge {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: var(--drive);
+  }
+  40% {
+    transform: translateY(-3px);
+    animation-timing-function: var(--glide);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Paddles swing about the gunwale: forward to the catch, back through the
+   drive, then a slower recovery. --side mirrors the starboard paddles. */
+.schematic--boat.is-drawn .boat-paddle {
+  animation: boat-stroke var(--stroke) var(--start) infinite backwards;
+}
+
+@keyframes boat-stroke {
+  0% {
+    transform: rotate(calc(var(--side) * 46deg));
+    animation-timing-function: var(--drive);
+  }
+  38% {
+    transform: rotate(calc(var(--side) * -14deg));
+    animation-timing-function: linear;
+  }
+  46% {
+    transform: rotate(calc(var(--side) * -16deg));
+    animation-timing-function: var(--glide);
+  }
+  100% {
+    transform: rotate(calc(var(--side) * 46deg));
+  }
+}
+
+.schematic--boat.is-drawn .boat-paddler {
+  animation: boat-lean var(--stroke) var(--start) infinite backwards;
+}
+
+@keyframes boat-lean {
+  0% {
+    transform: translateY(-2.5px);
+    animation-timing-function: var(--drive);
+  }
+  38% {
+    transform: translateY(2px);
+    animation-timing-function: var(--glide);
+  }
+  100% {
+    transform: translateY(-2.5px);
+  }
+}
+
+/* The swirl each blade leaves behind as it exits, drifting astern. */
+.boat-puddle {
+  fill: none;
+  stroke: var(--schematic-dim);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.schematic--boat.is-drawn .boat-puddle {
+  animation: boat-puddle var(--stroke) var(--start) infinite;
+}
+
+@keyframes boat-puddle {
+  0%,
+  40% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  46% {
+    opacity: 1;
+    transform: translateY(2px) scale(0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(28px) scale(1.7);
+  }
+}
+
+/* Drum: a hit on the catch, and a ring spreading out from it. */
+.boat-drum {
+  transform-origin: 140px 126px;
+}
+
+.schematic--boat.is-drawn .boat-drum {
+  animation: boat-drum var(--stroke) var(--start) infinite;
+}
+
+@keyframes boat-drum {
+  0% {
+    transform: scale(1.16);
+    stroke: var(--accent-line);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  30%,
+  100% {
+    transform: scale(1);
+    stroke: var(--schematic);
+  }
+}
+
+.boat-beat {
+  fill: none;
+  stroke: var(--accent-line);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform-origin: 140px 126px;
+}
+
+.schematic--boat.is-drawn .boat-beat {
+  animation: boat-beat var(--stroke) var(--start) infinite;
+}
+
+@keyframes boat-beat {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+/* The steerer's sweep oar makes small corrections, one every two strokes. */
+.boat-oar {
+  transform-origin: 146px 562px;
+}
+
+.schematic--boat.is-drawn .boat-oar {
+  animation: boat-oar calc(var(--stroke) * 2) var(--start) ease-in-out infinite
+    alternate;
+}
+
+@keyframes boat-oar {
+  from {
+    transform: rotate(-4deg);
+  }
+  to {
+    transform: rotate(4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schematic--boat.is-drawn * {
+    animation: none !important;
+  }
+}

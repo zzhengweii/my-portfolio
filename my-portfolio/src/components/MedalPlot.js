@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import { races } from "../data/content";
 
 // Unit dot plot: one dot per podium, stacked by race distance. Medals are an
@@ -14,12 +15,39 @@ const RANK = { gold: 0, silver: 1, bronze: 2 };
 
 const describe = (r) => `${r.year ? `${r.year} ` : ""}${r.event}`;
 
+// Results list: newest first, undated results last.
+const RESULTS = races
+  .map((race, index) => ({ ...race, index }))
+  .sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0));
+
 export default function MedalPlot() {
+  // active: a dot being hovered or focused (shows its tooltip).
+  // linked: a result row being hovered (lifts its dot).
   const [active, setActive] = useState(null);
+  const [linked, setLinked] = useState(null);
+  const reduce = useReducedMotion();
+  const scroller = useRef(null);
+  const rows = useRef({});
   const counts = MEDALS.map((m) => ({
     ...m,
     count: races.filter((r) => r.medal === m.id).length,
   }));
+
+  // Pointing at a dot scrolls the results list (not the page) to its row.
+  useEffect(() => {
+    const box = scroller.current;
+    const row = rows.current[active];
+    if (active === null || !box || !row) return;
+    const head = box.querySelector("thead")?.offsetHeight || 0;
+    const top = row.offsetTop - head;
+    const bottom = row.offsetTop + row.offsetHeight - box.clientHeight;
+    if (box.scrollTop > top || box.scrollTop < bottom) {
+      box.scrollTo({
+        top: box.scrollTop > top ? top : bottom + 12,
+        behavior: reduce ? "auto" : "smooth",
+      });
+    }
+  }, [active, reduce]);
 
   return (
     <figure className="medals">
@@ -48,11 +76,12 @@ export default function MedalPlot() {
               >
                 {stack.map((race) => {
                   const isActive = active === race.index;
+                  const isLit = isActive || linked === race.index;
                   return (
                     <li key={race.index}>
                       <button
                         type="button"
-                        className={`medal medal--${race.medal}${isActive ? " is-active" : ""}`}
+                        className={`medal medal--${race.medal}${isLit ? " is-active" : ""}`}
                         aria-label={`${race.medal}, ${describe(race)}, ${race.race}`}
                         onPointerEnter={() => setActive(race.index)}
                         onFocus={() => setActive(race.index)}
@@ -90,29 +119,66 @@ export default function MedalPlot() {
         ))}
       </ul>
 
-      <details className="medals__table">
-        <summary>All {races.length} results</summary>
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Year</th>
-              <th scope="col">Event</th>
-              <th scope="col">Race</th>
-              <th scope="col">Medal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {races.map((r) => (
-              <tr key={`${r.event}-${r.race}-${r.year}`}>
-                <td className="mono">{r.year || "-"}</td>
-                <td>{r.event}</td>
-                <td>{r.race}</td>
-                <td>{MEDALS[RANK[r.medal]].label}</td>
+      <div className="medals__results">
+        <p id="medal-results" className="medals__results-title label">
+          All {races.length} results
+        </p>
+        {/* Fixed height: the list scrolls instead of stretching the card. */}
+        <div
+          ref={scroller}
+          className="medals__scroll"
+          role="region"
+          aria-labelledby="medal-results"
+          tabIndex={0}
+        >
+          <table className="medals__table">
+            <thead>
+              <tr>
+                <th scope="col">Medal</th>
+                <th scope="col">Race</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </details>
+            </thead>
+            <tbody>
+              {RESULTS.map((r) => (
+                <tr
+                  key={r.index}
+                  ref={(el) => {
+                    rows.current[r.index] = el;
+                  }}
+                  className={
+                    active === r.index || linked === r.index
+                      ? "is-linked"
+                      : undefined
+                  }
+                  onPointerEnter={() => setLinked(r.index)}
+                  onPointerLeave={() => setLinked(null)}
+                >
+                  <td>
+                    <span className="medals__medal">
+                      <span
+                        className={`medal__dot medal__dot--${r.medal}`}
+                        aria-hidden="true"
+                      />
+                      {MEDALS[RANK[r.medal]].label}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="medals__race">{r.race}</span>
+                    <span className="medals__event">
+                      {r.event}
+                      {r.year && (
+                        <>
+                          , <span className="mono">{r.year}</span>
+                        </>
+                      )}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </figure>
   );
 }

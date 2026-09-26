@@ -14,8 +14,32 @@
   --schematic: rgb(143 176 214 / 0.72);
   --schematic-dim: rgb(143 176 214 / 0.38);
   --accent: #f4b55b;
+  --accent-hover: #f7c276;
   --accent-ink: #1a1206;
   --accent-soft: rgb(244 181 91 / 0.14);
+  /* accent for strokes, small marks and focus rings; and for accent text */
+  --accent-line: #f4b55b;
+  --accent-text: #f4b55b;
+
+  --glass: rgb(14 21 31 / 0.72);
+  --glass-strong: rgb(14 21 31 / 0.82);
+  --label-bg: rgb(10 15 22 / 0.86);
+  --hover-wash: rgb(143 176 214 / 0.08);
+  --indicator: rgb(143 176 214 / 0.12);
+  --glow: rgb(79 123 184 / 0.11);
+  --grid-dot: rgb(143 176 214 / 0.13);
+  --shadow-deep: rgb(3 8 16 / 0.8);
+  --shadow-soft: rgb(3 6 10 / 0.35);
+  --stamp-paper: #17222f;
+  --grain-opacity: 0.045;
+  /* page-wide parallax sky (Sky.css): far specks, near drafting marks */
+  --sky-far: rgb(214 226 240 / 0.42);
+  --sky-near: rgb(143 176 214 / 0.3);
+
+  /* medal ramp (ordinal), validated against this theme's surface */
+  --gold: #f4b55b;
+  --silver: #ada392;
+  --bronze: #8c6231;
 
   --font-sans:
     "Bricolage Grotesque Variable", ui-sans-serif, system-ui, -apple-system,
@@ -40,8 +64,56 @@
   --z-preview: 20;
   --z-nav: 40;
   --z-menu: 50;
+  --z-lightbox: 55;
   --z-grain: 60;
   --z-skip: 70;
+}
+
+/* Day: blueprint paper. Same structure, light surfaces, navy ink. */
+:root[data-theme="day"] {
+  color-scheme: light;
+
+  --bg: #eef2f7;
+  --bg-raised: #e6ecf3;
+  --surface: #f8fafc;
+  --surface-2: #ffffff;
+  --ink: #0d1726;
+  --ink-2: #3d4b5e;
+  --ink-3: #5b6879;
+  --line: rgb(32 64 110 / 0.14);
+  --line-strong: rgb(32 64 110 / 0.24);
+  --schematic: rgb(28 70 132 / 0.72);
+  --schematic-dim: rgb(28 70 132 / 0.36);
+  --accent: #f2a93b;
+  --accent-hover: #f5b75a;
+  --accent-soft: rgb(242 169 59 / 0.18);
+  --accent-line: #b06d00;
+  --accent-text: #8f5300;
+
+  --glass: rgb(248 250 252 / 0.78);
+  --glass-strong: rgb(248 250 252 / 0.9);
+  --label-bg: rgb(255 255 255 / 0.9);
+  --hover-wash: rgb(32 64 110 / 0.06);
+  --indicator: rgb(32 64 110 / 0.08);
+  --glow: rgb(79 123 184 / 0.14);
+  --grid-dot: rgb(32 64 110 / 0.14);
+  --shadow-deep: rgb(30 50 80 / 0.22);
+  --shadow-soft: rgb(30 50 80 / 0.12);
+  --stamp-paper: #ffffff;
+  --grain-opacity: 0.03;
+  --sky-far: rgb(28 70 132 / 0.16);
+  --sky-near: rgb(28 70 132 / 0.24);
+
+  --gold: #d39a2e;
+  --silver: #9a9282;
+  --bronze: #855733;
+}
+
+/* The theme switch grows out of the toggle (see theme.js). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 *,
@@ -58,10 +130,11 @@ html {
   background: var(--bg);
 }
 
+/* The page colour lives on <html> only: a body background would paint over
+   the fixed parallax sky (z-index -1). */
 body {
   margin: 0;
   min-height: 100svh;
-  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
@@ -79,7 +152,7 @@ body::after {
   inset: 0;
   z-index: var(--z-grain);
   pointer-events: none;
-  opacity: 0.045;
+  opacity: var(--grain-opacity);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -149,7 +222,7 @@ button,
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent-line);
   outline-offset: 3px;
 }
 
@@ -269,11 +342,11 @@ button,
 
 @media (hover: hover) and (pointer: fine) {
   .btn--primary:hover {
-    background: #f7c276;
+    background: var(--accent-hover);
   }
 
   .btn--ghost:hover {
-    background: rgb(143 176 214 / 0.08);
+    background: var(--hover-wash);
     box-shadow: inset 0 0 0 1px var(--schematic-dim);
   }
 }
@@ -298,7 +371,7 @@ button,
 }
 
 .sx--accent {
-  stroke: var(--accent);
+  stroke: var(--accent-line);
 }
 
 .sx-fill {
@@ -351,13 +424,13 @@ button,
 
 .sx-node {
   fill: var(--bg);
-  stroke: var(--accent);
+  stroke: var(--accent-line);
   stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
 }
 
 .sx-node__dot {
-  fill: var(--accent);
+  fill: var(--accent-line);
 }
 
 .sx-box {
@@ -368,8 +441,8 @@ button,
 }
 
 .sx-box--accent {
-  fill: rgb(244 181 91 / 0.12);
-  stroke: var(--accent);
+  fill: var(--accent-soft);
+  stroke: var(--accent-line);
 }
 
 .sx-box__text {
@@ -382,7 +455,7 @@ button,
 /* Data moving along a wire. Dash units are screen pixels here. */
 .sx-flow {
   fill: none;
-  stroke: var(--accent);
+  stroke: var(--accent-line);
   stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
   stroke-dasharray: 2 14;

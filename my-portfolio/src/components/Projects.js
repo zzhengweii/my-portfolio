@@ -1,21 +1,30 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useSpring,
   useTransform,
   useVelocity,
 } from "framer-motion";
-import { PiArrowRight, PiArrowUpRight } from "react-icons/pi";
+import {
+  PiArrowRight,
+  PiArrowUpRight,
+  PiArrowsOutSimple,
+} from "react-icons/pi";
 import { featuredProject, projects } from "../data/content";
-import VesselSchematic, { VESSEL_PARTS } from "./schematics/VesselSchematic";
+import ProjectLightbox from "./ProjectLightbox";
+import VesselSchematic, {
+  VESSEL_NOTES,
+  VESSEL_PARTS,
+} from "./schematics/VesselSchematic";
 import {
   FraudPreview,
   HealthcarePreview,
 } from "./schematics/PreviewSchematics";
 import RollText from "./ui/RollText";
-import { Reveal, useMediaQuery } from "./ui/motion";
+import { Parallax, Reveal, useMediaQuery } from "./ui/motion";
 import "./Projects.css";
 
 const SCHEMATIC_PREVIEWS = {
@@ -23,13 +32,15 @@ const SCHEMATIC_PREVIEWS = {
   healthcare: HealthcarePreview,
 };
 
-function Preview({ project }) {
+// describe: the preview is the main content (pop-up), so it gets alt text.
+function Preview({ project, describe = false }) {
+  const alt = describe ? project.preview.alt : "";
   if (project.preview.kind === "image") {
     return (
       <img
         src={project.preview.src}
-        alt=""
-        loading="lazy"
+        alt={alt}
+        loading={describe ? "eager" : "lazy"}
         decoding="async"
         width="960"
         height="720"
@@ -37,14 +48,31 @@ function Preview({ project }) {
     );
   }
   const Diagram = SCHEMATIC_PREVIEWS[project.id];
-  return <Diagram />;
+  return describe ? (
+    <div className="preview__diagram" role="img" aria-label={alt}>
+      <Diagram />
+    </div>
+  ) : (
+    <Diagram />
+  );
 }
 
+// The drawing and the signal list share one selection: hovering or focusing
+// previews a signal, clicking or tapping pins it until picked again.
 function FeaturedSheet({ project }) {
+  const [pinned, setPinned] = useState(null);
+  const [hovered, setHovered] = useState(null);
+  const active = hovered ?? pinned;
+  const pick = useCallback(
+    (i) => setPinned((current) => (current === i ? null : i)),
+    [],
+  );
+  const finePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
+
   return (
     <Reveal as="article" className="sheet" aria-labelledby="featured-title">
       <div className="sheet__drawing">
-        <VesselSchematic />
+        <VesselSchematic active={active} onHover={setHovered} onPick={pick} />
       </div>
 
       <div className="sheet__intro">
@@ -54,16 +82,42 @@ function FeaturedSheet({ project }) {
         <p className="sheet__summary">{project.summary}</p>
       </div>
 
-      <ol className="sheet__parts" aria-label="Signals the model reads">
-        {VESSEL_PARTS.map((part, i) => (
-          <li key={part}>
-            <span className="balloon mono" aria-hidden="true">
-              {i + 1}
-            </span>
-            {part}
-          </li>
-        ))}
-      </ol>
+      <div className="sheet__signals">
+        <ol className="sheet__parts" aria-label="Signals the model reads">
+          {VESSEL_PARTS.map((part, i) => (
+            <li key={part}>
+              <button
+                type="button"
+                className={`part${active === i ? " is-active" : ""}`}
+                aria-pressed={pinned === i}
+                onClick={() => pick(i)}
+                onPointerEnter={(e) =>
+                  e.pointerType === "mouse" && setHovered(i)
+                }
+                onPointerLeave={(e) =>
+                  e.pointerType === "mouse" && setHovered(null)
+                }
+                onFocus={() => setHovered(i)}
+                onBlur={() => setHovered(null)}
+              >
+                <span className="balloon mono" aria-hidden="true">
+                  {i + 1}
+                </span>
+                {part}
+              </button>
+            </li>
+          ))}
+        </ol>
+        <p className="sheet__readout" aria-live="polite">
+          {active === null ? (
+            `${finePointer ? "Hover over" : "Tap"} a signal to trace it through the ship.`
+          ) : (
+            <>
+              <strong>{VESSEL_PARTS[active]}.</strong> {VESSEL_NOTES[active]}
+            </>
+          )}
+        </p>
+      </div>
 
       <ol className="sheet__pipeline" aria-label="Modelling pipeline">
         {project.pipeline.map((step, i) => (
@@ -97,9 +151,17 @@ function FeaturedSheet({ project }) {
 
 // op.al-style index: a preview follows the cursor on a spring, leans with
 // horizontal speed, and cross-fades between projects. Siblings dim in CSS.
+// On touch screens and narrow windows each row shows a thumbnail instead,
+// which opens the picture in a pop-up.
 function ProjectIndex({ items }) {
   const [active, setActive] = useState(null);
-  const finePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
+  const [opened, setOpened] = useState(null);
+  const tapToOpen = useMediaQuery(
+    "(hover: none), (pointer: coarse), (max-width: 1024px)",
+  );
+  const finePointer = !tapToOpen;
+  const close = useCallback(() => setOpened(null), []);
+  const openedProject = items.find((project) => project.id === opened);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const sx = useSpring(x, { stiffness: 320, damping: 32, mass: 0.6 });
@@ -130,7 +192,7 @@ function ProjectIndex({ items }) {
 
   return (
     <div
-      className="index"
+      className={`index${tapToOpen ? " index--tap" : ""}`}
       onPointerMove={finePointer ? onPointerMove : undefined}
       onPointerLeave={() => setActive(null)}
     >
@@ -154,9 +216,27 @@ function ProjectIndex({ items }) {
               <p className="index__blurb">{project.blurb}</p>
               <p className="index__stack">{project.stack.join(", ")}</p>
             </div>
-            <div className="index__thumb" aria-hidden="true">
-              <Preview project={project} />
-            </div>
+            {tapToOpen && (
+              <button
+                type="button"
+                className="index__thumb"
+                aria-haspopup="dialog"
+                aria-label={`Open picture: ${project.title}`}
+                onClick={() => setOpened(project.id)}
+              >
+                <motion.span
+                  layoutId={`shot-${project.id}`}
+                  className={`index__shot${opened === project.id ? " is-open" : ""}`}
+                  style={{ borderRadius: 12 }}
+                  transition={{ type: "spring", duration: 0.5, bounce: 0.14 }}
+                >
+                  <Preview project={project} />
+                </motion.span>
+                <span className="index__zoom" aria-hidden="true">
+                  <PiArrowsOutSimple />
+                </span>
+              </button>
+            )}
             <div className="index__links">
               {project.links.length > 0 ? (
                 project.links.map((link) => (
@@ -179,6 +259,18 @@ function ProjectIndex({ items }) {
           </li>
         ))}
       </ul>
+
+      <AnimatePresence>
+        {openedProject && (
+          <ProjectLightbox
+            key={openedProject.id}
+            project={openedProject}
+            onClose={close}
+          >
+            <Preview project={openedProject} describe />
+          </ProjectLightbox>
+        )}
+      </AnimatePresence>
 
       {finePointer &&
         createPortal(
@@ -212,9 +304,11 @@ export default function Projects() {
       aria-labelledby="projects-title"
     >
       <div className="container">
-        <Reveal as="h2" className="section-title" id="projects-title">
-          Selected projects
-        </Reveal>
+        <Parallax distance={28}>
+          <Reveal as="h2" className="section-title" id="projects-title">
+            Selected projects
+          </Reveal>
+        </Parallax>
         <FeaturedSheet project={featuredProject} />
         <ProjectIndex items={projects} />
       </div>

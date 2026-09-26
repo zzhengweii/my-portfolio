@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import {
   PiArrowUp,
   PiArrowUpRight,
@@ -71,9 +77,9 @@ const HOLES = [
   ...Array.from({ length: 14 }, (_, i) => [96, 6 + i * 8]),
 ];
 
-function Stamp() {
+function Stamp({ style }) {
   return (
-    <div className="stamp" aria-hidden="true">
+    <motion.div className="stamp" aria-hidden="true" style={style}>
       <svg viewBox="0 0 96 116">
         <rect className="stamp__paper" x="0" y="0" width="96" height="116" />
         {HOLES.map(([cx, cy]) => (
@@ -106,13 +112,18 @@ function Stamp() {
           Z/W
         </text>
       </svg>
-    </div>
+    </motion.div>
   );
 }
 
-function Postmark() {
+function Postmark({ style }) {
   return (
-    <svg className="postmark" viewBox="0 0 200 110" aria-hidden="true">
+    <motion.svg
+      className="postmark"
+      viewBox="0 0 200 110"
+      aria-hidden="true"
+      style={style}
+    >
       <defs>
         <path
           id="postmark-ring"
@@ -141,11 +152,30 @@ function Postmark() {
         className="postmark__line"
         d="M104 72 q12 -8 24 0 t24 0 t24 0 t24 0"
       />
-    </svg>
+    </motion.svg>
   );
 }
 
 export default function Contact() {
+  const marksRef = useRef(null);
+  const reduce = useReducedMotion();
+  // The stamp and postmark sit at different depths on the card.
+  const { scrollYProgress } = useScroll({
+    target: marksRef,
+    offset: ["start end", "end start"],
+  });
+  const k = reduce ? 0 : 1;
+  const stampY = useTransform(scrollYProgress, (v) => (0.5 - v) * 40 * k);
+  const stampRotate = useTransform(
+    scrollYProgress,
+    (v) => 3 + (v - 0.5) * -8 * k,
+  );
+  const markY = useTransform(scrollYProgress, (v) => (0.5 - v) * -36 * k);
+  const markRotate = useTransform(
+    scrollYProgress,
+    (v) => -9 + (v - 0.5) * 10 * k,
+  );
+
   return (
     <section
       id="contact"
@@ -174,9 +204,9 @@ export default function Contact() {
           </div>
 
           <div className="postcard__side">
-            <div className="postcard__marks">
-              <Postmark />
-              <Stamp />
+            <div ref={marksRef} className="postcard__marks">
+              <Postmark style={{ y: markY, rotate: markRotate }} />
+              <Stamp style={{ y: stampY, rotate: stampRotate }} />
             </div>
             <p className="postcard__to label">To</p>
             <ul className="postcard__lines">

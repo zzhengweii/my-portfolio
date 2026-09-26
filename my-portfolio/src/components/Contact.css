@@ -11,7 +11,7 @@
   background: var(--bg-raised);
   box-shadow:
     inset 0 0 0 1px var(--line-strong),
-    0 40px 100px -40px rgb(3 8 16 / 0.9);
+    0 40px 100px -40px var(--shadow-deep);
 }
 
 /* Airmail edge */
@@ -22,9 +22,9 @@
   height: 6px;
   background: repeating-linear-gradient(
     -45deg,
-    rgb(244 181 91 / 0.75) 0 14px,
+    color-mix(in srgb, var(--accent) 80%, transparent) 0 14px,
     transparent 14px 28px,
-    rgb(143 176 214 / 0.5) 28px 42px,
+    color-mix(in srgb, var(--schematic) 70%, transparent) 28px 42px,
     transparent 42px 56px
   );
 }
@@ -103,8 +103,9 @@
 }
 
 .copy--copied {
-  color: var(--accent);
-  box-shadow: inset 0 0 0 1px rgb(244 181 91 / 0.5);
+  color: var(--accent-text);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--accent-line) 50%, transparent);
 }
 
 .copy--error {
@@ -113,11 +114,11 @@
 
 @media (hover: hover) and (pointer: fine) {
   .postcard__address-link:hover {
-    text-decoration-color: var(--accent);
+    text-decoration-color: var(--accent-line);
   }
 
   .copy:hover {
-    background: rgb(143 176 214 / 0.08);
+    background: var(--hover-wash);
   }
 }
 
@@ -136,10 +137,10 @@
   min-height: 132px;
 }
 
+/* Tilt and drift are set from Contact.js (scroll parallax). */
 .stamp {
   width: 92px;
-  transform: rotate(3deg);
-  filter: drop-shadow(0 8px 16px rgb(2 5 10 / 0.5));
+  filter: drop-shadow(0 8px 16px var(--shadow-soft));
 }
 
 .stamp svg {
@@ -148,7 +149,7 @@
 }
 
 .stamp__paper {
-  fill: #17222f;
+  fill: var(--stamp-paper);
 }
 
 .stamp__hole {
@@ -169,7 +170,7 @@
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
-  fill: var(--accent);
+  fill: var(--accent-text);
 }
 
 .postmark {
@@ -178,7 +179,6 @@
   right: 56px;
   width: 190px;
   opacity: 0.55;
-  transform: rotate(-9deg);
   pointer-events: none;
 }
 
@@ -238,7 +238,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .postcard__lines a:hover svg {
-    color: var(--accent);
+    color: var(--accent-text);
     transform: translate(3px, -3px);
   }
 }

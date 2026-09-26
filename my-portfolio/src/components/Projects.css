@@ -19,10 +19,7 @@
     clamp(16px, 2.5vw, 32px);
   border-bottom: 1px solid var(--line);
   /* drafting paper: a faint dot grid */
-  background-image: radial-gradient(
-    rgb(143 176 214 / 0.13) 1px,
-    transparent 1.2px
-  );
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1.2px);
   background-size: 24px 24px;
   background-position: 12px 12px;
 }
@@ -43,19 +40,75 @@
   color: var(--ink-2);
 }
 
-.sheet__parts {
+.sheet__signals {
   display: grid;
   align-content: start;
-  gap: 10px;
+  gap: 16px;
   border-bottom: 1px solid var(--line);
   border-left: 1px solid var(--line);
 }
 
-.sheet__parts li {
+.sheet__parts {
+  display: grid;
+  gap: 2px;
+}
+
+/* Each signal is a toggle that traces it in the drawing above. */
+.part {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: calc(100% + 10px);
+  margin-left: -5px;
+  padding: 4px 12px 4px 5px;
+  border-radius: 999px;
+  text-align: left;
   color: var(--ink-2);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    transform 140ms var(--ease-out);
+}
+
+.part:active {
+  transform: scale(0.97);
+}
+
+.part .balloon {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.part.is-active {
+  color: var(--ink);
+  background: var(--hover-wash);
+}
+
+.part.is-active .balloon {
+  color: var(--accent-ink);
+  background: var(--accent);
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .part:hover {
+    color: var(--ink);
+  }
+}
+
+/* Fixed height, so tracing a signal never shifts the sheet below. */
+.sheet__readout {
+  min-height: 5.2em;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.sheet__readout strong {
+  font-weight: 560;
+  color: var(--ink);
 }
 
 .sheet__pipeline {
@@ -83,7 +136,7 @@
 }
 
 .sheet__pipeline li:last-child .sheet__value {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .sheet__step-label {
@@ -210,10 +263,6 @@
   color: var(--ink-3);
 }
 
-.index__thumb {
-  display: none;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .index__list.has-active .index__row:not(.is-active) {
     opacity: 0.36;
@@ -249,7 +298,7 @@
   overflow: hidden;
   background: var(--surface);
   box-shadow:
-    0 24px 60px -18px rgb(2 5 10 / 0.85),
+    0 24px 60px -18px var(--shadow-deep),
     inset 0 0 0 1px var(--line-strong);
   opacity: 0;
   transform: scale(0.9);
@@ -291,32 +340,189 @@
   width: 88%;
 }
 
-/* Touch and narrow screens: show a small inline thumbnail instead. */
-@media (hover: none), (pointer: coarse) {
-  .index__row {
-    grid-template-columns: 56px minmax(0, 1fr) 112px;
-  }
+/* Touch screens and narrow windows: a thumbnail that opens a pop-up. */
+.index--tap .index__row {
+  grid-template-columns: 56px minmax(0, 1fr) 132px;
+}
 
-  .index__thumb {
-    display: block;
-    grid-column: 3;
-    grid-row: 1;
-    overflow: hidden;
-    border-radius: var(--radius-sm);
-    aspect-ratio: 4 / 3;
-    background: var(--surface);
-    box-shadow: inset 0 0 0 1px var(--line);
-  }
+.index--tap .index__links {
+  grid-column: 2 / -1;
+}
 
-  .index__thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.index__thumb {
+  position: relative;
+  grid-column: 3;
+  grid-row: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-sm);
+  transition: transform 140ms var(--ease-out);
+}
 
-  .index__links {
-    grid-column: 2 / -1;
-  }
+.index__thumb:active {
+  transform: scale(0.97);
+}
+
+/* Carries the shared layoutId, so it stays above later rows while it
+   travels back from the pop-up. */
+.index__shot {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.index__shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.index__shot .schematic--preview {
+  width: 88%;
+}
+
+.index__zoom {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--glass-strong);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  transition: opacity 200ms ease 300ms;
+}
+
+.index__zoom svg {
+  width: 14px;
+  height: 14px;
+}
+
+.index__shot.is-open + .index__zoom {
+  opacity: 0;
+  transition-delay: 0ms;
+}
+
+/* Project picture pop-up */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-lightbox);
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) 16px
+    max(16px, env(safe-area-inset-bottom, 0px));
+}
+
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.lightbox__card {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  width: min(100%, 720px, calc((100svh - 300px) * 4 / 3));
+  min-width: min(100%, 320px);
+  padding: 10px 10px 22px;
+  touch-action: none;
+}
+
+.lightbox__paper {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow:
+    0 40px 100px -30px var(--shadow-deep),
+    inset 0 0 0 1px var(--line-strong);
+}
+
+.lightbox__frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--bg-raised);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.lightbox__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lightbox__frame .preview__diagram {
+  width: 88%;
+}
+
+.lightbox__caption {
+  position: relative;
+  padding-inline: 12px;
+}
+
+.lightbox__meta {
+  font-size: 0.8125rem;
+  color: var(--ink-3);
+}
+
+.lightbox__title {
+  margin-top: 6px;
+  font-size: clamp(1.35rem, 5vw, 1.75rem);
+  font-weight: 640;
+  letter-spacing: -0.025em;
+}
+
+.lightbox__blurb {
+  margin-top: 8px;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+
+.lightbox__links {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--glass-strong);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.lightbox__close svg {
+  width: 18px;
+  height: 18px;
 }
 
 @media (max-width: 960px) {
@@ -324,7 +530,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .sheet__parts {
+  .sheet__signals {
     border-left: 0;
   }
 
@@ -364,34 +570,35 @@
   .index__links {
     grid-column: 1;
   }
-}
 
-@media (max-width: 640px) and (hover: none),
-  (max-width: 640px) and (pointer: coarse) {
-  .index__row {
-    grid-template-columns: minmax(0, 1fr) 96px;
+  .index--tap .index__row {
+    grid-template-columns: minmax(0, 1fr) 104px;
   }
 
-  .index__year {
+  .index--tap .index__year {
     grid-column: 1 / -1;
   }
 
-  .index__main {
+  .index--tap .index__main {
     grid-column: 1;
   }
 
-  .index__thumb {
+  .index--tap .index__thumb {
     grid-column: 2;
     grid-row: 2;
   }
 
-  .index__links {
+  .index--tap .index__links {
     grid-column: 1 / -1;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .part,
+  .part .balloon,
   .index__title,
+  .index__thumb,
+  .index__zoom,
   .preview__frame,
   .preview__item {
     transition: none;

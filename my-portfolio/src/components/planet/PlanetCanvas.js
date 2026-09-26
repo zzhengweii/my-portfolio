@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
+import { useMotionValueEvent, useScroll, useVelocity } from "framer-motion";
 import { createWorld } from "./world";
 import RollText from "../ui/RollText";
+import { useTheme } from "../theme";
 
 // Each label rides beside the landmark it names, pushed outwards from the
 // planet's centre, with a leader line back to the landmark.
@@ -28,6 +30,21 @@ export default function PlanetCanvas({ onReady, onFail }) {
   const dots = useRef({});
   const callbacks = useRef({ onReady, onFail });
   callbacks.current = { onReady, onFail };
+  const worldRef = useRef(null);
+  const { theme } = useTheme();
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
+
+  // Scrolling the page speeds the walker up for a moment.
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  useMotionValueEvent(scrollVelocity, "change", (v) =>
+    worldRef.current?.nudge(v),
+  );
+
+  useEffect(() => {
+    worldRef.current?.setDay(theme === "day");
+  }, [theme]);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -121,7 +138,12 @@ export default function PlanetCanvas({ onReady, onFail }) {
 
     let world;
     try {
-      world = createWorld(canvas, { reducedMotion, onFrame });
+      world = createWorld(canvas, {
+        reducedMotion,
+        onFrame,
+        day: themeRef.current === "day",
+      });
+      worldRef.current = world;
     } catch (error) {
       callbacks.current.onFail?.();
       return undefined;
@@ -177,6 +199,7 @@ export default function PlanetCanvas({ onReady, onFail }) {
       });
       document.removeEventListener("visibilitychange", onVisibility);
       canvas.removeEventListener("webglcontextlost", onLost);
+      worldRef.current = null;
       world.dispose();
     };
   }, []);

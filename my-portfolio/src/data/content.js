@@ -142,7 +142,10 @@ export const projects = [
         href: "https://github.com/zhepaper/is4228-project---fraud-detection",
       },
     ],
-    preview: { kind: "schematic" },
+    preview: {
+      kind: "schematic",
+      alt: "Diagram: PaySim, BAF and IEEE-CIS transactions feed one FastAPI scoring service that passes, reviews or blocks each one, with GPT-4o explaining the decision.",
+    },
   },
   {
     id: "healthcare",
@@ -157,7 +160,10 @@ export const projects = [
         href: "https://github.com/zzhengweii/insurance-fraud-machine-learning-model/tree/main",
       },
     ],
-    preview: { kind: "schematic" },
+    preview: {
+      kind: "schematic",
+      alt: "Diagram: 550K+ claims and 138 features feed six models tuned with Optuna. Extra Trees reaches 94.61% ROC-AUC.",
+    },
   },
   {
     id: "keurig",

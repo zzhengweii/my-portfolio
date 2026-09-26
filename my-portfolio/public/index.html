@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <meta name="theme-color" content="#0A0F16" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
     <title>Zheng Wei Ow | Data Science and Machine Learning</title>
     <meta
       name="description"
@@ -32,6 +32,15 @@
     <link rel="icon" href="%PUBLIC_URL%/web logo.png" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <script>
+      // Apply a saved day theme before first paint so there is no flash.
+      try {
+        if (localStorage.getItem("theme") === "day") {
+          document.documentElement.dataset.theme = "day";
+          document.documentElement.style.colorScheme = "light";
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <noscript>This site needs JavaScript to run.</noscript>

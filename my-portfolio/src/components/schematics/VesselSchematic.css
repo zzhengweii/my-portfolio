@@ -1,0 +1,362 @@
+/*
+ * Interactive vessel. Picking a signal (data-active on the <svg>) fades the
+ * ship's shell back like an x-ray and traces that signal in the accent:
+ * 0 shaft and propeller, 1 engine, 2 fuel, 3 GPS and heading, 4 weather.
+ * Every animation pauses while the drawing is off screen.
+ */
+.schematic--vessel {
+  --trace: var(--accent-line);
+}
+
+.schematic--vessel:not(.is-playing) * {
+  animation-play-state: paused !important;
+}
+
+.vessel-shell,
+.signal {
+  transition: opacity 280ms ease;
+}
+
+.schematic--vessel[data-active] .vessel-shell {
+  opacity: 0.32;
+}
+
+.schematic--vessel[data-active] .signal:not(.is-active) {
+  opacity: 0.42;
+}
+
+/* The ship rides the swell (she also sails with the scroll, from JS). */
+.vessel-bob {
+  transform-origin: 620px 300px;
+}
+
+.schematic--vessel.is-drawn .vessel-bob {
+  animation: vessel-bob 6s ease-in-out infinite alternate;
+}
+
+@keyframes vessel-bob {
+  from {
+    transform: translateY(-1px) rotate(-0.35deg);
+  }
+  to {
+    transform: translateY(1.5px) rotate(0.35deg);
+  }
+}
+
+/* Signals: sensor node, leader and numbered balloon */
+.signal {
+  cursor: pointer;
+}
+
+.signal__hit {
+  fill: transparent;
+  pointer-events: all;
+}
+
+.signal__leader {
+  fill: none;
+  stroke: var(--schematic-dim);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 200ms ease;
+}
+
+.signal__balloon {
+  fill: var(--bg);
+  stroke: var(--schematic);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition:
+    fill 200ms ease,
+    stroke 200ms ease;
+}
+
+.signal__n {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  fill: var(--ink);
+  transition: fill 200ms ease;
+}
+
+.signal__node {
+  fill: var(--bg);
+  stroke: var(--accent-line);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.signal__dot {
+  fill: var(--accent-line);
+}
+
+.signal__pulse {
+  fill: none;
+  stroke: var(--accent-line);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.signal.is-active .signal__leader {
+  stroke: var(--accent-line);
+}
+
+.signal.is-active .signal__balloon {
+  fill: var(--accent);
+  stroke: var(--accent-line);
+}
+
+.signal.is-active .signal__n {
+  fill: var(--accent-ink);
+}
+
+/* Until a signal is picked, the sensors ping in turn as an invitation. */
+.schematic--vessel.is-drawn:not([data-active]) .signal__pulse {
+  animation: signal-ping 3.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+  animation-delay: calc(2.2s + var(--i) * 0.35s);
+}
+
+.signal.is-active .signal__pulse {
+  animation: signal-ping 1.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+@keyframes signal-ping {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  45%,
+  100% {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+/* Parts that light up when traced */
+.vx-part {
+  transition:
+    stroke 200ms ease,
+    fill 200ms ease;
+}
+
+/* 1 Shaft RPM: shaft lit, propeller spinning hard (it always turns a little) */
+.vx-prop {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.schematic--vessel.is-drawn .vx-prop {
+  animation: vx-prop 1.4s linear infinite;
+}
+
+.schematic--vessel[data-active="0"] .vx--shaft .sx {
+  stroke: var(--trace);
+}
+
+.schematic--vessel[data-active="0"] .vx--shaft .vx-part {
+  stroke-dasharray: none;
+}
+
+.schematic--vessel[data-active="0"] .vx-prop {
+  animation-duration: 0.34s;
+}
+
+@keyframes vx-prop {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.12);
+  }
+}
+
+/* 2 Engine RPM: engine block lit, pistons running */
+.schematic--vessel[data-active="1"] .vx--engine .vx-part {
+  stroke: var(--trace);
+  stroke-dasharray: none;
+  fill: var(--accent-soft);
+}
+
+.vx-piston {
+  fill: none;
+  stroke: var(--trace);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.schematic--vessel[data-active="1"] .vx-piston {
+  opacity: 1;
+  animation: vx-piston 0.42s ease-in-out infinite alternate;
+  animation-delay: calc(var(--i) * -0.14s);
+}
+
+@keyframes vx-piston {
+  to {
+    transform: translateY(8px);
+  }
+}
+
+/* 3 Fuel: tank level falling, fuel running along the line to the engine */
+.schematic--vessel[data-active="2"] .vx--fuel .vx-part {
+  stroke: var(--trace);
+}
+
+.schematic--vessel[data-active="2"] .vx--fuel rect.vx-part {
+  stroke-dasharray: none;
+}
+
+.vx-level {
+  fill: var(--accent);
+  fill-opacity: 0.3;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transition: opacity 200ms ease;
+}
+
+.schematic--vessel[data-active="2"] .vx-level {
+  opacity: 1;
+  animation: vx-level 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes vx-level {
+  to {
+    transform: scaleY(0.55);
+  }
+}
+
+.vx-flow {
+  fill: none;
+  stroke: var(--trace);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 0 9;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+}
+
+.schematic--vessel[data-active="2"] .vx-flow {
+  opacity: 1;
+  animation: vx-flow 0.5s linear infinite;
+}
+
+@keyframes vx-flow {
+  to {
+    stroke-dashoffset: -9;
+  }
+}
+
+/* 4 Speed and heading: GPS pings from the mast, heading arrow at the bow */
+.vx-arc,
+.vx-heading,
+.vx-heading-head {
+  fill: none;
+  stroke: var(--trace);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.vx-heading {
+  stroke-dasharray: 6 6;
+}
+
+.schematic--vessel[data-active="3"] .vx-arc {
+  animation: vx-arc 1.3s ease-out infinite;
+}
+
+.schematic--vessel[data-active="3"] .vx-arc:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.schematic--vessel[data-active="3"] .vx-arc:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+@keyframes vx-arc {
+  0% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.schematic--vessel[data-active="3"] .vx-heading,
+.schematic--vessel[data-active="3"] .vx-heading-head {
+  opacity: 1;
+}
+
+.schematic--vessel[data-active="3"] .vx-heading {
+  animation: vx-heading 0.7s linear infinite;
+}
+
+@keyframes vx-heading {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+/* 5 Weather: gusts, swell and current come alive */
+.schematic--vessel[data-active="4"] .vx--wind .sx,
+.schematic--vessel[data-active="4"] .vx--sea .sx {
+  stroke: var(--trace);
+}
+
+.schematic--vessel[data-active="4"] .vx--wind path,
+.schematic--vessel[data-active="4"] .vx-current {
+  animation: vx-gust 1.2s ease-in-out infinite;
+}
+
+.schematic--vessel[data-active="4"] .vx--wind path:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.schematic--vessel[data-active="4"] .vx--wind path:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.schematic--vessel[data-active="4"] .vx-wave {
+  animation: vx-wave 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes vx-gust {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-12px);
+  }
+}
+
+@keyframes vx-wave {
+  to {
+    transform: translateX(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schematic--vessel * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Traced parts still show, just without motion. */
+  .schematic--vessel[data-active="3"] .vx-arc,
+  .signal.is-active .signal__pulse {
+    opacity: 1;
+  }
+}

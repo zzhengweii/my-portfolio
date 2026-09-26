@@ -3,7 +3,9 @@ import {
   motion,
   useMotionValue,
   useReducedMotion,
+  useScroll,
   useSpring,
+  useTransform,
 } from "framer-motion";
 
 export const EASE_OUT = [0.23, 1, 0.32, 1];
@@ -43,6 +45,43 @@ export function Reveal({
       transition={{ duration: 0.8, delay, ease: EASE_OUT }}
       {...rest}
     >
+      {children}
+    </Tag>
+  );
+}
+
+/*
+ * Scroll-linked drift for parallax depth. `distance` is how far (px) the
+ * element travels over its whole pass through the viewport: positive drifts
+ * up faster than the page (feels closer), negative lags behind (feels
+ * further away). Halved on small screens, off with reduced motion.
+ */
+export function useParallax(
+  ref,
+  distance,
+  offset = ["start end", "end start"],
+) {
+  const reduce = useReducedMotion();
+  const small = useMediaQuery("(max-width: 700px)");
+  const reach = useRef(distance);
+  reach.current = reduce ? 0 : small ? distance / 2 : distance;
+  const { scrollYProgress } = useScroll({ target: ref, offset });
+  return useTransform(scrollYProgress, (v) => (1 - 2 * v) * reach.current);
+}
+
+export function Parallax({
+  as = "div",
+  distance = 32,
+  className,
+  style,
+  children,
+  ...rest
+}) {
+  const ref = useRef(null);
+  const y = useParallax(ref, distance);
+  const Tag = motion[as];
+  return (
+    <Tag ref={ref} className={className} style={{ ...style, y }} {...rest}>
       {children}
     </Tag>
   );

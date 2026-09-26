@@ -12,9 +12,15 @@
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow:
-    0 30px 80px -30px rgb(3 8 16 / 0.8),
+    0 30px 80px -30px var(--shadow-deep),
     inset 0 0 0 1px var(--line);
   aspect-ratio: 4 / 5;
+}
+
+/* 7% taller than the frame at each end: room for the scroll pan. */
+.about__pan {
+  position: absolute;
+  inset: -7% 0;
 }
 
 /* Wipes up from the bottom once, like a print coming out of the plotter. */

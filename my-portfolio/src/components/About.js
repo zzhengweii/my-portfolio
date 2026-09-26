@@ -1,5 +1,11 @@
 import React, { useRef } from "react";
-import { useInView } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import photo640 from "../assets/img/zhengwei-marina-bay-640.webp";
 import photo1000 from "../assets/img/zhengwei-marina-bay-1000.webp";
 import { facts, toolkit } from "../data/content";
@@ -7,29 +13,46 @@ import { Reveal } from "./ui/motion";
 import "./About.css";
 
 export default function About() {
+  const sectionRef = useRef(null);
   const photoRef = useRef(null);
   const photoInView = useInView(photoRef, {
     once: true,
     margin: "0px 0px -15% 0px",
   });
+  const reduce = useReducedMotion();
+  // The photo pans inside its frame as the section scrolls by (parallax).
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const pan = useTransform(scrollYProgress, (v) =>
+    reduce ? "0%" : `${(v - 0.5) * 12}%`,
+  );
 
   return (
-    <section id="about" className="section about" aria-labelledby="about-title">
+    <section
+      ref={sectionRef}
+      id="about"
+      className="section about"
+      aria-labelledby="about-title"
+    >
       <div className="container about__grid">
         <figure
           ref={photoRef}
           className={`about__photo${photoInView ? " is-in" : ""}`}
         >
-          <img
-            src={photo1000}
-            srcSet={`${photo640} 640w, ${photo1000} 1000w`}
-            sizes="(min-width: 960px) 38vw, 92vw"
-            width="1000"
-            height="1250"
-            loading="lazy"
-            decoding="async"
-            alt="Zheng Wei in a white shirt at Marina Bay, with the Singapore skyline lit up at dusk behind him."
-          />
+          <motion.div className="about__pan" style={{ y: pan }}>
+            <img
+              src={photo1000}
+              srcSet={`${photo640} 640w, ${photo1000} 1000w`}
+              sizes="(min-width: 960px) 38vw, 92vw"
+              width="1000"
+              height="1250"
+              loading="lazy"
+              decoding="async"
+              alt="Zheng Wei in a white shirt at Marina Bay, with the Singapore skyline lit up at dusk behind him."
+            />
+          </motion.div>
         </figure>
 
         <div className="about__body">
