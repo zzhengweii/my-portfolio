@@ -5,7 +5,7 @@ import DragonBoatSchematic, {
 } from "./schematics/DragonBoatSchematic";
 import FintechSchematic from "./schematics/FintechSchematic";
 import MedalPlot from "./MedalPlot";
-import { Parallax, Reveal } from "./ui/motion";
+import { Parallax, Reveal, useMediaQuery } from "./ui/motion";
 import "./Activities.css";
 
 export default function Activities() {
@@ -18,6 +18,7 @@ export default function Activities() {
     (i) => setPinned((current) => (current === i ? null : i)),
     [],
   );
+  const finePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
 
   return (
     <section
@@ -82,7 +83,7 @@ export default function Activities() {
                 </ol>
                 <p className="readout" aria-live="polite">
                   {active === null ? (
-                    "Hover over a crew position to learn more."
+                    `${finePointer ? "Hover over" : "Tap"} a crew position to learn more.`
                   ) : (
                     <>
                       <strong>{BOAT_PARTS[active]}.</strong>{" "}
