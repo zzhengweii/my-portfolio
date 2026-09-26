@@ -1,0 +1,289 @@
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+  padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 16px);
+  padding-bottom: 40px;
+  overflow: clip;
+}
+
+/* A faint pool of night light behind the planet. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    52% 58% at 70% 52%,
+    rgb(79 123 184 / 0.11),
+    transparent 72%
+  );
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent);
+  mask-image: linear-gradient(to bottom, #000 60%, transparent);
+}
+
+.hero__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: clamp(16px, 3vw, 48px);
+}
+
+.hero__copy {
+  position: relative;
+  z-index: var(--z-raised);
+}
+
+.hero__eyebrow {
+  color: var(--ink-2);
+  animation: hero-fade 900ms var(--ease-out) both;
+}
+
+.hero__title {
+  margin-top: 22px;
+  font-size: clamp(3.4rem, 7.1vw, 7.4rem);
+  font-weight: 720;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+}
+
+/* Each line rises out of its own mask. The padding keeps the "g" whole. */
+.hero__line {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.hero__line > span {
+  display: inline-block;
+  animation: hero-rise 1100ms var(--ease-out) both;
+  animation-delay: 60ms;
+}
+
+.hero__line + .hero__line > span {
+  animation-delay: 150ms;
+}
+
+.hero__sub {
+  max-width: 31ch;
+  margin-top: 30px;
+  font-size: clamp(1.125rem, 1.35vw, 1.3rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  animation: hero-fade 900ms var(--ease-out) 260ms both;
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+  animation: hero-fade 900ms var(--ease-out) 360ms both;
+}
+
+@keyframes hero-rise {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* The tiny planet */
+.world {
+  position: relative;
+  width: 100%;
+  height: min(80svh, 780px);
+  min-height: 420px;
+}
+
+.world__placeholder {
+  position: absolute;
+  inset: 6% 8%;
+  width: 84%;
+  height: 88%;
+  opacity: 0.8;
+  transition: opacity 700ms ease;
+}
+
+.world.is-ready .world__placeholder {
+  opacity: 0;
+}
+
+.world__stage {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+
+.world.is-ready .world__stage {
+  opacity: 1;
+}
+
+.world__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: pan-y;
+  transform: scale(0.94);
+  transition: transform 1400ms var(--ease-out);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent);
+  mask-composite: intersect;
+}
+
+.world.is-ready .world__canvas {
+  transform: scale(1);
+}
+
+.world__canvas:active {
+  cursor: grabbing;
+}
+
+.world__leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.world__leader {
+  fill: none;
+  stroke: var(--schematic);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.world__anchor {
+  fill: var(--bg);
+  stroke: var(--accent);
+  stroke-width: 1.25;
+}
+
+.world__labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Positioned every frame from JS (transform), so no layout work. */
+.world__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding-inline: 12px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  background: rgb(10 15 22 / 0.86);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  white-space: nowrap;
+  will-change: transform;
+  transition:
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.world__label[data-hidden="true"] {
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .world__label:hover {
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+}
+
+.world__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: hero-fade 800ms var(--ease-out) 600ms both;
+}
+
+.world__hint svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 960px) {
+  .hero {
+    align-items: flex-start;
+    padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 40px);
+  }
+
+  .hero__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .world {
+    height: min(108vw, 620px);
+    min-height: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .world__leaders,
+  .world__labels {
+    display: none;
+  }
+
+  .hero__title {
+    font-size: clamp(3.4rem, 17vw, 4.6rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__line > span,
+  .hero__eyebrow,
+  .hero__sub,
+  .hero__ctas,
+  .world__hint {
+    animation: none;
+  }
+
+  .world__canvas {
+    transform: none;
+    transition: none;
+  }
+}

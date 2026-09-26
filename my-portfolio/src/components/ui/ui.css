@@ -1,0 +1,57 @@
+/* Text roll (op.al-style hover): characters slide up, a copy follows. */
+.roll {
+  display: inline-flex;
+  overflow: hidden;
+  line-height: 1.25;
+  vertical-align: top;
+  /* keep descenders of the copy from peeking through */
+  padding-block: 0.02em;
+}
+
+.roll__track {
+  display: inline-flex;
+}
+
+.roll__char {
+  position: relative;
+  display: inline-block;
+  transition: transform 460ms var(--ease-out);
+  transition-delay: calc(var(--i) * 14ms);
+}
+
+.roll__char::after {
+  content: attr(data-char);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  padding-top: 0.04em;
+}
+
+a:focus-visible .roll__char,
+button:focus-visible .roll__char {
+  transform: translateY(-104%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a:hover .roll__char,
+  button:hover .roll__char {
+    transform: translateY(-104%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roll__char {
+    transition: none;
+  }
+
+  a:hover .roll__char,
+  button:hover .roll__char,
+  a:focus-visible .roll__char,
+  button:focus-visible .roll__char {
+    transform: none;
+  }
+}
+
+.magnetic {
+  display: inline-flex;
+}

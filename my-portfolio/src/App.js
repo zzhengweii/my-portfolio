@@ -1,54 +1,29 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "./components/screen/Navbar";
-import Home from "./components/screen/Home";
-import Loading from "./components/screen/Loading";
-import About from "./components/screen/About";
-import Experience from "./components/screen/Experience";
-import Projects from "./components/screen/Projects";
-import Footer from "./components/screen/Footer";
-import "./App.css";
+import React from "react";
+import { MotionConfig } from "framer-motion";
+import Nav from "./components/Nav";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Experience from "./components/Experience";
+import Projects from "./components/Projects";
+import Activities from "./components/Activities";
+import Contact from "./components/Contact";
 
 function App() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading process (e.g., fetching data)
-    setTimeout(() => {
-      setLoading(false); // Set loading to false after 3 seconds
-    }, 3000);
-  }, []);
-
   return (
-    <div className="website">
-      {/* Show Loading Screen while loading */}
-      {loading ? (
-        <div className="loading-container">
-          <Loading /> {/* Your loading spinner */}
-        </div>
-      ) : (
-        <div>
-          <Navbar />
-
-          <div id="home">
-            <Home />
-          </div>
-          <div id="about">
-            <About />
-          </div>
-
-          <div id="experience">
-            <Experience />
-          </div>
-          <div id="projects">
-            <Projects />
-          </div>
-          <div id="contact">
-            {" "}
-            <Footer />
-          </div>
-        </div>
-      )}
-    </div>
+    <MotionConfig reducedMotion="user">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <Nav />
+      <main id="main">
+        <Hero />
+        <About />
+        <Experience />
+        <Projects />
+        <Activities />
+        <Contact />
+      </main>
+    </MotionConfig>
   );
 }
 

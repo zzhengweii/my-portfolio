@@ -1,0 +1,342 @@
+.bento {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(16px, 2vw, 24px);
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+/* Water-light wash behind the boat, drafting grid behind the flow. */
+.cell--boat {
+  background:
+    radial-gradient(
+      70% 50% at 20% 100%,
+      rgb(79 123 184 / 0.12),
+      transparent 70%
+    ),
+    var(--bg-raised);
+}
+
+.cell--fintech {
+  background-image: radial-gradient(
+    rgb(143 176 214 / 0.12) 1px,
+    transparent 1.2px
+  );
+  background-size: 24px 24px;
+  background-position: 12px 12px;
+}
+
+.cell__title {
+  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  font-weight: 640;
+  letter-spacing: -0.025em;
+}
+
+.cell__role {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--ink-3);
+}
+
+.cell__text {
+  margin-top: 16px;
+  max-width: 52ch;
+  color: var(--ink-2);
+}
+
+.cell__diagram {
+  margin-block: auto;
+  padding-top: 36px;
+}
+
+.schematic--flow {
+  display: block;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.boat {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(24px, 3vw, 40px);
+  align-items: start;
+  margin-top: 36px;
+}
+
+.boat__drawing {
+  display: grid;
+  gap: 20px;
+}
+
+.schematic--boat {
+  display: block;
+  max-width: 230px;
+  margin-inline: auto;
+}
+
+.boat__parts {
+  display: grid;
+  gap: 10px;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+
+.boat__parts li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Medal dot plot */
+.medals {
+  display: grid;
+  gap: 22px;
+  --gold: #f4b55b;
+  --silver: #ada392;
+  --bronze: #8c6231;
+}
+
+.medals__hero {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.medals__total {
+  font-size: clamp(3.25rem, 5vw, 4.5rem);
+  font-weight: 680;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+.medals__caption {
+  max-width: 19ch;
+  padding-bottom: 4px;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+.medals__plot {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.medals__col {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.medals__stack {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  width: 100%;
+  min-height: 132px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.medals__stack li {
+  position: relative;
+}
+
+/* 28 x 26 hit area around a 16px dot with a surface ring. */
+.medal {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 26px;
+  border-radius: 8px;
+}
+
+.medal:focus-visible {
+  outline-offset: 0;
+}
+
+.medal__dot {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--bg-raised);
+  transition: transform 160ms var(--ease-out);
+}
+
+.medal--gold .medal__dot,
+.medal__dot--gold {
+  background: var(--gold);
+}
+
+.medal--silver .medal__dot,
+.medal__dot--silver {
+  background: var(--silver);
+}
+
+.medal--bronze .medal__dot,
+.medal__dot--bronze {
+  background: var(--bronze);
+}
+
+.medal.is-active .medal__dot {
+  transform: scale(1.3);
+}
+
+.medals__axis {
+  font-size: 0.8125rem;
+  color: var(--ink-3);
+}
+
+.medals__tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 5;
+  display: grid;
+  gap: 2px;
+  width: max-content;
+  max-width: 230px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  box-shadow:
+    0 16px 36px -12px rgb(2 5 10 / 0.8),
+    inset 0 0 0 1px var(--line-strong);
+  pointer-events: none;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  animation: tip-in 150ms var(--ease-out);
+}
+
+.medals__col:first-child .medals__tip {
+  left: 0;
+  transform: none;
+  transform-origin: bottom left;
+}
+
+.medals__col:last-child .medals__tip {
+  left: auto;
+  right: 0;
+  transform: none;
+  transform-origin: bottom right;
+}
+
+.medals__tip strong {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.medals__tip-race {
+  color: var(--ink-3);
+}
+
+@keyframes tip-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.medals__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+
+.medals__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.medals__legend .medal__dot {
+  width: 12px;
+  height: 12px;
+}
+
+.medals__legend .mono {
+  color: var(--ink-3);
+  font-size: 0.8125rem;
+}
+
+.medals__table summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 200ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .medals__table summary:hover {
+    text-decoration-color: var(--accent);
+  }
+}
+
+.medals__table table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+.medals__table th {
+  padding: 6px 8px 6px 0;
+  text-align: left;
+  font-weight: 500;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.medals__table td {
+  padding: 7px 8px 7px 0;
+  vertical-align: top;
+}
+
+@media (max-width: 1080px) {
+  .bento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .boat {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .schematic--boat {
+    max-width: 180px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .medals__tip {
+    animation: none;
+  }
+
+  .medal__dot {
+    transition: none;
+  }
+}

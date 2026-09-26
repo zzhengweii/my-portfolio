@@ -1,20 +1,22 @@
 # My Portfolio 🌐
 
-Welcome to my personal portfolio! This website showcases my skills, projects, and experience. It is built with React.js, with interactive and smooth animations powered by [Framer Motion](https://www.framer.com/motion/). The website is deployed on [Vercel](https://vercel.com/) for fast and reliable hosting. 🚀
+Welcome to my personal portfolio! This website showcases my experience, projects and NUS activities. It is built with React.js, with a night-time tiny planet rendered in [three.js](https://threejs.org/) and animations powered by [Framer Motion](https://motion.dev/). The website is deployed on [Vercel](https://vercel.com/) for fast and reliable hosting. 🚀
 
 ## Features ✨
 
-- **Interactive design**: Modern and clean design with smooth animations. 🎨
-- **Responsive**: The website is fully responsive, ensuring a seamless experience across devices (desktop, tablet, and mobile). 📱💻
-- **Showcase of Projects**: Highlights my professional and academic projects, including my work with data analytics, full-stack development, and data visualisation. 📈🖥️
-- **Skills and Experience**: Overview of my technical skills and work experience in software development, data analytics, and more. 💼
+- **Tiny planet hero**: A low-poly world you can drag to spin, with labels that track landmarks and link to each section. 🪐
+- **Schematic drawings**: Blueprint-style SVG drawings of my featured vessel project, a dragon boat lineup and the FinTech credit-risk pipeline. 📐
+- **Hover details**: Project previews that follow the cursor, text that rolls on hover, and a magnetic call to action. 🖱️
+- **Responsive and accessible**: Works across desktop, tablet and mobile, with keyboard focus states and full reduced-motion support. 📱💻
+- **Design plan**: Tokens, layout and motion rules live in [`my-portfolio/DESIGN.md`](my-portfolio/DESIGN.md). 🎨
 
 ## Technologies Used 🛠️
 
 - **Frontend**: React.js ⚛️
+- **3D**: three.js 🪐
 - **Animation**: Framer Motion 🎞️
+- **Fonts**: Bricolage Grotesque and Geist Mono, self-hosted via Fontsource 🔤
 - **Deployment**: Vercel 🌍
-- **Backend**: Firebase (optional depending on your site’s use of Firebase) 🔥
 - **Version Control**: Git, GitHub 🧑‍💻
 
 ## Setup 🏗️
