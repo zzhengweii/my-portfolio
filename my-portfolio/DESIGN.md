@@ -163,23 +163,22 @@ the drawing, so the card does not stretch on desktop and tablet (a fixed
 Depth runs through the whole page, all scroll-linked transforms on the
 compositor (`useParallax` and `Parallax` in `ui/motion.js`):
 
-| Layer                               | Rate or travel                                       |
-| ----------------------------------- | ---------------------------------------------------- |
-| Sky: far specks (stars at night)    | 8% of scroll speed, fixed behind everything          |
-| Sky: near drafting marks            | 24% of scroll speed                                  |
-| Sky: soft glows (coral, sage, sand) | 40% of scroll speed, loud enough to read in daylight |
-| Hero copy                           | lifts 220px faster than the page and fades           |
-| Planet                              | lags 320px and shrinks to 0.84                       |
-| Section titles                      | drift 56px against their content                     |
-| About photo                         | pans 18% inside its frame                            |
-| Experience figures                  | float 64px against the text                          |
-| Vessel                              | sails 110 units along the sheet                      |
-| Dragon boat                         | pulls 80 units up its lane                           |
-| FinTech diagram                     | drifts 44px inside its card                          |
-| Stamp and postmark                  | drift and tilt in opposite directions                |
+| Layer                            | Rate or travel                              |
+| -------------------------------- | ------------------------------------------- |
+| Sky: far specks (stars at night) | 8% of scroll speed, fixed behind everything |
+| Sky: near drafting marks         | 24% of scroll speed                         |
+| Hero copy                        | lifts 220px faster than the page and fades  |
+| Planet                           | lags 320px and shrinks to 0.84              |
+| Section titles                   | drift 56px against their content            |
+| About photo                      | pans 18% inside its frame                   |
+| Experience figures               | float 64px against the text                 |
+| Vessel                           | sails 110 units along the sheet             |
+| Dragon boat                      | pulls 80 units up its lane                  |
+| FinTech diagram                  | drifts 44px inside its card                 |
+| Stamp and postmark               | drift and tilt in opposite directions       |
 
-In day mode the sky specks and marks are darker and the glows stronger, so
-the depth reads as clearly on sand paper as it does at night.
+In day mode the sky specks and marks are darker, so the depth reads as
+clearly on sand paper as it does at night.
 The sky sits at `z-index: -1` with the page colour on `<html>` only, so
 opaque cards hide it and the translucent experience band lets it through.
 Travel drops to 60% under 700px wide and everything is still with reduced
