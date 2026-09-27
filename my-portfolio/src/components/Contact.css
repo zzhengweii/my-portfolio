@@ -352,15 +352,18 @@
   }
 }
 
+/* No z-index here, so the trail and the plane stack separately: the
+   dotted trail runs under every piece of text on the card (each has a
+   card-coloured backing, below), the plane flies over the top. */
 .flight {
   position: absolute;
   inset: 0;
-  z-index: 3;
   pointer-events: none;
 }
 
 .flight__trail {
   position: absolute;
+  z-index: 1;
   top: 0;
   left: 0;
   overflow: visible;
@@ -384,6 +387,7 @@
 
 .flight__plane {
   position: absolute;
+  z-index: 5;
   top: 0;
   left: 0;
   width: 32px;
@@ -427,4 +431,16 @@
   .postcard__marks .postmark {
     opacity: 0.55;
   }
+}
+
+/* Text sits above the plane's dotted trail, on a card-coloured backing, so
+   the trail passes behind it wherever the route wanders. */
+.postcard__title,
+.postcard__text,
+.postcard__to,
+.postcard__lines {
+  position: relative;
+  z-index: 2;
+  background: var(--bg-raised);
+  box-shadow: 0 0 0 8px var(--bg-raised);
 }
