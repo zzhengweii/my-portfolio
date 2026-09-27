@@ -6,7 +6,9 @@ import { races } from "../data/content";
 // Unit dot plot: one dot per podium, stacked by race distance. Medals are an
 // ordinal scale: one warm ramp, gold lightest to bronze darkest, with
 // lightness order and contrast checked against the page background.
-const DISTANCES = [100, 200, 500, 1000];
+const DISTANCES = [100, 200, 500, 1000, 5000];
+// 5000 reads as 5 km; shorter races stay in metres.
+const distanceLabel = (d) => (d >= 5000 ? `${d / 1000} km` : `${d} m`);
 const MEDALS = [
   { id: "gold", label: "Gold" },
   { id: "silver", label: "Silver" },
@@ -79,7 +81,7 @@ export default function MedalPlot() {
             <div key={distance} className="medals__col">
               <ul
                 className="medals__stack"
-                aria-label={`${distance} metre races`}
+                aria-label={`${distanceLabel(distance)} races`}
               >
                 {stack.map((race) => {
                   const isActive = active === race.index;
@@ -107,7 +109,9 @@ export default function MedalPlot() {
                   );
                 })}
               </ul>
-              <span className="medals__axis mono">{distance} m</span>
+              <span className="medals__axis mono">
+                {distanceLabel(distance)}
+              </span>
             </div>
           );
         })}

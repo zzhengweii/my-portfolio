@@ -297,6 +297,13 @@ export const races = [
   },
   {
     year: "2025",
+    event: "Austchamp 5km Rowing Challenge",
+    race: "5km Rowing Challenge",
+    medal: "silver",
+    distance: 5000,
+  },
+  {
+    year: "2025",
     event: "Singapore Water Regatta Festival",
     race: "DB22 200m Tertiary Men",
     medal: "silver",
