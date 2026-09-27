@@ -81,15 +81,29 @@ export default function Nav() {
   const { scrollY } = useScroll();
   const lastY = useRef(0);
   const menuButton = useRef(null);
+  const header = useRef(null);
+  const idle = useRef(0);
 
-  // Hide while scrolling down, return on the way up.
+  // Hide while scrolling down, return on the way up. Away from the top of
+  // the page it also tucks itself away after a pause in scrolling, unless
+  // it is being pointed at or has keyboard focus.
   useMotionValueEvent(scrollY, "change", (y) => {
     const previous = lastY.current;
     lastY.current = y;
     if (y < 120) setHidden(false);
     else if (y > previous + 6) setHidden(true);
     else if (y < previous - 6) setHidden(false);
+
+    window.clearTimeout(idle.current);
+    if (y >= 120) {
+      idle.current = window.setTimeout(() => {
+        const el = header.current;
+        if (el && !el.matches(":hover, :focus-within")) setHidden(true);
+      }, 2500);
+    }
   });
+
+  useEffect(() => () => window.clearTimeout(idle.current), []);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -109,7 +123,10 @@ export default function Nav() {
   }, [open]);
 
   return (
-    <header className={`nav${hidden && !open ? " is-hidden" : ""}`}>
+    <header
+      ref={header}
+      className={`nav${hidden && !open ? " is-hidden" : ""}`}
+    >
       <div className="container nav__inner">
         <a
           href="#home"
