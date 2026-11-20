@@ -70,7 +70,7 @@ export const toolkit = [
 export const experience = [
   {
     company: "Monee (MariBank)",
-    role: "Data Scientist Intern, Risk Modelling",
+    role: "Data Scientist Intern, Risk Model Management",
     period: "Sep 2026 - Present",
     current: true,
     points: [

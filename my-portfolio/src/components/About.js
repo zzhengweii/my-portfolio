@@ -82,7 +82,9 @@ export default function About() {
                 <h3 className="label">{group.group}</h3>
                 <ul>
                   {group.items.map((item) => (
-                    <li key={item}>{item}</li>
+                    <li key={item} className="chip">
+                      {item}
+                    </li>
                   ))}
                 </ul>
               </div>

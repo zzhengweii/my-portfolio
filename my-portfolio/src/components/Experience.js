@@ -61,7 +61,9 @@ export default function Experience() {
                   {job.tags && (
                     <ul className="stop__tags" aria-label="Model areas">
                       {job.tags.map((tag) => (
-                        <li key={tag}>{tag}</li>
+                        <li key={tag} className="chip">
+                          {tag}
+                        </li>
                       ))}
                     </ul>
                   )}
